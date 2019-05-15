@@ -10,6 +10,7 @@ import java.util.Collection;
 import Coupons.Utils.JdbcUtils;
 
 import Coupons.Enums.ClientType;
+import Coupons.JavaBeans.LoginData;
 import Coupons.JavaBeans.User;
 import Coupons.Enums.ErrorType;
 import Coupons.Exceptions.ApplicationException;
@@ -273,7 +274,7 @@ public class UsersDAO {
 		}
 	}
 	
-	public ClientType login(String user, String password) throws ApplicationException {
+	public LoginData login(String user, String password) throws ApplicationException {
 		//Turn on the connections
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
@@ -300,9 +301,8 @@ public class UsersDAO {
 			if (!result.next()) {
 				throw new ApplicationException(ErrorType.LOGIN_FAILED, "Failed login");
 			}
-			
-			ClientType clientType = ClientType.valueOf(result.getString("type"));
-			return clientType;
+			LoginData loginData = new LoginData(result.getLong("ID"),0,ClientType.valueOf(result.getString("type")));
+			return loginData;
 		} catch (SQLException exception) {
 			exception.printStackTrace();
 			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
