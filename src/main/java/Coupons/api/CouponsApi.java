@@ -1,5 +1,6 @@
 package Coupons.api;
 
+import java.util.Collection;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import Coupons.JavaBeans.Coupon;
+import Coupons.JavaBeans.UserData;
 import Coupons.Logic.CouponController;
+import Coupons.Logic.ICacheManager;
+import Coupons.Logic.PurchasesController;
 import Coupons.Enums.Categories;
 import Coupons.Exceptions.ApplicationException;
 
@@ -25,12 +29,16 @@ public class CouponsApi {
 	@Autowired
 	private CouponController couponsController; 
 	
+	@Autowired
+	private PurchasesController purchasesController; 
+	
+	@Autowired
+	private ICacheManager cacheManager;
+	
 	@PostMapping
 	public void createCoupon(@RequestBody Coupon coupon) throws ApplicationException {
 		couponsController.addCoupon(coupon);
 	}
-	
-	
 	
 	@PutMapping
 	public void updateCoupon(@RequestBody Coupon coupon) throws ApplicationException {
@@ -38,8 +46,8 @@ public class CouponsApi {
 	}
 	
 	@GetMapping("/{couponId}")
-	public Coupon getCoupon(@PathVariable("couponId") long id) {
-		Coupon coupon = new Coupon(12, "Coca cola", new Date().toString(), new Date().toString(), 100, Categories.groceries,"It will work believe me", 33.4, ":-(", 1111);
+	public Coupon getCoupon(@PathVariable("couponId") long id) throws ApplicationException {
+		Coupon coupon = couponsController.getCoupon(id);
 		return coupon;
 	}
 	
@@ -47,10 +55,30 @@ public class CouponsApi {
 	public void deleteCoupon(@PathVariable("couponId") long id) throws ApplicationException {
 		couponsController.deleteCoupon(id);
 	}
-	
 	@GetMapping("/byType")
-	// @RequestParam = get the value from the query string
-	public void getCouponByType(@RequestParam("type") CouponType couponType) {
-		return couponsController.getCouponByType(couponType);
+	public Collection<Coupon> getCouponByType(@PathVariable("type") Categories category) throws ApplicationException {
+		return couponsController.getCouponsByCategory(category);
+	}
+	
+	@GetMapping("/company/")
+	public Collection<Coupon> getCompanyCoupons(@RequestParam("token") int token, @RequestParam(value = "category", required = false) Categories category) throws ApplicationException {
+		UserData userData =  (UserData) cacheManager.get(token);
+		
+		if (category != null){
+			return couponsController.getCompanyCoupons(userData.getCompany(), category);
+		}
+		
+		return couponsController.getCompanyCoupons(userData.getCompany());
+	}
+	
+	@GetMapping("/customer/")
+	public Collection<Coupon> getCustomerCoupons(@RequestParam("token") int token, @RequestParam(value = "category", required = false) Categories category) throws ApplicationException {
+		UserData userData =  (UserData) cacheManager.get(token);
+		
+		if (category != null){
+			return purchasesController.getCustomerCoupons(category, userData.getUserID());
+		}
+		
+		return purchasesController.getCustomerCoupons(userData.getUserID());
 	}
 }

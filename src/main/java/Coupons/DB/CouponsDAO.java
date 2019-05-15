@@ -426,6 +426,7 @@ import Coupons.Utils.JdbcUtils;
 			JdbcUtils.closeResources(connection, preparedStatement, resultSet);
 		}
 	}
+	
 	public Collection<Coupon> getAllCouponsByCustomer(long customerID) throws ApplicationException {
 
 		Connection connection = null;
@@ -463,6 +464,42 @@ import Coupons.Utils.JdbcUtils;
 		}
 	}
 	
+	public Collection<Coupon> getAllCouponsByCategory(Categories category) throws ApplicationException {
+
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		try {
+			connection =JdbcUtils.getConnection();
+			String sql = String.format("SELECT * FROM Coupons WHERE category=?");
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1,category.toString());
+
+			resultSet = preparedStatement.executeQuery();
+
+					Collection<Coupon> customerCoupons = new ArrayList<Coupon>();
+					
+					while(resultSet.next()) {
+						
+						Coupon coupon = extractCouponFromResultSet(resultSet);
+
+						customerCoupons.add(coupon);
+					}
+					
+					return customerCoupons;
+				}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
+			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
+					+" find coupons by category failed");
+		} 
+		
+		finally {
+			JdbcUtils.closeResources(connection, preparedStatement, resultSet);
+		}
+	}
 	/**
 	 * returns all coupons belonging to company with specified ID.
 	 * 

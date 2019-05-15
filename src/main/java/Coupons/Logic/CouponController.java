@@ -128,13 +128,50 @@ public class CouponController extends ClientController {
 	 * @see 		companiesDBDAO
 	 * @return ArrayList of coupon objects belonging to this company
 	 */
+	
+	public Coupon getCoupon(long couponID) throws ApplicationException{
+		if (couponsDBDAO.getOneCoupon(couponID)==null) {
+			throw new ApplicationException(ErrorType.COUPON_ID_DOES_NOT_EXIST, ErrorType.COUPON_ID_DOES_NOT_EXIST.getInternalMessage());
+		}
+		return couponsDBDAO.getOneCoupon(couponID);
+	}
+	
+	/**
+	 * returns a list of all company coupons of a specified category
+	 * 
+	 * @param  Category the category of coupons to be returnes
+	 * @see 		companiesDBDAO
+	 * @see			JavaBeans.Coupon
+	 * @see			JavaBeans.Category
+	 * @return 		ArrayList of coupons
+	 */
+	
 	public Collection<Coupon> getCompanyCoupons(long companyID) throws ApplicationException{
 		if (companiesDBDAO.getCompanyByID(companyID)==null) {
 			throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage());
 		}
 		return couponsDBDAO.getCompanyCoupons(companyID);
 	}
-	
+	/**
+	 * returns a list of all company coupons of a specified category
+	 * 
+	 * @param  Category the category of coupons to be returnes
+	 * @see 		companiesDBDAO
+	 * @see			JavaBeans.Coupon
+	 * @see			JavaBeans.Category
+	 * @return 		ArrayList of coupons
+	 */
+	public Collection<Coupon> getCouponsByCategory(Categories category) throws ApplicationException
+	{
+		//get list of all company coupons
+		
+		Collection<Coupon> coupons = couponsDBDAO.getAllCouponsByCategory(category);
+
+		//remove coupons with different category from list
+		
+		return coupons;
+
+	}
 	/**
 	 * returns a list of all company coupons of a specified category
 	 * 
