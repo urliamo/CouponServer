@@ -1,4 +1,4 @@
-package com.avi.coupons.api;
+package Coupons.api;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.avi.coupons.beans.Purchase;
-import com.avi.coupons.beans.UserData;
+import Coupons.JavaBeans.Purchase;
+import Coupons.JavaBeans.UserData;
+
+import Coupons.Logic.PurchasesController;
 
 @RestController
 @RequestMapping("/purchases")
@@ -22,10 +24,7 @@ public class PurchasesApi {
 	@PostMapping
 	public void purchaseCoupon(@RequestBody Purchase purchaseData, HttpServletRequest request) {
 		UserData userData = (UserData) request.getAttribute("userData");
-		this.purchasesController.purchase(purchaseData.getCouponID(), purchaseData.getAmount(), userData.getUserId());
+		this.purchasesController.purchaseCoupon(purchaseData.getCouponID(), userData.getUserID(), purchaseData.getAmount());
 	}
 	
-	
-	
-
 }

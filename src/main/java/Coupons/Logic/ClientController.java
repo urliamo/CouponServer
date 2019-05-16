@@ -1,7 +1,7 @@
 package Coupons.Logic;
 
-import Coupons.Enums.ClientType;
 import Coupons.Exceptions.ApplicationException;
+import Coupons.JavaBeans.LoginData;
 
 
 /**
@@ -15,11 +15,11 @@ import Coupons.Exceptions.ApplicationException;
  */
 public abstract class ClientController {
 	
-	protected  Coupons.DB.CompaniesDAO companiesDBDAO= new Coupons.DB.CompaniesDAO();
+	protected static  Coupons.DB.CompaniesDAO companiesDBDAO= new Coupons.DB.CompaniesDAO();
 	protected  Coupons.DB.CustomerDAO customerDBDAO= new Coupons.DB.CustomerDAO();
-	protected  Coupons.DB.CouponsDAO couponsDBDAO= new Coupons.DB.CouponsDAO();
+	protected static  Coupons.DB.CouponsDAO couponsDBDAO= new Coupons.DB.CouponsDAO();
 	protected  Coupons.DB.UsersDAO usersDBDAO= new Coupons.DB.UsersDAO();
-	protected  Coupons.DB.PurchasesDAO purchasesDBDAO= new Coupons.DB.PurchasesDAO();
+	protected static  Coupons.DB.PurchasesDAO purchasesDBDAO= new Coupons.DB.PurchasesDAO();
 
 
 	/**
@@ -30,7 +30,7 @@ public abstract class ClientController {
 	 * @throws ApplicationException 
 	 * @throws wrong mail\password
 	 */
-	public ClientType login(String email, String password) throws ApplicationException {
+	public LoginData login(String email, String password) throws ApplicationException {
 		return usersDBDAO.login(email, password);
 	}
 

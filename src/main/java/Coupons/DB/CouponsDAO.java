@@ -251,7 +251,39 @@ import Coupons.Utils.JdbcUtils;
 		}
 	}
 
-	
+	/**
+	 * removes a coupon from the DB.
+	 * 
+	 * @param  couponID the Id of the coupon to be removed from the DB
+	 * @see			JavaBeans.Coupon
+	 */
+	public void deleteCompanyCoupons(long companyId) throws ApplicationException {
+
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		
+		try {
+
+			connection =JdbcUtils.getConnection();
+
+			String sql = String.format("DELETE FROM Coupons WHERE companyID=?");
+
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setLong(1, companyId);
+
+				preparedStatement.executeUpdate();
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
+			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
+					+" delete coupon failed");
+		} 
+		finally {
+			JdbcUtils.closeResources(connection, preparedStatement);
+		}
+	}
 	/**
 	 * returns all coupons as a list.
 	 * 
@@ -508,14 +540,14 @@ import Coupons.Utils.JdbcUtils;
 	 */
 	
 	
-	public Collection<Coupon> getCompanyCoupons(long companyID) throws ApplicationException {
+	public Collection<Long> getCompanyCouponsID(long companyID) throws ApplicationException {
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		try {
 			connection =JdbcUtils.getConnection();
-			String sql = String.format("SELECT * FROM Coupons WHERE company_id=?");
+			String sql = String.format("SELECT coupon_id FROM Coupons WHERE company_id=?");
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setLong(1,companyID);
 
@@ -528,6 +560,42 @@ import Coupons.Utils.JdbcUtils;
 						Coupon coupon = extractCouponFromResultSet(resultSet);
 
 						customerCoupons.add(coupon);
+					}
+					
+					return customerCoupons;
+				}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
+			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
+					+" find customer coupons failed");
+		} 
+		
+		finally {
+			JdbcUtils.closeResources(connection, preparedStatement, resultSet);
+		}
+	}
+	public Collection<Coupon> getCompanyCoupons(long companyID) throws ApplicationException {
+
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		try {
+			connection =JdbcUtils.getConnection();
+			String sql = String.format("SELECT coupon_id FROM Coupons WHERE company_id=?");
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setLong(1,companyID);
+
+			resultSet = preparedStatement.executeQuery();
+
+					Collection<Long> customerCoupons = new ArrayList<Long>();
+					
+					while(resultSet.next()) {
+						
+						long couponID = resultSet.getLong("coupon_id");
+
+						customerCoupons.add(couponID);
 					}
 					
 					return customerCoupons;
@@ -585,7 +653,7 @@ import Coupons.Utils.JdbcUtils;
 	
 private Coupon extractCouponFromResultSet(ResultSet result) throws SQLException  {
 		
-		Coupon coupon = new Coupon(result.getString("description"),result.getString("image"), result.getString("title"),result.getLong("coup_id"), result.getInt("amount"), result.getDate("start_date").toLocalDate(), result.getDate("end_date").toLocalDate(), result.getLong("comp_id"), Categories.valueOf(result.getString("category")), result.getDouble("price"));
+		Coupon coupon = new Coupon(result.getString("description"),result.getString("image"), result.getString("title"),result.getLong("coupon_id"), result.getInt("amount"), result.getDate("start_date").toLocalDate(), result.getDate("end_date").toLocalDate(), result.getLong("comp_id"), Categories.valueOf(result.getString("category")), result.getDouble("price"));
 	
 		return coupon;
 	}

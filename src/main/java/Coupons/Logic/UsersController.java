@@ -38,6 +38,9 @@ public class UsersController {
 	private Coupons.DB.CompaniesDAO companiesDAO;
 	
 	@Autowired
+	private Coupons.DB.PurchasesDAO purchasesDAO;
+	
+	@Autowired
 	private ICacheManager cacheManager;
 
 	public UsersController() {
@@ -100,7 +103,7 @@ public class UsersController {
 			throw new ApplicationException(ErrorType.USER_ID_DOES_NOT_EXIST, ErrorType.USER_ID_DOES_NOT_EXIST.getInternalMessage());
 		}
 		usersDao.deleteUserByID(userId);
-
+		purchasesDAO.getAllPurchasesbyCustomer(userId);
 	}
 
 	public void deleteUsersByCompanyId(long companyId) throws ApplicationException {

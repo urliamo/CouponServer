@@ -127,9 +127,9 @@ public static void buildDB() {
 		// Change string for statement to include coupons table creation
 		
 				sql = "CREATE TABLE coupons (" +
-							"couponID BIGINT PRIMARY KEY AUTO_INCREMENT, " +
-							"companyID BIGINT NOT NULL, " +
-							"categoryID BIGINT NOT NULL, " +
+							"coupon_ID BIGINT PRIMARY KEY AUTO_INCREMENT, " +
+							"company_ID BIGINT NOT NULL, " +
+							"category VARCHAR(50) NOT NULL, " +
 							"title VARCHAR(50) NOT NULL, " +
 							"description VARCHAR(100) NOT NULL, " +
 							"image VARCHAR(50) NOT NULL, " +
@@ -149,11 +149,11 @@ public static void buildDB() {
 				
 					// Change string for statement to include customers_vs_coupons table creation
 				sql = "CREATE TABLE jb.purchases ("+
-					"PurchaseID BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL,"+
+				//	"PurchaseID BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL,"+
 					"customerID BIGINT NOT NULL,"+
 					"couponID BIGINT NOT NULL,"+
 					"amount INT NOT NULL,"+
-					"PRIMARY KEY (PurchaseID),"+
+				//	"PRIMARY KEY (PurchaseID),"+
 					"FOREIGN KEY (customerID) REFERENCES customers(customerID),"+
 					"FOREIGN KEY (couponID) REFERENCES coupons(couponID))";
 			

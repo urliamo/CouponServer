@@ -178,6 +178,8 @@ public class PurchasesDAO {
 		}
 		
 	}
+	
+	
 	/**
 	 * adds a new coupon purchase to the customer.
 	 *
@@ -277,5 +279,26 @@ public class PurchasesDAO {
 		purchase.setCouponID(result.getLong("coupon_id"));
 		purchase.setAmount(result.getInt("amount"));
 		return purchase;
+	}
+
+
+	public void deleteCompanyPurchases(long companyId) throws ApplicationException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+
+		try {
+			connection = JdbcUtils.getConnection();
+			String delete = "DELETE FROM purchases WHERE coupon_id IN (select coupon_id from coupons where company_id=?)";
+			preparedStatement = connection.prepareStatement(delete);
+			preparedStatement.setLong(1, companyId);
+			preparedStatement.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
+					+" delete purchase by company ID failed");
+		} finally {
+			JdbcUtils.closeResources(connection, preparedStatement);
+		}
 	}
 }

@@ -62,7 +62,34 @@ public void purchaseCoupon(long couponID, long customerID, int amount) {
 	}
 }
 
+public static void deleteCompanyPurchases(long companyId) {
+	try
+	{
+		if (companiesDBDAO.getCompanyByID(companyId)==null) {
+			throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage());
 
+		}
+		purchasesDBDAO.deleteCompanyPurchases(companyId);
+
+	}
+	catch(Exception Ex){
+		 System.out.println(Ex.getMessage());
+
+	}
+}
+
+public static void deleteCouponPurchases(long couponId) {
+	try
+	{
+		
+		purchasesDBDAO.deletePurchaseBycouponId(couponId);
+
+	}
+	catch(Exception Ex){
+		 System.out.println(Ex.getMessage());
+
+	}
+}
 /**
  * returns a list of all customer coupons 
  * @see 		DB.CouponDBDAO
@@ -166,12 +193,6 @@ public void purchaseCoupon(long couponID, long customerID, int amount) {
 		}
 		return customerCoupons;
 	}
-	}
-	/**
-	 * returns the DB data of this customer
-	 * 
-	 * @see 		DB.customerDBDAO
-	 * @see			JavaBeans.Customer
-	 * @return 		customer object with this customers' data
-	 */
-
+	
+}
+	

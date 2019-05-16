@@ -85,24 +85,15 @@ public class CompanyController extends ClientController{
 	 * @see 		JavaBeans.Company
 	 * @throws 		company does not exist!
 	 */
-		public void deleteCompany(Coupons.JavaBeans.Company company) throws ApplicationException{
+		public void deleteCompany(long companyId) throws ApplicationException{
 			try {
-				if (!companiesDBDAO.isCompanyExists(company.getEmail(), company.getName())) {
+				if (companiesDBDAO.getCompanyByID(companyId)!=null) {
 					throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage());
 				}
 				//remove company from DB
-				companiesDBDAO.deleteCompany(company.getCompanyID());
+				companiesDBDAO.deleteCompany(companyId);
 				
-				//find company coupons
-				Collection<Coupons.JavaBeans.Coupon> coupons = couponsDBDAO.getCompanyCoupons(company.getCompanyID());
-				
-				//remove all company coupons and customer purchases
-				for (Coupons.JavaBeans.Coupon c : coupons) {
-					couponsDBDAO.deleteCoupon(c.getId());
-					purchasesDBDAO.deletePurchaseBycouponId(c.getId());
-				}
-				
-				
+				Coupons.Logic.CouponController.deleteCompanyCoupons(companyId);
 				
 			}
 			catch(Exception Ex) {

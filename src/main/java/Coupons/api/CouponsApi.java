@@ -60,7 +60,7 @@ public class CouponsApi {
 		return couponsController.getCouponsByCategory(category);
 	}
 	
-	@GetMapping("/company/")
+	@GetMapping("/byCompany/")
 	public Collection<Coupon> getCompanyCoupons(@RequestParam("token") int token, @RequestParam(value = "category", required = false) Categories category) throws ApplicationException {
 		UserData userData =  (UserData) cacheManager.get(token);
 		
@@ -71,7 +71,7 @@ public class CouponsApi {
 		return couponsController.getCompanyCoupons(userData.getCompany());
 	}
 	
-	@GetMapping("/customer/")
+	@GetMapping("/byCustomer/")
 	public Collection<Coupon> getCustomerCoupons(@RequestParam("token") int token, @RequestParam(value = "category", required = false) Categories category) throws ApplicationException {
 		UserData userData =  (UserData) cacheManager.get(token);
 		

@@ -114,12 +114,34 @@ public class CouponController extends ClientController {
 			}
 			
 		//delete coupon customer purchases
-		purchasesDBDAO.deletePurchaseBycouponId(couponID);
+		Coupons.Logic.PurchasesController.deleteCouponPurchases(couponID);
 		//delete company coupon
 		couponsDBDAO.deleteCoupon(couponID);
+	}
+	
+
+	/**
+	 * removes a coupon from the DB.
+	 * <p>
+	 * this also removes any coupons purchased by customers
+	 * 
+	 * 
+	 * @param  coupon the coupon to be removed from the DB
+	 * @exception coupon does not exist!
+	 * @see 		couponsDBDAO
+	 * @see			JavaBeans.Coupon
+	 */
+	public static void deleteCompanyCoupons(long companyID) throws ApplicationException {
 		
-	
-	
+			//check if coupon actually exists
+			if (companiesDBDAO.getCompanyByID(companyID)==null) {
+				throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage());
+			}
+			
+		//delete coupon customer purchases
+		Coupons.Logic.PurchasesController.deleteCompanyPurchases(companyID);
+		//delete company coupons
+		couponsDBDAO.deleteCompanyCoupons(companyID);
 	}
 	/**
 	 * returns all coupons belonging to this company.
@@ -146,12 +168,13 @@ public class CouponController extends ClientController {
 	 * @return 		ArrayList of coupons
 	 */
 	
-	public Collection<Coupon> getCompanyCoupons(long companyID) throws ApplicationException{
+	public Collection<Long> getCompanyCouponIDs(long companyID) throws ApplicationException{
 		if (companiesDBDAO.getCompanyByID(companyID)==null) {
 			throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage());
 		}
-		return couponsDBDAO.getCompanyCoupons(companyID);
+		return couponsDBDAO.getCompanyCouponsID(companyID);
 	}
+	
 	/**
 	 * returns a list of all company coupons of a specified category
 	 * 
