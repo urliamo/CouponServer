@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.springframework.stereotype.Repository;
+
 import Coupons.Enums.ErrorType;
 import Coupons.Exceptions.ApplicationException;
 import Coupons.JavaBeans.Company;
@@ -21,6 +23,8 @@ import Coupons.Utils.JdbcUtils;
  * @see         JavaBeans.Company
  * @see 		JavaBeans.Coupon
  */
+
+@Repository
 public class CompaniesDAO implements ICompaniesDAO {
 	
 	/**

@@ -30,11 +30,11 @@ public class UsersApi {
 	private ICacheManager cacheManager;
 	
 	@PostMapping
-	public void login(@RequestBody LoginForm loginForm) throws ApplicationException {
+	public int login(@RequestBody LoginForm loginForm) throws ApplicationException {
 		LoginData loginData = this.usersController.login(loginForm);
 		UserData userData = new UserData(loginData.getUserId(),loginForm.getUserName(), loginForm.getPassword(), loginData.getClientType());
 		cacheManager.put(loginData.getToken(), userData);
-		
+		return loginData.getToken();
 	}
 	
 	@PostMapping

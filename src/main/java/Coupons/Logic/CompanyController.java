@@ -2,6 +2,7 @@ package Coupons.Logic;
 
 import java.util.Collection;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import Coupons.Enums.ErrorType;
@@ -12,25 +13,27 @@ import Coupons.Utils.NameUtils;
 
 
 /**
- * object returned when user logs in as admin. in charge of login and DBDAO actions for admins. 
+ * object returned when user logs in as admin. in charge of login and DAO actions for admins. 
  *
  * @see         JavaBeans.Company
  * @see 		JavaBeans.Customer
  */
 
 @Controller
-public class CompanyController extends ClientController{
+public class CompanyController {
 
-	
+	@Autowired
+	private static Coupons.DB.CompaniesDAO companiesDAO;
+
 	/**
-	 *adds a new company to the DB using the DBDAO.
+	 *adds a new company to the DB using the DAO.
 	 *
 	 * @param  company the new company to be added to the DB.
-	 * @see 		DB.companiesDBDAO
+	 * @see 		DB.companiesDAO
 	 * @see 		JavaBeans.Company
 	 * @throws company already exists!
 	 */
-	public long addCompany(Coupons.JavaBeans.Company company) throws ApplicationException{
+	public long addCompany(Company company) throws ApplicationException{
 		if (company == null) 
 		{
 			throw new ApplicationException(ErrorType.EMPTY, ErrorType.EMPTY.getInternalMessage());
@@ -43,57 +46,60 @@ public class CompanyController extends ClientController{
 			throw new ApplicationException(ErrorType.COMPANY_ID_MUST_BE_ASSIGNED, ErrorType.COMPANY_ID_MUST_BE_ASSIGNED.getInternalMessage());
 		}
 		
-		if (!companiesDBDAO.isCompanyExistsByMailOrName(company.getEmail(), company.getName())) { 
+		if (!companiesDAO.isCompanyExistsByMailOrName(company.getEmail(), company.getName())) { 
 			throw new ApplicationException(ErrorType.NAME_IS_ALREADY_EXISTS, ErrorType.NAME_IS_ALREADY_EXISTS.getInternalMessage());
 		}
-			return companiesDBDAO.addCompany(company);
+			return companiesDAO.addCompany(company);
 		
 	}
 	
 	/**
-	 *updates an existing company in the DB using the DBDAO.
+	 *updates an existing company in the DB using the DAO.
 	 *
 	 * @param  company the company to be updates
-	 * @see 		companiesDBDAO
+	 * @see 		companiesDAO
 	 * @see 		JavaBeans.Company
 	 * @throws 		company does not exist!
 	 * @throws 		company name cannot be updated!
 	 */
 	public void updateCompany(Coupons.JavaBeans.Company company) throws ApplicationException{
 		
-				if (!companiesDBDAO.isCompanyExists(company.getEmail(), company.getName())) {
+				if (!companiesDAO.isCompanyExists(company.getEmail(), company.getName())) {
 					throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage());
 				}
 				
-			if (companiesDBDAO.getCompanyByID(company.getCompanyID()).getName()!= company.getName()) {
+			if (companiesDAO.getCompanyByID(company.getCompanyID()).getName()!= company.getName()) {
 				throw new ApplicationException(ErrorType.NAME_IS_IRREPLACEABLE, ErrorType.NAME_IS_IRREPLACEABLE.getInternalMessage());
 			}
 			else {
-				companiesDBDAO.updateCompany(company);
+				companiesDAO.updateCompany(company);
 			}
 			
 	
 	}
 	
 	/**
-	 *removes an existing company from the DB using the DBDAO.
+	 *removes an existing company from the DB using the DAO.
 	 *<P>
 	 *this also removes any coupons belonging to the company.
 	 *
 	 * @param  company the company to be removed
-	 * @see 		companiesDBDAO
+	 * @see 		companiesDAO
 	 * @see 		JavaBeans.Company
 	 * @throws 		company does not exist!
 	 */
 		public void deleteCompany(long companyId) throws ApplicationException{
 			try {
-				if (companiesDBDAO.getCompanyByID(companyId)!=null) {
+				if (companiesDAO.getCompanyByID(companyId)!=null) {
 					throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage());
 				}
-				//remove company from DB
-				companiesDBDAO.deleteCompany(companyId);
-				
+				//remove company coupons and purchases
 				Coupons.Logic.CouponController.deleteCompanyCoupons(companyId);
+				//remove company users
+				Coupons.Logic.UsersController.deleteUsersByCompanyId(companyId);
+				//remove company from DB
+				companiesDAO.deleteCompany(companyId);
+				
 				
 			}
 			catch(Exception Ex) {
@@ -103,26 +109,26 @@ public class CompanyController extends ClientController{
 		}
 		
 		/**
-		 *	returns an ArrayList of Company objects with all companies using the DBDAO.
+		 *	returns an ArrayList of Company objects with all companies using the DAO.
 		 *
-		 * @see 		companiesDBDAO
+		 * @see 		companiesDAO
 		 * @see 		JavaBeans.Company
 		 * @return		ArrayList of all companies
 		 */
-		public Collection<Company> getAllCompanies() throws Exception{
-			return companiesDBDAO.getAllCompanies();
+		public Collection<Company> getAllCompanies() throws ApplicationException{
+			return companiesDAO.getAllCompanies();
 		}
 		
 		/**
 		 *	returns a company of the specified ID
 		 *
 		 * @param		companyID long containing the ID of the company to be returned
-		 * @see 		companiesDBDAO
+		 * @see 		companiesDAO
 		 * @see 		JavaBeans.Company
 		 * @return		Company object with the company data of the specified ID.
 		 */
-		public Company getCompany(long id) throws Exception{
-			return companiesDBDAO.getCompanyByID(id);
+		public static Company getCompany(long id) throws ApplicationException{
+			return companiesDAO.getCompanyByID(id);
 		}
 
 		

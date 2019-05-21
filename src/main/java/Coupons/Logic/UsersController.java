@@ -32,19 +32,14 @@ import Coupons.Utils.PasswordUtils;
 public class UsersController {
 	
 	@Autowired
-	private Coupons.DB.UsersDAO usersDao;
+	private static Coupons.DB.UsersDAO usersDao;
 	
 	@Autowired
-	private Coupons.DB.CompaniesDAO companiesDAO;
+	private static Coupons.DB.CompaniesDAO companiesDAO;
 	
-	@Autowired
-	private Coupons.DB.PurchasesDAO purchasesDAO;
-	
-	@Autowired
-	private ICacheManager cacheManager;
 
 	public UsersController() {
-		this.usersDao = new Coupons.DB.UsersDAO();
+		
 	}
 	
 	public LoginData login(LoginForm loginForm) throws ApplicationException {
@@ -63,7 +58,7 @@ public class UsersController {
 		return token.hashCode();
 	}
 
-	public long createUser(User user) throws ApplicationException {
+	public static long createUser(User user) throws ApplicationException {
 		if (user == null) {
 			throw new ApplicationException(ErrorType.EMPTY, ErrorType.EMPTY.getInternalMessage());
 		}
@@ -96,17 +91,16 @@ public class UsersController {
 		usersDao.updateUser(user);
 	}
 
-	public void deleteUser(long userId) throws ApplicationException {
+	public static void deleteUser(long userId) throws ApplicationException {
 
 
 		if (usersDao.getUserByID(userId) == null) {
 			throw new ApplicationException(ErrorType.USER_ID_DOES_NOT_EXIST, ErrorType.USER_ID_DOES_NOT_EXIST.getInternalMessage());
 		}
-		usersDao.deleteUserByID(userId);
-		purchasesDAO.getAllPurchasesbyCustomer(userId);
+		usersDao.deleteUserByID(userId); 
 	}
 
-	public void deleteUsersByCompanyId(long companyId) throws ApplicationException {
+	public static void deleteUsersByCompanyId(long companyId) throws ApplicationException {
 
 
 		if ( companiesDAO.getCompanyByID(companyId) == null) {

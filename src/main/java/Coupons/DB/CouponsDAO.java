@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Locale.Category;
 
+import org.springframework.stereotype.Repository;
+
 import Coupons.Enums.Categories;
 import Coupons.Enums.ErrorType;
 import Coupons.Exceptions.ApplicationException;
@@ -22,7 +24,10 @@ import Coupons.Utils.JdbcUtils;
  *
  * @param  connectionPool connection pool assigned to this instance.
  * @see 		JavaBeans.Coupon
- */public class CouponsDAO implements ICouponsDAO {
+ * 
+ */
+@Repository
+public class CouponsDAO implements ICouponsDAO {
 	
 	
 	

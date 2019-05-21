@@ -1,9 +1,7 @@
 package Coupons.Logic;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Locale.Category;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,12 +9,11 @@ import org.springframework.stereotype.Controller;
 import Coupons.Enums.Categories;
 import Coupons.Enums.ErrorType;
 import Coupons.Exceptions.ApplicationException;
-import Coupons.JavaBeans.Company;
 import Coupons.JavaBeans.Coupon;
 
 
 /**
- * object returned when user logs in as Company. in charge of login and DBDAO actions for companies. 
+ * object returned when user logs in as Company. in charge of login and DAO actions for companies. 
  *
  * @param  companyID int containing the unique ID of the current company using this object instance.
  * @see         JavaBeans.Company
@@ -25,17 +22,14 @@ import Coupons.JavaBeans.Coupon;
  */
 @Controller
 
-public class CouponController extends ClientController {
+public class CouponController {
+
 
 	@Autowired
-	private Coupons.DB.UsersDAO usersDao;
-	
+	private static Coupons.DB.CompaniesDAO companiesDAO;
+
 	@Autowired
-	private Coupons.DB.CompaniesDAO companiesDAO;
-	@Autowired
-	private Coupons.DB.PurchasesDAO purchasesDAO;
-	@Autowired
-	private Coupons.DB.CouponsDAO couponsDAO;
+	private static Coupons.DB.CouponsDAO couponsDAO;
 
 
 	public CouponController() {
@@ -51,7 +45,7 @@ public class CouponController extends ClientController {
 	 * @exception coupon already exists
 	 * @exception coupon starts after it expired
 	 * @exception coupon already expired
-	 * @see 		couponsDBDAO
+	 * @see 		couponsDAO
 	 * @see			JavaBeans.Coupon
 	 */
 	
@@ -60,7 +54,7 @@ public class CouponController extends ClientController {
 			
 
 			
-				if (couponsDBDAO.getCompanyCouponsByTitle(coupon.getCompany_id(), coupon.getTitle()) != null) {
+				if (couponsDAO.getCompanyCouponsByTitle(coupon.getCompany_id(), coupon.getTitle()) != null) {
 					throw new ApplicationException(ErrorType.EXISTING_COUPON_TITLE, ErrorType.EXISTING_COUPON_TITLE.getInternalMessage());
 				}
 			//check coupon expiration date vs. start date
@@ -71,7 +65,7 @@ public class CouponController extends ClientController {
 				throw new ApplicationException(ErrorType.COUPON_ALREADY_EXPIRED, ErrorType.COUPON_ALREADY_EXPIRED.getInternalMessage());
 			}
 			//add coupon
-		couponsDBDAO.addCoupon(coupon);
+		couponsDAO.addCoupon(coupon);
 		
 		
 	}
@@ -81,16 +75,16 @@ public class CouponController extends ClientController {
 	 *
 	 * @param  coupon the  coupon to be added updated in the DB
 	 * @exception coupon does not exist
-	 * @see 		couponsDBDAO
+	 * @see 		couponsDAO
 	 * @see			JavaBeans.Coupon
 	 */
 	public void updateCoupon(Coupon coupon) throws ApplicationException{
 		
 			//check coupon with this id exists
-			if (!couponsDBDAO.isCouponExists(coupon.getId()))
+			if (!couponsDAO.isCouponExists(coupon.getId()))
 				throw new ApplicationException(ErrorType.COUPON_ID_DOES_NOT_EXIST, ErrorType.COUPON_ID_DOES_NOT_EXIST.getInternalMessage());
 				//update coupon
-		couponsDBDAO.updateCoupon(coupon);
+		couponsDAO.updateCoupon(coupon);
 	
 		
 	}
@@ -103,20 +97,20 @@ public class CouponController extends ClientController {
 	 * 
 	 * @param  coupon the coupon to be removed from the DB
 	 * @exception coupon does not exist!
-	 * @see 		couponsDBDAO
+	 * @see 		couponsDAO
 	 * @see			JavaBeans.Coupon
 	 */
 	public void deleteCoupon(long couponID) throws ApplicationException {
 		
 			//check if coupon actually exists
-			if (!couponsDBDAO.isCouponExists(couponID)) {
+			if (!couponsDAO.isCouponExists(couponID)) {
 				throw new ApplicationException(ErrorType.COUPON_ID_DOES_NOT_EXIST, ErrorType.COUPON_ID_DOES_NOT_EXIST.getInternalMessage());
 			}
 			
 		//delete coupon customer purchases
 		Coupons.Logic.PurchasesController.deleteCouponPurchases(couponID);
 		//delete company coupon
-		couponsDBDAO.deleteCoupon(couponID);
+		couponsDAO.deleteCoupon(couponID);
 	}
 	
 
@@ -128,58 +122,58 @@ public class CouponController extends ClientController {
 	 * 
 	 * @param  coupon the coupon to be removed from the DB
 	 * @exception coupon does not exist!
-	 * @see 		couponsDBDAO
+	 * @see 		couponsDAO
 	 * @see			JavaBeans.Coupon
 	 */
 	public static void deleteCompanyCoupons(long companyID) throws ApplicationException {
 		
 			//check if coupon actually exists
-			if (companiesDBDAO.getCompanyByID(companyID)==null) {
+			if (companiesDAO.getCompanyByID(companyID)==null) {
 				throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage());
 			}
 			
 		//delete coupon customer purchases
 		Coupons.Logic.PurchasesController.deleteCompanyPurchases(companyID);
 		//delete company coupons
-		couponsDBDAO.deleteCompanyCoupons(companyID);
+		couponsDAO.deleteCompanyCoupons(companyID);
 	}
 	/**
 	 * returns all coupons belonging to this company.
 	 * 
 	 * @param  coupon the new coupon to be added to the DB
-	 * @see 		companiesDBDAO
+	 * @see 		companiesDAO
 	 * @return ArrayList of coupon objects belonging to this company
 	 */
 	
 	public Coupon getCoupon(long couponID) throws ApplicationException{
-		if (couponsDBDAO.getOneCoupon(couponID)==null) {
+		if (couponsDAO.getOneCoupon(couponID)==null) {
 			throw new ApplicationException(ErrorType.COUPON_ID_DOES_NOT_EXIST, ErrorType.COUPON_ID_DOES_NOT_EXIST.getInternalMessage());
 		}
-		return couponsDBDAO.getOneCoupon(couponID);
+		return couponsDAO.getOneCoupon(couponID);
 	}
 	
 	/**
-	 * returns a list of all company coupons of a specified category
+	 * returns a list of all company coupon IDs of a 
 	 * 
-	 * @param  Category the category of coupons to be returnes
-	 * @see 		companiesDBDAO
+	 * @param  companyID the ID of the company coupons to return
+	 * @see 		companiesDAO
 	 * @see			JavaBeans.Coupon
 	 * @see			JavaBeans.Category
 	 * @return 		ArrayList of coupons
 	 */
 	
 	public Collection<Long> getCompanyCouponIDs(long companyID) throws ApplicationException{
-		if (companiesDBDAO.getCompanyByID(companyID)==null) {
+		if (companiesDAO.getCompanyByID(companyID)==null) {
 			throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage());
 		}
-		return couponsDBDAO.getCompanyCouponsID(companyID);
+		return couponsDAO.getCompanyCouponsID(companyID);
 	}
 	
 	/**
-	 * returns a list of all company coupons of a specified category
+	 * returns a list of all  coupons of a specified category
 	 * 
 	 * @param  Category the category of coupons to be returnes
-	 * @see 		companiesDBDAO
+	 * @see 		companiesDAO
 	 * @see			JavaBeans.Coupon
 	 * @see			JavaBeans.Category
 	 * @return 		ArrayList of coupons
@@ -188,7 +182,7 @@ public class CouponController extends ClientController {
 	{
 		//get list of all company coupons
 		
-		Collection<Coupon> coupons = couponsDBDAO.getAllCouponsByCategory(category);
+		Collection<Coupon> coupons = couponsDAO.getAllCouponsByCategory(category);
 
 		//remove coupons with different category from list
 		
@@ -199,7 +193,7 @@ public class CouponController extends ClientController {
 	 * returns a list of all company coupons of a specified category
 	 * 
 	 * @param  Category the category of coupons to be returnes
-	 * @see 		companiesDBDAO
+	 * @see 		companiesDAO
 	 * @see			JavaBeans.Coupon
 	 * @see			JavaBeans.Category
 	 * @return 		ArrayList of coupons
@@ -207,10 +201,10 @@ public class CouponController extends ClientController {
 	public Collection<Coupon> getCompanyCoupons(long companyID, Categories category) throws ApplicationException
 	{
 		//get list of all company coupons
-		if (companiesDBDAO.getCompanyByID(companyID)==null) {
+		if (companiesDAO.getCompanyByID(companyID)==null) {
 			throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage());
 		}
-		Collection<Coupon> coupons = couponsDBDAO.getCompanyCoupons(companyID);
+		Collection<Coupon> coupons = couponsDAO.getCompanyCoupons(companyID);
 
 		//remove coupons with different category from list
 		for (Coupon c : coupons) {
@@ -224,15 +218,15 @@ public class CouponController extends ClientController {
 	 * returns a list of all company coupons of a specified max price
 	 * 
 	 * @param  maxprice the highest price of the returned coupons
-	 * @see 		companiesDBDAO
+	 * @see 		companiesDAO
 	 * @see			JavaBeans.Coupon
 	 * @return ArrayList of coupons
 	 */
 	public Collection<Coupon> getCompanyCoupons(long companyID, double maxprice) throws ApplicationException{
-		if (companiesDBDAO.getCompanyByID(companyID)==null) {
+		if (companiesDAO.getCompanyByID(companyID)==null) {
 			throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage());
 		}
-		Collection<Coupon> coupons = couponsDBDAO.getCompanyCoupons(companyID);
+		Collection<Coupon> coupons = couponsDAO.getCompanyCoupons(companyID);
 
 		//remove coupons with higher price from returned list
 		for (Coupon c : coupons) {

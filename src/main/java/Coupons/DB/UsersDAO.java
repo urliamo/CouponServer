@@ -7,6 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+
+import org.springframework.stereotype.Repository;
+
 import Coupons.Utils.JdbcUtils;
 
 import Coupons.Enums.ClientType;
@@ -16,7 +19,7 @@ import Coupons.Enums.ErrorType;
 import Coupons.Exceptions.ApplicationException;
 import Coupons.Utils.DateUtils;
 //import com.avi.coupons.utils.JdbcUtils;
-
+@Repository
 public class UsersDAO {
 	
 

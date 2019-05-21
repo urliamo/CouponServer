@@ -4,6 +4,7 @@ public class Customer {
 		private String lastName;
 		private String firstName;
 	    private long customerId;
+	    private User user;
 	    
 	    public String getLastName() {
 			return lastName;
@@ -25,12 +26,25 @@ public class Customer {
 			this.customerId = id;
 		}
 		
+		public Customer(String lastName, String firstName, long id,User user) {
+			super();
+			this.setLastName(lastName);
+			this.setFirstName(firstName);
+			this.setCustomerId(id);
+			this.setUser(user);
+		}
 		
 		public Customer(String lastName, String firstName, long id) {
 			super();
 			this.setLastName(lastName);
 			this.setFirstName(firstName);
 			this.setCustomerId(id);
+		}
+		public User getUser() {
+			return user;
+		}
+		public void setUser(User user) {
+			this.user = user;
 		}
 
 		

@@ -52,12 +52,12 @@ public static void buildDB() {
 		
 		// Create string for statement including users table creation
 		 sql = "CREATE TABLE users ("+
-		"ID bigint PRIMARY KEY NOT NULL AUTO_INCREMENT,"+
+		"user_ID bigint PRIMARY KEY NOT NULL AUTO_INCREMENT,"+
 		" password VARCHAR(50) NOT NULL,"+
 		" email VARCHAR(50) NOT NULL,"+
-		" companyID VARCHAR(50),"+
+		" company_ID VARCHAR(50),"+
 		" Type VARCHAR(50) NOT NULL,"+
-		"FOREIGN KEY (companyID) REFERENCES companies(companyID))";
+		"FOREIGN KEY (company_ID) REFERENCES companies(company_ID))";
 		
 		
 		
@@ -69,7 +69,7 @@ public static void buildDB() {
 				
 		// Create string for statement including companies table creation
 		 sql = "CREATE TABLE companies ("+
-		"companyID BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,"+
+		"company_ID BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,"+
 		"name VARCHAR(50) NOT NULL,"+
 		"email VARCHAR(50) NOT NULL,";
 		
@@ -84,10 +84,10 @@ public static void buildDB() {
 		// Change string for statement to include customers table creation
 				
 		sql = "CREATE TABLE customers (" +
-					"customerID BIGINT PRIMARY KEY, " +
+					"customer_ID BIGINT PRIMARY KEY, " +
 					"first_name VARCHAR(50) NOT NULL, " +
 					"last_name VARCHAR(50) NOT NULL, " +
-					"FOREIGN KEY (customerID) REFERENCES users(ID))";
+					"FOREIGN KEY (customer_ID) REFERENCES users(user_ID))";
 				
 		//Execute create customers table statement
 
@@ -99,7 +99,7 @@ public static void buildDB() {
 		// Change string for statement to include categories table creation
 		
 		sql = "CREATE TABLE categories (" +
-					"categoryID INT PRIMARY KEY AUTO_INCREMENT, " +
+					"category_ID INT PRIMARY KEY AUTO_INCREMENT, " +
 					"name VARCHAR(50) NOT NULL)";
 				
 		//Execute create categories table statement
@@ -137,8 +137,8 @@ public static void buildDB() {
 							"price DOUBLE NOT NULL, " +
 							"start_date DATE NOT NULL, " +
 							"end_date DATE NOT NULL, " +
-							"FOREIGN KEY (companyID) REFERENCES companies(companyID)," +
-							"FOREIGN KEY (categoryID) REFERENCES categories(categoryID))";
+							"FOREIGN KEY (company_ID) REFERENCES companies(company_ID)," +
+							"FOREIGN KEY (category_ID) REFERENCES categories(category_ID))";
 						
 				//Execute create coupons table statement
 
@@ -149,13 +149,13 @@ public static void buildDB() {
 				
 					// Change string for statement to include customers_vs_coupons table creation
 				sql = "CREATE TABLE jb.purchases ("+
-				//	"PurchaseID BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL,"+
-					"customerID BIGINT NOT NULL,"+
-					"couponID BIGINT NOT NULL,"+
+					"Purchase_ID BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL,"+
+					"customer_ID BIGINT NOT NULL,"+
+					"coupon_ID BIGINT NOT NULL,"+
 					"amount INT NOT NULL,"+
-				//	"PRIMARY KEY (PurchaseID),"+
-					"FOREIGN KEY (customerID) REFERENCES customers(customerID),"+
-					"FOREIGN KEY (couponID) REFERENCES coupons(couponID))";
+					"PRIMARY KEY (Purchase_ID),"+
+					"FOREIGN KEY (customer_ID) REFERENCES customers(customer_ID),"+
+					"FOREIGN KEY (coupon_ID) REFERENCES coupons(coupon_ID))";
 			
 
 				//--old customer VS coupons--

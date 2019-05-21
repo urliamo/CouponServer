@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.springframework.stereotype.Repository;
 
 import Coupons.Utils.JdbcUtils;
 
@@ -14,7 +15,7 @@ import Coupons.JavaBeans.Purchase;
 import Coupons.Enums.ErrorType;
 import Coupons.Exceptions.ApplicationException;
 import Coupons.Utils.DateUtils;
-
+@Repository
 public class PurchasesDAO {
 
 	/**
@@ -281,6 +282,25 @@ public class PurchasesDAO {
 		return purchase;
 	}
 
+	public void deleteCustomerPurchases(long customerId) throws ApplicationException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+
+		try {
+			connection = JdbcUtils.getConnection();
+			String delete = "DELETE FROM purchases WHERE customer_id=?)";
+			preparedStatement = connection.prepareStatement(delete);
+			preparedStatement.setLong(1, customerId);
+			preparedStatement.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
+					+" delete purchase by customer ID failed");
+		} finally {
+			JdbcUtils.closeResources(connection, preparedStatement);
+		}
+	}
 
 	public void deleteCompanyPurchases(long companyId) throws ApplicationException {
 		Connection connection = null;
