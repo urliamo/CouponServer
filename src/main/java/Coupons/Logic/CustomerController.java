@@ -4,13 +4,11 @@ package Coupons.Logic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import Coupons.Enums.ClientType;
 import Coupons.Enums.ErrorType;
 import Coupons.Exceptions.ApplicationException;
 import Coupons.JavaBeans.Customer;
 import Coupons.JavaBeans.User;
 import Coupons.Utils.NameUtils;
-import Coupons.Utils.PasswordUtils;
 
 
 

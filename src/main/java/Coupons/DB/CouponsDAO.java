@@ -558,16 +558,16 @@ public class CouponsDAO implements ICouponsDAO {
 
 			resultSet = preparedStatement.executeQuery();
 
-					Collection<Coupon> customerCoupons = new ArrayList<Coupon>();
+					Collection<Long> companyCoupons = new ArrayList<Long>();
 					
 					while(resultSet.next()) {
-						
-						Coupon coupon = extractCouponFromResultSet(resultSet);
+						long couponID = resultSet.getLong("coupon_id");
 
-						customerCoupons.add(coupon);
+						companyCoupons.add(couponID);
+						
 					}
 					
-					return customerCoupons;
+					return companyCoupons;
 				}
 		catch (SQLException e)
 		{
@@ -594,16 +594,16 @@ public class CouponsDAO implements ICouponsDAO {
 
 			resultSet = preparedStatement.executeQuery();
 
-					Collection<Long> customerCoupons = new ArrayList<Long>();
+					Collection<Coupon> companyCoupons = new ArrayList<Coupon>();
 					
 					while(resultSet.next()) {
 						
-						long couponID = resultSet.getLong("coupon_id");
+						Coupon coupon = extractCouponFromResultSet(resultSet);
 
-						customerCoupons.add(couponID);
+						companyCoupons.add(coupon);
 					}
 					
-					return customerCoupons;
+					return companyCoupons;
 				}
 		catch (SQLException e)
 		{
