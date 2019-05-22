@@ -50,10 +50,6 @@ public class CouponController {
 	 */
 	
 	public void addCoupon(Coupon coupon) throws ApplicationException{
-		
-			
-
-			
 				if (couponsDAO.getCompanyCouponsByTitle(coupon.getCompany_id(), coupon.getTitle()) != null) {
 					throw new ApplicationException(ErrorType.EXISTING_COUPON_TITLE, ErrorType.EXISTING_COUPON_TITLE.getInternalMessage());
 				}
@@ -233,6 +229,22 @@ public class CouponController {
 			if (c.getPrice()>maxprice)
 				coupons.remove(c);
 		}
+		return coupons;
+	}
+	/**
+	 * returns a list of all company coupons
+	 * 
+	 * @param  maxprice the highest price of the returned coupons
+	 * @see 		companiesDAO
+	 * @see			JavaBeans.Coupon
+	 * @return ArrayList of coupons
+	 */
+	public Collection<Coupon> getCompanyCoupons(long companyID) throws ApplicationException{
+		if (companiesDAO.getCompanyByID(companyID)==null) {
+			throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage());
+		}
+		Collection<Coupon> coupons = couponsDAO.getCompanyCoupons(companyID);
+
 		return coupons;
 	}
 

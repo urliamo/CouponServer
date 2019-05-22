@@ -52,20 +52,39 @@ public class CustomerController{
 	}
 	
 	public void createCustomer(Customer customer) throws ApplicationException {
-		if (customer == null) {
-			throw new ApplicationException(ErrorType.EMPTY, ErrorType.EMPTY.getInternalMessage());
-		}
+		try
+			{
+			if (customer == null) {
+				throw new ApplicationException(ErrorType.EMPTY, ErrorType.EMPTY.getInternalMessage());
+			}
+			
+			NameUtils.isValidName(customer.getFirstName());
+			NameUtils.isValidName(customer.getLastName());
+			User customerUser= customer.getUser();
+			customer.setCustomerId(UsersController.createUser(customerUser));
+			customerDAO.addCustomer(customer);
+			}
 		
-		NameUtils.isValidName(customer.getFirstName());
-		NameUtils.isValidName(customer.getLastName());
-		User customerUser= customer.getUser();
-		customer.setCustomerId(UsersController.createUser(customerUser));
-		customerDAO.addCustomer(customer);
-	}
+		catch(Exception Ex){
+			System.out.println(Ex.getMessage());
+			}
 
-	
-	
+		}
+	public void updateCustomer(Customer customer) throws ApplicationException {
+		try
+			{
+			if (customer == null) {
+				throw new ApplicationException(ErrorType.EMPTY, ErrorType.EMPTY.getInternalMessage());
+			}
+			
+			NameUtils.isValidName(customer.getFirstName());
+			NameUtils.isValidName(customer.getLastName());
+			customerDAO.updateCustomer(customer);
+			}
+		
+		catch(Exception Ex){
+			System.out.println(Ex.getMessage());
+			}
 
-
-	
+		}
 }
