@@ -6,9 +6,13 @@ public class LoginData {
 	
 	private long userId;
 	private Integer token;
+	private Long companyId;
 	private ClientType clientType;
 	
-	public LoginData(long userId, int token, ClientType clientType) {
+	public LoginData(long userId, int token, ClientType clientType, Long companyId) {
+		if (companyId != null) {
+			this.setCompanyId(companyId);
+		}
 		this.setClientType(clientType);
 		this.setUserId(userId);
 		this.setToken(token);
@@ -36,6 +40,16 @@ public class LoginData {
 
 	public void setClientType(ClientType clientType) {
 		this.clientType = clientType;
+	}
+
+
+	public Long getCompanyId() {
+		return companyId;
+	}
+
+
+	public void setCompanyId(Long companyId) {
+		this.companyId = companyId;
 	}
 
 }

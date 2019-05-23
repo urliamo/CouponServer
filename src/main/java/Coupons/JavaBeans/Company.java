@@ -4,10 +4,6 @@ public class Company {
     private String name;
     private String email;
     private long company_id=0;
-    
-    
-
-	
 
 	public void setName(String name) {
         this.name = name;

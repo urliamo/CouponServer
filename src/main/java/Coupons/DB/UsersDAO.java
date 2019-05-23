@@ -277,7 +277,7 @@ public class UsersDAO {
 		}
 	}
 	
-	public LoginData login(String user, String password) throws ApplicationException {
+	public LoginData login(String userName, String password) throws ApplicationException {
 		//Turn on the connections
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
@@ -294,7 +294,7 @@ public class UsersDAO {
 			preparedStatement=connection.prepareStatement(sqlStatement);
 
 			//Replacing the question marks in the statement above with the relevant data
-			preparedStatement.setString(1, user);
+			preparedStatement.setString(1, userName);
 			preparedStatement.setString(2, password);
 
 			//Executing the query and saving the DB response in the resultSet.
@@ -304,7 +304,7 @@ public class UsersDAO {
 			if (!result.next()) {
 				throw new ApplicationException(ErrorType.LOGIN_FAILED, "Failed login");
 			}
-			LoginData loginData = new LoginData(result.getLong("ID"),0,ClientType.valueOf(result.getString("type")));
+			LoginData loginData = new LoginData(result.getLong("user_ID"),0,ClientType.valueOf(result.getString("type")), result.getLong("company_id"));
 			return loginData;
 		} catch (SQLException exception) {
 			exception.printStackTrace();
