@@ -14,7 +14,7 @@ public class JdbcUtils {
 
 	public static Connection getConnection() throws SQLException {
 		Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/coupons?useSSL=false", "root",
-				"");
+				"123456");
 		return connection;
 	}
 

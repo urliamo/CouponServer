@@ -19,13 +19,17 @@ public class PurchasesController {
 	
 	
 	@Autowired
-	private static Coupons.DB.CouponsDAO couponsDAO;
+	private Coupons.DB.CouponsDAO couponsDAO;
 
 	@Autowired
-	private static Coupons.DB.PurchasesDAO purchasesDAO;
+	private Coupons.DB.PurchasesDAO purchasesDAO;
 
 	@Autowired
-	private static Coupons.DB.CustomerDAO customerDAO;
+	private Coupons.DB.CustomerDAO customerDAO;
+	
+	@Autowired
+	private Coupons.DB.CompaniesDAO companiesDAO;
+
 
 	public PurchasesController() {
 	}
@@ -72,7 +76,7 @@ public void purchaseCoupon(long couponID, long customerID, int amount) {
 	}
 }
 
-public static void deleteCustomerPurchases(long customerId) {
+public void deleteCustomerPurchases(long customerId) {
 	try
 	{
 		if (customerDAO.getOneCustomer(customerId)==null) {
@@ -88,10 +92,10 @@ public static void deleteCustomerPurchases(long customerId) {
 	}
 }
 
-public static void deleteCompanyPurchases(long companyId) {
+public void deleteCompanyPurchases(long companyId) {
 	try
 	{
-		if (Coupons.Logic.CompanyController.getCompany(companyId)==null) {
+		if (companiesDAO.getCompanyByID(companyId)==null) {
 			throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage());
 
 		}
@@ -104,7 +108,7 @@ public static void deleteCompanyPurchases(long companyId) {
 	}
 }
 
-public static void deleteCouponPurchases(long couponId) {
+public void deleteCouponPurchases(long couponId) {
 	try
 	{
 		

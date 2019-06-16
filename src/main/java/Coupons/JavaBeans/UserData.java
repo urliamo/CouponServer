@@ -8,24 +8,25 @@ public class UserData {
 	
 	private long userID;
 	private String userName;
-	private String password;
+	private Customer userCustomer;
 	private ClientType type;
 	private Long companyID;
 	
-	public UserData(long userID, String userName, String password, ClientType type) {
+	public UserData(long userID, String userName,  ClientType type, Customer customer) {
 		this.setUserID(userID);
 		this.setUserName(userName);
-		this.setPassword(password);
-		this.type = type;
-		this.setCompany(null);
+		this.setType(type);
+		this.setCompanyID(null);
+		this.setUserCustomer(customer);
+
 	}
 	
-	public UserData(long userID,String userName, String password, ClientType type, long company) {
+	public UserData(long userID,String userName, ClientType type, long company) {
 		this.setUserID(userID);
-		this.userName = userName;
-		this.password = password;
-		this.type = type;
-		this.setCompany(company);
+		this.setUserName(userName);
+		this.setType(type);
+		this.setCompanyID(company);
+		this.setUserCustomer(null);
 	}
 
 	public String getUserName() {
@@ -44,19 +45,11 @@ public class UserData {
 		this.type = type;
 	}
 
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String companyID) {
-		this.password = password;
-	}
-
 	public Long getCompany() {
 		return companyID;
 	}
 
-	public void setCompany(Long companyID) {
+	public void setCompanyID(Long companyID) {
 		this.companyID = companyID;
 	}
 
@@ -66,6 +59,14 @@ public class UserData {
 
 	public void setUserID(long userID) {
 		this.userID = userID;
+	}
+
+	public Customer getUserCustomer() {
+		return userCustomer;
+	}
+
+	public void setUserCustomer(Customer userCustomer) {
+		this.userCustomer = userCustomer;
 	}
 
 	

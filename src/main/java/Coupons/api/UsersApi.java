@@ -12,12 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import Coupons.Logic.UsersController;
 import Coupons.Exceptions.ApplicationException;
-import Coupons.JavaBeans.Coupon;
-import Coupons.JavaBeans.LoginData;
 import Coupons.JavaBeans.LoginForm;
 import Coupons.JavaBeans.User;
-import Coupons.JavaBeans.UserData;
-import Coupons.Logic.ICacheManager;
+
 
 @RestController
 @RequestMapping("/users")
@@ -26,20 +23,17 @@ public class UsersApi {
 	@Autowired
 	private UsersController usersController;
 	
-	@Autowired
-	private ICacheManager cacheManager;
+
 	
-	@PostMapping
+	@PostMapping("/login")
 	public int login(@RequestBody LoginForm loginForm) throws ApplicationException {
-		LoginData loginData = this.usersController.login(loginForm);
-		UserData userData = new UserData(loginData.getUserId(),loginForm.getUserName(), loginForm.getPassword(), loginData.getClientType());
-		cacheManager.put(loginData.getToken(), userData);
-		return loginData.getToken();
+		
+		return usersController.login(loginForm);
 	}
 	
 	@PostMapping
-	public void addUser(@RequestBody User user) throws ApplicationException {
-		usersController.createUser(user);
+	public long addUser(@RequestBody User user) throws ApplicationException {
+		return usersController.createUser(user);
 	}
 	
 	@PutMapping
@@ -49,7 +43,7 @@ public class UsersApi {
 	
 	@DeleteMapping("/{userId}")
 	public void deleteUser(@PathVariable("userId") long id) throws ApplicationException {
-	usersController.deleteUser(id);
+		usersController.deleteUser(id);
 	}
 	
 //	@GetMapping("/{userID}")

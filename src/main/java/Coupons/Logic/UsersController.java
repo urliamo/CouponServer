@@ -9,7 +9,6 @@ import Coupons.DB.CompaniesDAO;
 import Coupons.Enums.ClientType;
 import Coupons.Enums.ErrorType;
 import Coupons.Exceptions.ApplicationException;
-import Coupons.JavaBeans.LoginData;
 import Coupons.JavaBeans.LoginForm;
 import Coupons.JavaBeans.User;
 import Coupons.JavaBeans.UserData;
@@ -32,22 +31,23 @@ import Coupons.Utils.PasswordUtils;
 public class UsersController {
 	
 	@Autowired
-	private static Coupons.DB.UsersDAO usersDao;
+	private Coupons.DB.UsersDAO usersDao;
 	
 	@Autowired
-	private static Coupons.DB.CompaniesDAO companiesDAO;
+	private Coupons.DB.CompaniesDAO companiesDAO;
 	
+	@Autowired
+	private ICacheManager cacheManager;
 
 	public UsersController() {
 		
 	}
 	
-	public LoginData login(LoginForm loginForm) throws ApplicationException {
-		LoginData loginData = usersDao.login(loginForm.getUserName(),loginForm.getPassword());
-		
-		loginData.setToken(generateEncryptedToken(loginForm.getUserName()));
-	
-		return loginData;
+	public int login(LoginForm loginForm) throws ApplicationException {
+		UserData loginData = usersDao.login(loginForm.getUserName(),loginForm.getPassword());
+		int token = generateEncryptedToken(loginForm.getUserName());
+		cacheManager.put(token, loginData);
+		return token;
 	}
 
 	
@@ -58,7 +58,7 @@ public class UsersController {
 		return token.hashCode();
 	}
 
-	public static long createUser(User user) throws ApplicationException {
+	public long createUser(User user) throws ApplicationException {
 		if (user == null) {
 			throw new ApplicationException(ErrorType.EMPTY, ErrorType.EMPTY.getInternalMessage());
 		}
@@ -91,7 +91,7 @@ public class UsersController {
 		usersDao.updateUser(user);
 	}
 
-	public static void deleteUser(long userId) throws ApplicationException {
+	public void deleteUser(long userId) throws ApplicationException {
 
 
 		if (usersDao.getUserByID(userId) == null) {
@@ -100,7 +100,7 @@ public class UsersController {
 		usersDao.deleteUserByID(userId); 
 	}
 
-	public static void deleteUsersByCompanyId(long companyId) throws ApplicationException {
+	public void deleteUsersByCompanyId(long companyId) throws ApplicationException {
 
 
 		if ( companiesDAO.getCompanyByID(companyId) == null) {

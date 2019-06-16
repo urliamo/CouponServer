@@ -100,5 +100,10 @@ public class Coupon {
 		this.setCategory(category);
 		this.setPrice(price);
 	}
+	
+	public Coupon() {
+		super();
+	
+	}
     
 }

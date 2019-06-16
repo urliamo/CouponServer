@@ -24,12 +24,14 @@ import Coupons.JavaBeans.Coupon;
 
 public class CouponController {
 
+	@Autowired
+	private Coupons.DB.PurchasesDAO purchasesDAO;
+	
+	@Autowired
+	private Coupons.DB.CompaniesDAO companiesDAO;
 
 	@Autowired
-	private static Coupons.DB.CompaniesDAO companiesDAO;
-
-	@Autowired
-	private static Coupons.DB.CouponsDAO couponsDAO;
+	private Coupons.DB.CouponsDAO couponsDAO;
 
 
 	public CouponController() {
@@ -104,7 +106,7 @@ public class CouponController {
 			}
 			
 		//delete coupon customer purchases
-		Coupons.Logic.PurchasesController.deleteCouponPurchases(couponID);
+		purchasesDAO.deletePurchaseBycouponId(couponID);
 		//delete company coupon
 		couponsDAO.deleteCoupon(couponID);
 	}
@@ -121,7 +123,7 @@ public class CouponController {
 	 * @see 		couponsDAO
 	 * @see			JavaBeans.Coupon
 	 */
-	public static void deleteCompanyCoupons(long companyID) throws ApplicationException {
+	public void deleteCompanyCoupons(long companyID) throws ApplicationException {
 		
 			//check if coupon actually exists
 			if (companiesDAO.getCompanyByID(companyID)==null) {
@@ -129,7 +131,7 @@ public class CouponController {
 			}
 			
 		//delete coupon customer purchases
-		Coupons.Logic.PurchasesController.deleteCompanyPurchases(companyID);
+		purchasesDAO.deleteCompanyPurchases(companyID);
 		//delete company coupons
 		couponsDAO.deleteCompanyCoupons(companyID);
 	}

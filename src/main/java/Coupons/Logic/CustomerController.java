@@ -19,6 +19,12 @@ public class CustomerController{
 	@Autowired
 	private static Coupons.DB.CustomerDAO customerDAO;
 
+	@Autowired
+	private static Coupons.DB.UsersDAO usersDAO;
+	
+	@Autowired
+	private static Coupons.DB.PurchasesDAO purchasesDAO;
+	
 	public CustomerController() {
 		super();
 	}
@@ -36,12 +42,12 @@ public class CustomerController{
 		
 	}
 	
-	public static void deleteCustomer(long customerId) {
+	public void deleteCustomer(long customerId) {
 		try
 		{
-			PurchasesController.deleteCustomerPurchases(customerId);
+			purchasesDAO.deleteCustomerPurchases(customerId);
 			customerDAO.deleteCustomer(customerId);
-			UsersController.deleteUser(customerId);
+			usersDAO.deleteUserByID(customerId);
 		}
 		catch(Exception Ex){
 			 System.out.println(Ex.getMessage());
@@ -59,7 +65,7 @@ public class CustomerController{
 			NameUtils.isValidName(customer.getFirstName());
 			NameUtils.isValidName(customer.getLastName());
 			User customerUser= customer.getUser();
-			customer.setCustomerId(UsersController.createUser(customerUser));
+			customer.setCustomerId(usersDAO.createUser(customerUser));
 			customerDAO.addCustomer(customer);
 			}
 		

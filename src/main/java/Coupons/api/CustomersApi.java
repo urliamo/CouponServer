@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import Coupons.Exceptions.ApplicationException;
 import Coupons.JavaBeans.Customer;
 import Coupons.Logic.CustomerController;
-import Coupons.Logic.ICacheManager;
 
 @RestController
 @RequestMapping("/customers")
@@ -23,8 +22,6 @@ public class CustomersApi {
 	@Autowired
 	private CustomerController customerController; 
 	
-	@Autowired
-	private ICacheManager cacheManager;
 	
 	@PostMapping
 	public void createCustomer(@RequestBody Customer customer) throws ApplicationException {

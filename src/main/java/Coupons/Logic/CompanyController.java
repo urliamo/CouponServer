@@ -23,7 +23,13 @@ import Coupons.Utils.NameUtils;
 public class CompanyController {
 
 	@Autowired
-	private static Coupons.DB.CompaniesDAO companiesDAO;
+	private Coupons.DB.CompaniesDAO companiesDAO;
+	
+	@Autowired
+	private Coupons.DB.UsersDAO usersDAO;
+	
+	@Autowired
+	private Coupons.DB.CouponsDAO couponsDAO;
 
 	/**
 	 *adds a new company to the DB using the DAO.
@@ -94,9 +100,9 @@ public class CompanyController {
 					throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage());
 				}
 				//remove company coupons and purchases
-				Coupons.Logic.CouponController.deleteCompanyCoupons(companyId);
+				couponsDAO.deleteCompanyCoupons(companyId);
 				//remove company users
-				Coupons.Logic.UsersController.deleteUsersByCompanyId(companyId);
+				usersDAO.deleteCompanysUsers(companyId);
 				//remove company from DB
 				companiesDAO.deleteCompany(companyId);
 				
@@ -127,7 +133,7 @@ public class CompanyController {
 		 * @see 		JavaBeans.Company
 		 * @return		Company object with the company data of the specified ID.
 		 */
-		public static Company getCompany(long id) throws ApplicationException{
+		public Company getCompany(long id) throws ApplicationException{
 			return companiesDAO.getCompanyByID(id);
 		}
 

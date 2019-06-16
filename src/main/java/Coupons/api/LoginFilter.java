@@ -1,9 +1,7 @@
 package Coupons.api;
 
-
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -11,8 +9,8 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import Coupons.Logic.ICacheManager;
 import Coupons.JavaBeans.UserData;
+import Coupons.Logic.ICacheManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +24,8 @@ public class LoginFilter implements Filter {
 private ICacheManager cacheManager;
 
 @Override
-public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+throws IOException, ServletException {
 
 HttpServletRequest req = ((HttpServletRequest) request);
 String path = req.getRequestURI();
@@ -63,18 +62,6 @@ HttpServletResponse res = (HttpServletResponse) response;
 // 401 = Unauthorized http error code
 res.setStatus(401);
 
-}
-
-@Override
-public void init(FilterConfig filterConfig) throws ServletException {
-	// TODO Auto-generated method stub
-	
-}
-
-@Override
-public void destroy() {
-	// TODO Auto-generated method stub
-	
 }
 
 }

@@ -41,6 +41,10 @@ public class Company {
 		this.setEmail(email);
 		this.setCompanyID(company_id);
 	}
+    
+    public Company() {
+		super();
+	}
 
 	
 }

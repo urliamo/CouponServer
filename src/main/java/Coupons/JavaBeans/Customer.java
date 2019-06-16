@@ -40,6 +40,11 @@ public class Customer {
 			this.setFirstName(firstName);
 			this.setCustomerId(id);
 		}
+		
+		public Customer() {
+			super();
+			
+		}
 		public User getUser() {
 			return user;
 		}

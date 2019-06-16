@@ -13,8 +13,8 @@ import org.springframework.stereotype.Repository;
 import Coupons.Utils.JdbcUtils;
 
 import Coupons.Enums.ClientType;
-import Coupons.JavaBeans.LoginData;
 import Coupons.JavaBeans.User;
+import Coupons.JavaBeans.UserData;
 import Coupons.Enums.ErrorType;
 import Coupons.Exceptions.ApplicationException;
 import Coupons.Utils.DateUtils;
@@ -277,7 +277,7 @@ public class UsersDAO {
 		}
 	}
 	
-	public LoginData login(String userName, String password) throws ApplicationException {
+	public UserData login(String userName, String password) throws ApplicationException {
 		//Turn on the connections
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
@@ -304,7 +304,7 @@ public class UsersDAO {
 			if (!result.next()) {
 				throw new ApplicationException(ErrorType.LOGIN_FAILED, "Failed login");
 			}
-			LoginData loginData = new LoginData(result.getLong("user_ID"),0,ClientType.valueOf(result.getString("type")), result.getLong("company_id"));
+			UserData loginData = new UserData(result.getLong("user_ID"),userName,ClientType.valueOf(result.getString("type")), result.getLong("company_id"));
 			return loginData;
 		} catch (SQLException exception) {
 			exception.printStackTrace();

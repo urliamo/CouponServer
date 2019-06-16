@@ -10,6 +10,10 @@ public class LoginForm {
 		this.password = password;
 	}
 	
+	public LoginForm() {
+		super();
+	}
+	
 	public String getUserName() {
 		return userName;
 	}
