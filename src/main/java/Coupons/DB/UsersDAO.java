@@ -1,5 +1,6 @@
 package Coupons.DB;
 
+import java.math.BigDecimal;
 //import java.beans.Statement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -25,6 +26,7 @@ public class UsersDAO {
 
 	public long createUser(User user) throws ApplicationException {
 		//Turn on the connections
+		BigDecimal companyID = null;
 		Connection connection=null;
 		PreparedStatement preparedStatement=null;
 		ResultSet resultSet = null;
@@ -37,13 +39,9 @@ public class UsersDAO {
 			
 			String sqlStatement = null;
 
-			// 2 types of users, we insert the companyId parameter for a "company" type user
-			if (user.getCompanyId() == null){
-				sqlStatement="INSERT INTO Users (user, password, type) VALUES(?,?,?)";
-			}
-			else {
-				sqlStatement="INSERT INTO Users (user, password, type, CompanyID ) VALUES(?,?,?,?)";
-			}
+			
+			sqlStatement="INSERT INTO Users (user_name, password,email, type, Company_ID ) VALUES(?,?,?,?,?)";
+			
 
 			//Combining between the syntax and our connection
 			preparedStatement=connection.prepareStatement(sqlStatement, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -51,12 +49,13 @@ public class UsersDAO {
 			//Replacing the question marks in the statement above with the relevant data
 			preparedStatement.setString(1,user.getUserName());
 			preparedStatement.setString(2,user.getPassword());
-			preparedStatement.setString(3, user.getType().name());
-			if (user.getCompanyId() == null)
-			{
-				preparedStatement.setLong(4, user.getCompanyId());
-
+			preparedStatement.setString(3,user.getEmail());
+			preparedStatement.setString(4, user.getType().name());
+			if (user.getCompanyId()!= null) {
+				companyID=BigDecimal.valueOf(user.getCompanyId());
 			}
+			preparedStatement.setBigDecimal(5, companyID);
+
 
 			//Executing the update
 			preparedStatement.executeUpdate();
@@ -88,7 +87,7 @@ public class UsersDAO {
 
 		try {
 			connection = JdbcUtils.getConnection();
-			String delete = "DELETE FROM users WHERE user_email=?";
+			String delete = "DELETE FROM users WHERE email=?";
 			preparedStatement = connection.prepareStatement(delete);
 			preparedStatement.setString(1, userEmail);
 			preparedStatement.executeUpdate();
@@ -175,8 +174,8 @@ public class UsersDAO {
 
 		try {
 			connection = JdbcUtils.getConnection();
-			String getAllCompanies = "SELECT * FROM users WHERE client_type=?";
-			preparedStatement = connection.prepareStatement(getAllCompanies);
+			String getAllUsers = "SELECT * FROM users WHERE type=?";
+			preparedStatement = connection.prepareStatement(getAllUsers);
 			preparedStatement.setString(1, type.name());
 			result = preparedStatement.executeQuery();
 
@@ -259,7 +258,7 @@ public class UsersDAO {
 
 		try {
 			connection = JdbcUtils.getConnection();
-			String getAllCompanies = "SELECT * FROM users where ID=?";
+			String getAllCompanies = "SELECT * FROM users where user_ID=?";
 			preparedStatement = connection.prepareStatement(getAllCompanies);
 			preparedStatement.setLong(1, id);
 			result = preparedStatement.executeQuery();
@@ -321,9 +320,10 @@ public class UsersDAO {
 	private User extractUserFromResultSet(ResultSet result) throws SQLException {
 		User user = new User();
 		user.setId(result.getLong("user_id"));
-		user.setEmail(result.getString("user_email"));
+		user.setUserName(result.getString("user_name"));
+		user.setEmail(result.getString("email"));
 		user.setPassword(result.getString("password"));
-		user.setType(ClientType.valueOf(result.getString("client_type")));
+		user.setType(ClientType.valueOf(result.getString("type")));
 		user.setCompanyId(result.getLong("company_id"));
 
 		return user;

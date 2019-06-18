@@ -1,18 +1,16 @@
 package Coupons.DB;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 
 
 public class DBCreator  {
 private static String USERNAME = "root";
-private static String PASSWORD = "123456";
-private static String DRIVER = "com.mysql.jdbc.Driver";
-private static String URL = "jdbc:mysql://localhost:3306/";
+//private static String PASSWORD = "123456";
+private static String PASSWORD = "administrator";
+//private static String DRIVER = "com.mysql.cj.jdbc.Driver";
+private static String DRIVER = "org.mariadb.jdbc.Driver";
+private static String URL = "jdbc:mariadb://localhost:3306/";
 
 
 
@@ -50,36 +48,41 @@ public static void buildDB() {
 		connection = DriverManager.getConnection(URL+"JB",USERNAME,PASSWORD);
 		statement = connection.createStatement();	
 		
+		
+		// Create string for statement including companies table creation
+				 sql = "CREATE TABLE companies ("+
+				"company_ID BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,"+
+				"company_name VARCHAR(50) NOT NULL,"+
+				"company_email VARCHAR(50) NOT NULL)";
+				
+				
+				
+				//Execute create companies table statement
+				
+				statement.executeUpdate(sql);
+				
+				System.out.println("companies table has been created.");	
+				
+				
 		// Create string for statement including users table creation
 		 sql = "CREATE TABLE users ("+
 		"user_ID bigint PRIMARY KEY NOT NULL AUTO_INCREMENT,"+
+		" user_name VARCHAR(50) NOT NULL,"+
 		" password VARCHAR(50) NOT NULL,"+
 		" email VARCHAR(50) NOT NULL,"+
-		" company_ID VARCHAR(50),"+
+		" company_ID BIGINT,"+
 		" Type VARCHAR(50) NOT NULL,"+
 		"FOREIGN KEY (company_ID) REFERENCES companies(company_ID))";
 		
 		
 		
-		//Execute create companies table statement
+		//Execute create users table statement
 		
 		statement.executeUpdate(sql);
 		
 		System.out.println("users table has been created.");	
 				
-		// Create string for statement including companies table creation
-		 sql = "CREATE TABLE companies ("+
-		"company_ID BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,"+
-		"name VARCHAR(50) NOT NULL,"+
-		"email VARCHAR(50) NOT NULL,";
 		
-		
-		
-		//Execute create companies table statement
-		
-		statement.executeUpdate(sql);
-		
-		System.out.println("companies table has been created.");	
 		
 		// Change string for statement to include customers table creation
 				
@@ -96,33 +99,6 @@ public static void buildDB() {
 		System.out.println("customers table has been created.");
 		
 
-		// Change string for statement to include categories table creation
-		
-		sql = "CREATE TABLE categories (" +
-					"category_ID INT PRIMARY KEY AUTO_INCREMENT, " +
-					"name VARCHAR(50) NOT NULL)";
-				
-		//Execute create categories table statement
-
-		statement.executeUpdate(sql);
-		System.out.println("categories table has been created.");
-
-		//change string for statement to include categories to be added
-		sql = "insert into categories(name) Values";
-		
-		//add each category under Categories class to the string
-		for (Coupons.Enums.Categories c : Coupons.Enums.Categories.values())
-		{
-			sql+="('"+c.toString()+"'),";
-		}
-		
-		//remove final "," in string
-		sql = sql.substring(0, sql.length()-1);
-		
-		//execute update Categories table statement
-		statement.executeUpdate(sql);
-		System.out.println("categories table has been updated to include categories.");
-
 		
 		// Change string for statement to include coupons table creation
 		
@@ -137,8 +113,7 @@ public static void buildDB() {
 							"price DOUBLE NOT NULL, " +
 							"start_date DATE NOT NULL, " +
 							"end_date DATE NOT NULL, " +
-							"FOREIGN KEY (company_ID) REFERENCES companies(company_ID)," +
-							"FOREIGN KEY (category_ID) REFERENCES categories(category_ID))";
+							"FOREIGN KEY (company_ID) REFERENCES companies(company_ID))";
 						
 				//Execute create coupons table statement
 
@@ -153,7 +128,6 @@ public static void buildDB() {
 					"customer_ID BIGINT NOT NULL,"+
 					"coupon_ID BIGINT NOT NULL,"+
 					"amount INT NOT NULL,"+
-					"PRIMARY KEY (Purchase_ID),"+
 					"FOREIGN KEY (customer_ID) REFERENCES customers(customer_ID),"+
 					"FOREIGN KEY (coupon_ID) REFERENCES coupons(coupon_ID))";
 			

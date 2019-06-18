@@ -9,6 +9,7 @@ import Coupons.DB.DBCreator;
 @SpringBootApplication
 //@EnableTransactionManagement
 public class CouponApp {
+
 	public static void main(String[] args) {
 		DBCreator.buildDB();
 		SpringApplication.run(CouponApp.class, args);

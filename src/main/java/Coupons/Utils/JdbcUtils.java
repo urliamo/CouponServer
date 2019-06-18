@@ -4,17 +4,24 @@ import java.sql.*;
 
 public class JdbcUtils {
 
+	private static String USERNAME = "root";
+	//private static String PASSWORD = "123456";
+	private static String PASSWORD = "administrator";
+	//private static String DRIVER = "com.mysql.cj.jdbc.Driver";
+	private static String DRIVER = "org.mariadb.jdbc.Driver";
+	private static String DBDTYPE = "mariadb";
+	private static String DBDNAME = "jb";
 	static {
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName(DRIVER);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
 
 	public static Connection getConnection() throws SQLException {
-		Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/coupons?useSSL=false", "root",
-				"123456");
+		Connection connection = DriverManager.getConnection("jdbc:"+DBDTYPE+"://localhost:3306/"+DBDNAME+"?useSSL=false", USERNAME,
+				PASSWORD);
 		return connection;
 	}
 

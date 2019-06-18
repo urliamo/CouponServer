@@ -17,13 +17,13 @@ import Coupons.Utils.NameUtils;
 public class CustomerController{
 	
 	@Autowired
-	private static Coupons.DB.CustomerDAO customerDAO;
+	private Coupons.DB.CustomerDAO customerDAO;
 
 	@Autowired
-	private static Coupons.DB.UsersDAO usersDAO;
+	private Coupons.DB.UsersDAO usersDAO;
 	
 	@Autowired
-	private static Coupons.DB.PurchasesDAO purchasesDAO;
+	private Coupons.DB.PurchasesDAO purchasesDAO;
 	
 	public CustomerController() {
 		super();

@@ -35,7 +35,7 @@ public class PurchasesDAO {
 				connection = JdbcUtils.getConnection();
 
 				String sql = String.format(
-					"SELECT *  FROM purchases WHERE CUSTOMERID = ? AND COUPONID = ?",
+					"SELECT *  FROM purchases WHERE CUSTOMER_ID = ? AND COUPON_ID = ?",
 					customerID,couponID);
 
 				preparedStatement = connection.prepareStatement(sql);

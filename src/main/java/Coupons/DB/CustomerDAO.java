@@ -99,7 +99,7 @@ public class CustomerDAO implements ICustomerDAO {
 				String sqlStatement = null;
 
 				// 2 types of users, we insert the companyId parameter for a "company" type user
-					sqlStatement="INSERT INTO Customers (CustomerID, FirstName, LastName) VALUES(?,?,?)";
+					sqlStatement="INSERT INTO Customers (Customer_ID, First_Name, Last_Name) VALUES(?,?,?)";
 				
 
 				//Combining between the syntax and our connection
@@ -144,7 +144,7 @@ public class CustomerDAO implements ICustomerDAO {
 			//set sql string to include the new properties of the customer to be updated in table (by ID)
 
 			String sql = String.format(
-					"UPDATE Customers SET FIRST_NAME='%s', LAST_NAME='%s', WHERE CustomerID=%d",
+					"UPDATE Customers SET FIRST_NAME='%s', LAST_NAME='%s', WHERE Customer_ID=%d",
 					Customer.getFirstName(),Customer.getLastName(), Customer.getCustomerId());
 
 			//execute sql statement
@@ -179,7 +179,7 @@ public class CustomerDAO implements ICustomerDAO {
 
 			connection =JdbcUtils.getConnection();
 			//set sql string to include customer ID to be deleted
-			String sql = String.format("DELETE FROM Customers WHERE CustomerID=%d", CustomerID);
+			String sql = String.format("DELETE FROM Customers WHERE Customer_ID=%d", CustomerID);
 
 			//execute sql statement
 			preparedStatement = connection.prepareStatement(sql);
@@ -265,7 +265,7 @@ public class CustomerDAO implements ICustomerDAO {
 		try {
 			connection =JdbcUtils.getConnection();
 			//set sql string to find customer with selected ID from customers table
-			String sql = String.format("SELECT * FROM Customers WHERE ID=%d", CustomerID);
+			String sql = String.format("SELECT * FROM Customers WHERE customer_ID=%d", CustomerID);
 
 			preparedStatement = connection.prepareStatement(sql) ;
 
@@ -303,7 +303,7 @@ public class CustomerDAO implements ICustomerDAO {
 	
 	
 	private Customer extractCustomerFromResultSet(ResultSet result) throws SQLException {
-		Customer customer = new Customer(result.getString("firstName"),result.getString("lastName"),result.getLong("id"));
+		Customer customer = new Customer(result.getString("first_Name"),result.getString("last_Name"),result.getLong("customer_id"));
 
 		return customer;
 	}
