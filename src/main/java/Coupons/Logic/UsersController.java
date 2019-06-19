@@ -9,6 +9,7 @@ import Coupons.DB.CompaniesDAO;
 import Coupons.Enums.ClientType;
 import Coupons.Enums.ErrorType;
 import Coupons.Exceptions.ApplicationException;
+import Coupons.JavaBeans.LoginData;
 import Coupons.JavaBeans.LoginForm;
 import Coupons.JavaBeans.User;
 import Coupons.JavaBeans.UserData;
@@ -43,11 +44,12 @@ public class UsersController {
 		
 	}
 	
-	public int login(LoginForm loginForm) throws ApplicationException {
-		UserData loginData = usersDao.login(loginForm.getUserName(),loginForm.getPassword());
+	public LoginData login(LoginForm loginForm) throws ApplicationException {
+		UserData userData = usersDao.login(loginForm.getUserName(),loginForm.getPassword());
 		int token = generateEncryptedToken(loginForm.getUserName());
-		cacheManager.put(token, loginData);
-		return token;
+		cacheManager.put(token, userData);
+		LoginData loginData = new LoginData(userData.getUserID(),token,userData.getType(), userData.getCompany());
+		return loginData;
 	}
 
 	

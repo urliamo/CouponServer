@@ -300,6 +300,42 @@ public class CustomerDAO implements ICustomerDAO {
 	 */
 	
 	
+	public String getCustomerName(long CustomerID) throws ApplicationException {
+
+		Connection connection = null;
+		Customer customer = null;
+		ResultSet resultSet = null;
+		PreparedStatement preparedStatement = null;
+		String name = null;
+		try {
+			connection =JdbcUtils.getConnection();
+			//set sql string to find customer with selected ID from customers table
+			String sql = String.format("SELECT * FROM Customers WHERE customer_ID=%d", CustomerID);
+
+			preparedStatement = connection.prepareStatement(sql) ;
+
+			resultSet = preparedStatement.executeQuery();
+
+					if (resultSet.next()) {
+
+						customer = extractCustomerFromResultSet(resultSet);	
+					}	
+					
+			name = customer.getFirstName()+" "+customer.getLastName();
+			return name;
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
+			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
+					+" find customer failed");
+		} 
+		finally {
+			
+			JdbcUtils.closeResources(connection, preparedStatement, resultSet);
+		}
+	}
 	
 	
 	private Customer extractCustomerFromResultSet(ResultSet result) throws SQLException {

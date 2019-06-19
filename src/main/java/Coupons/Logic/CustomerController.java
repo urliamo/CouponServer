@@ -8,6 +8,7 @@ import Coupons.Enums.ErrorType;
 import Coupons.Exceptions.ApplicationException;
 import Coupons.JavaBeans.Customer;
 import Coupons.JavaBeans.User;
+import Coupons.JavaBeans.UserData;
 import Coupons.Utils.NameUtils;
 
 
@@ -91,4 +92,23 @@ public class CustomerController{
 			}
 
 		}
+	
+	public String getCustomerName(long customerId, UserData userData) throws ApplicationException {
+
+		if (!userData.getType().name().equals("Customer"))
+			throw new ApplicationException(ErrorType.CUSTOMER_ID_DOES_NOT_EXIST, ErrorType.CUSTOMER_ID_DOES_NOT_EXIST.getInternalMessage());
+
+		if (customerId != userData.getUserID())
+			throw new ApplicationException(ErrorType.CUSTOMER_ID_DOES_NOT_EXIST, ErrorType.CUSTOMER_ID_DOES_NOT_EXIST.getInternalMessage());
+
+
+		if (customerDAO.getOneCustomer(customerId)==null)
+			throw new ApplicationException(ErrorType.CUSTOMER_ID_DOES_NOT_EXIST,
+					ErrorType.CUSTOMER_ID_DOES_NOT_EXIST.getInternalMessage());
+
+		String name = customerDAO.getCustomerName(customerId);
+
+		return name;
+
+	}
 }

@@ -1,6 +1,8 @@
 package Coupons.api;
 
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import Coupons.Exceptions.ApplicationException;
 import Coupons.JavaBeans.Customer;
+import Coupons.JavaBeans.UserData;
 import Coupons.Logic.CustomerController;
 
 @RestController
@@ -45,4 +48,13 @@ public class CustomersApi {
 		customerController.deleteCustomer(customerId);
 	}
 	
+	@GetMapping("/name/{customerId}")
+	public String getCustomerName(@PathVariable("customerId") long customerId, HttpServletRequest request)
+			throws ApplicationException {
+
+		UserData userData = (UserData) request.getAttribute("userData");
+
+		return customerController.getCustomerName(customerId, userData);
+
+	}
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import Coupons.Logic.UsersController;
 import Coupons.Exceptions.ApplicationException;
+import Coupons.JavaBeans.LoginData;
 import Coupons.JavaBeans.LoginForm;
 import Coupons.JavaBeans.User;
 
@@ -26,7 +27,7 @@ public class UsersApi {
 
 	
 	@PostMapping("/login")
-	public int login(@RequestBody LoginForm loginForm) throws ApplicationException {
+	public LoginData login(@RequestBody LoginForm loginForm) throws ApplicationException {
 		
 		return usersController.login(loginForm);
 	}

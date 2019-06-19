@@ -10,12 +10,14 @@ public class LoginData {
 	private ClientType clientType;
 	
 	public LoginData(long userId, int token, ClientType clientType, Long companyId) {
-		if (companyId != null) {
-			this.setCompanyId(companyId);
-		}
+		this.setCompanyId(companyId);
 		this.setClientType(clientType);
 		this.setUserId(userId);
 		this.setToken(token);
+	}
+	
+	public LoginData() {
+	
 	}
 	
 	
