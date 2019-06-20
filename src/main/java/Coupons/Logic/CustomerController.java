@@ -10,6 +10,7 @@ import Coupons.JavaBeans.Customer;
 import Coupons.JavaBeans.User;
 import Coupons.JavaBeans.UserData;
 import Coupons.Utils.NameUtils;
+import Coupons.Utils.userDataUtils;
 
 
 
@@ -38,14 +39,15 @@ public class CustomerController{
 	 * @see			JavaBeans.Customer
 	 * @return 		customer object with this customers' data
 	 */
-	public Customer getCustomerDetails(long customerID) throws ApplicationException{
+	public Customer getCustomerByID(long customerID) throws ApplicationException{
 		return  customerDAO.getOneCustomer(customerID);	
 		
 	}
 	
-	public void deleteCustomer(long customerId) {
+	public void deleteCustomer(long customerId, UserData userData) {
 		try
 		{
+			userDataUtils.validateCustomerData(customerId, userData);
 			purchasesDAO.deleteCustomerPurchases(customerId);
 			customerDAO.deleteCustomer(customerId);
 			usersDAO.deleteUserByID(customerId);
@@ -60,9 +62,11 @@ public class CustomerController{
 		try
 			{
 			if (customer == null) {
-				throw new ApplicationException(ErrorType.EMPTY, ErrorType.EMPTY.getInternalMessage());
+				throw new ApplicationException(ErrorType.EMPTY, ErrorType.EMPTY.getInternalMessage() ,false);
 			}
-			
+			if (customer.getUser() == null) {
+				throw new ApplicationException(ErrorType.EMPTY, ErrorType.EMPTY.getInternalMessage(), false);
+			}
 			NameUtils.isValidName(customer.getFirstName());
 			NameUtils.isValidName(customer.getLastName());
 			User customerUser= customer.getUser();
@@ -75,12 +79,14 @@ public class CustomerController{
 			}
 
 		}
-	public void updateCustomer(Customer customer) throws ApplicationException {
+	public void updateCustomer(Customer customer, UserData userData) throws ApplicationException {
 		try
 			{
-			if (customer == null) {
-				throw new ApplicationException(ErrorType.EMPTY, ErrorType.EMPTY.getInternalMessage());
-			}
+			userDataUtils.validateCustomerData(customer, userData);
+			if (userData.getType().name().equals("Administrator")
+					|| userData.getType().name().equals("Company"))
+				throw new ApplicationException(ErrorType.FIELD_IS_IRREPLACEABLE,
+						ErrorType.FIELD_IS_IRREPLACEABLE.getInternalMessage(), false);
 			
 			NameUtils.isValidName(customer.getFirstName());
 			NameUtils.isValidName(customer.getLastName());
@@ -94,21 +100,11 @@ public class CustomerController{
 		}
 	
 	public String getCustomerName(long customerId, UserData userData) throws ApplicationException {
-
-		if (!userData.getType().name().equals("Customer"))
-			throw new ApplicationException(ErrorType.CUSTOMER_ID_DOES_NOT_EXIST, ErrorType.CUSTOMER_ID_DOES_NOT_EXIST.getInternalMessage());
-
-		if (customerId != userData.getUserID())
-			throw new ApplicationException(ErrorType.CUSTOMER_ID_DOES_NOT_EXIST, ErrorType.CUSTOMER_ID_DOES_NOT_EXIST.getInternalMessage());
-
-
-		if (customerDAO.getOneCustomer(customerId)==null)
-			throw new ApplicationException(ErrorType.CUSTOMER_ID_DOES_NOT_EXIST,
-					ErrorType.CUSTOMER_ID_DOES_NOT_EXIST.getInternalMessage());
-
+		userDataUtils.validateCustomerData(customerId, userData);
 		String name = customerDAO.getCustomerName(customerId);
 
 		return name;
 
 	}
+	
 }

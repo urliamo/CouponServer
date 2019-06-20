@@ -54,22 +54,20 @@ public class CouponsDAO implements ICouponsDAO {
 
 				ResultSet resultSet = preparedStatement.executeQuery();
 
-				if(!resultSet.next())
+				if(resultSet.next())
 				{
-						throw new ApplicationException(ErrorType.INVALID_ID,"coupon does not exist!");
+					return true;
 				}
-				else
-				{
-				return true;
-				}
+				
+					return false;
 			
 		}
 		catch (SQLException e)
 		{
 			e.printStackTrace();
 			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" check coupon exists failed");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+
 		} 
 		finally {
 			JdbcUtils.closeResources(connection, preparedStatement);
@@ -95,16 +93,7 @@ public class CouponsDAO implements ICouponsDAO {
 
 			connection =JdbcUtils.getConnection();
 			
-			if (Coupon.getStart_date().isAfter(Coupon.getEnd_date()))
-			{
-				throw new ApplicationException(ErrorType.INVALID_DATES, "coupon starts after it ends");
-
-			}
-			if (LocalDate.now().isAfter(Coupon.getEnd_date()))
-			{
-				throw new ApplicationException(ErrorType.INVALID_DATES, "coupon already expired");
-
-			}
+			
 			String sql = String.format("INSERT INTO Coupons(DESCRIPTION, IMAGE, TITLE, AMOUNT, START_DATE, END_DATE, COMPANY_ID, CATEGORY_ID, PRICE) " + 
 					"VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
@@ -130,7 +119,7 @@ public class CouponsDAO implements ICouponsDAO {
 						}
 						else
 						{
-						throw new ApplicationException(ErrorType.GENERAL_ERROR, "Failed to create coupon id");
+						throw new ApplicationException(ErrorType.GENERAL_ERROR, "Failed to create coupon id", true);
 						}
 					
 					}
@@ -138,8 +127,8 @@ public class CouponsDAO implements ICouponsDAO {
 		{
 			e.printStackTrace();
 			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" add coupon failed");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+
 		} 
 			finally {
 				JdbcUtils.closeResources(connection, preparedStatement);
@@ -185,8 +174,8 @@ public class CouponsDAO implements ICouponsDAO {
 		{
 			e.printStackTrace();
 			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" update coupon failed");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+
 		} 
 		finally {
 			JdbcUtils.closeResources(connection, preparedStatement);
@@ -215,8 +204,8 @@ public class CouponsDAO implements ICouponsDAO {
 		{
 			e.printStackTrace();
 			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" update coupon failed");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+
 		} 
 		finally {
 			JdbcUtils.closeResources(connection, preparedStatement);
@@ -248,8 +237,8 @@ public class CouponsDAO implements ICouponsDAO {
 		{
 			e.printStackTrace();
 			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" delete coupon failed");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+
 		} 
 		finally {
 			JdbcUtils.closeResources(connection, preparedStatement);
@@ -282,8 +271,8 @@ public class CouponsDAO implements ICouponsDAO {
 		{
 			e.printStackTrace();
 			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" delete coupon failed");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+
 		} 
 		finally {
 			JdbcUtils.closeResources(connection, preparedStatement);
@@ -324,8 +313,8 @@ public class CouponsDAO implements ICouponsDAO {
 		{
 			e.printStackTrace();
 			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" return all coupons failed");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+
 		} 
 		finally {
 			JdbcUtils.closeResources(connection, preparedStatement, resultSet);
@@ -367,8 +356,8 @@ public class CouponsDAO implements ICouponsDAO {
 		{
 			e.printStackTrace();
 			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" return expired coupons failed");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+
 		} 
 		finally {
 			JdbcUtils.closeResources(connection, preparedStatement, resultSet);
@@ -383,7 +372,7 @@ public class CouponsDAO implements ICouponsDAO {
 	 */
 	
 	public Coupon getOneCoupon(long CouponID) throws ApplicationException {
-
+		
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
@@ -399,7 +388,7 @@ public class CouponsDAO implements ICouponsDAO {
 				resultSet = preparedStatement.executeQuery();
 				if (!resultSet.next())
 				{
-					throw new ApplicationException(ErrorType.INVALID_ID,"coupon does not exist!");
+					throw new ApplicationException(ErrorType.GENERAL_ERROR,"coupon does not exist!", true);
 				}
 
 					
@@ -411,8 +400,8 @@ public class CouponsDAO implements ICouponsDAO {
 		{
 			e.printStackTrace();
 			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" return coupon failed");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+
 		} 	
 			
 		finally {
@@ -428,7 +417,7 @@ public class CouponsDAO implements ICouponsDAO {
 	 * @return 		ID of the category of the coupon with specified ID.
 	 */
 	
-	public Category getCouponCategory(int categoryID) throws ApplicationException {
+	public Category getCouponCategory(int couponID) throws ApplicationException {
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -436,10 +425,10 @@ public class CouponsDAO implements ICouponsDAO {
 		try {
 			connection =JdbcUtils.getConnection();
 
-			String sql = String.format("SELECT * FROM categories WHERE ID=?");
+			String sql = String.format("SELECT category FROM coupons WHERE coupon_ID=?");
 
 			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setInt(1,categoryID);
+			preparedStatement.setInt(1,couponID);
 
 			resultSet = preparedStatement.executeQuery();
 
@@ -456,8 +445,8 @@ public class CouponsDAO implements ICouponsDAO {
 		{
 			e.printStackTrace();
 			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" return coupon category failed");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+
 		} 	
 		finally {
 			JdbcUtils.closeResources(connection, preparedStatement, resultSet);
@@ -492,8 +481,7 @@ public class CouponsDAO implements ICouponsDAO {
 		{
 			e.printStackTrace();
 			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" find customer coupons failed");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
 		} 
 		
 		finally {
@@ -529,8 +517,7 @@ public class CouponsDAO implements ICouponsDAO {
 		{
 			e.printStackTrace();
 			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" find coupons by category failed");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
 		} 
 		
 		finally {
@@ -573,8 +560,7 @@ public class CouponsDAO implements ICouponsDAO {
 		{
 			e.printStackTrace();
 			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" find customer coupons failed");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
 		} 
 		
 		finally {
@@ -609,8 +595,7 @@ public class CouponsDAO implements ICouponsDAO {
 		{
 			e.printStackTrace();
 			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" find customer coupons failed");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
 		} 
 		
 		finally {
@@ -647,8 +632,7 @@ public class CouponsDAO implements ICouponsDAO {
 		{
 			e.printStackTrace();
 			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" find customer coupons failed");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
 		} 
 		
 		finally {

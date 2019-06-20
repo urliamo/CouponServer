@@ -6,27 +6,43 @@ public class ApplicationException extends Exception {
 
 	private static final long serialVersionUID = 1L;
 	private ErrorType errorType;
+	private boolean isCritical;
 
-//	public ApplicationException(Exception e) {
-//		super(e);
-//	}
+	// constructor
 
-//	public ApplicationException(Exception e, String message) {
-//		super(message, e);
-//	}
+		/**
+		 * @param errorType  Receive an error type
+		 * @param message    Receive a message
+		 * @param isCritical Receive is critical
+		 * @param throwable  Receive a throwable
+		 */
+		public ApplicationException(ErrorType errorType, String message, boolean isCritical, Throwable throwable) {
 
-	public ApplicationException(Exception innerException, ErrorType errorType, String message) {
-		super(message, innerException);
-		this.errorType=errorType;
-	}
+			super(message, throwable);
+			this.errorType = errorType;
+			this.isCritical = isCritical;
 
-	public ApplicationException(ErrorType errorType, String message) {
-		super(message);
-		this.errorType=errorType;
-	}
+		}
+
+		/**
+		 * @param errorType  Receive an error type
+		 * @param message    Receive a message
+		 * @param isCritical Receive is critical
+		 */
+		public ApplicationException(ErrorType errorType, String message, boolean isCritical) {
+
+			super(message);
+			this.errorType = errorType;
+			this.isCritical = isCritical;
+
+		}
+
 	
 	public ErrorType getErrorType(){
 		return this.errorType;
+	}
+	public boolean isErrorCritical(){
+		return this.isCritical;
 	}
 }
 

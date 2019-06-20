@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import Coupons.Enums.ErrorType;
 import Coupons.Exceptions.ApplicationException;
 import Coupons.JavaBeans.Company;
+import Coupons.JavaBeans.UserData;
 import Coupons.Utils.EmailUtils;
 import Coupons.Utils.NameUtils;
 
@@ -39,21 +40,26 @@ public class CompanyController {
 	 * @see 		JavaBeans.Company
 	 * @throws company already exists!
 	 */
-	public long addCompany(Company company) throws ApplicationException{
+	public long addCompany(Company company,UserData userData) throws ApplicationException{
 		if (company == null) 
 		{
-			throw new ApplicationException(ErrorType.EMPTY, ErrorType.EMPTY.getInternalMessage());
+			throw new ApplicationException(ErrorType.EMPTY, ErrorType.EMPTY.getInternalMessage(), true);
+		}
+		if (!userData.getType().name().equals("Administrator")) {
+			throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), false);
+
 		}
 
+		
 		NameUtils.isValidName(company.getName());
 		EmailUtils.isValidEmail(company.getEmail());
 
 		if (company.getCompanyID() != 0) {
-			throw new ApplicationException(ErrorType.COMPANY_ID_MUST_BE_ASSIGNED, ErrorType.COMPANY_ID_MUST_BE_ASSIGNED.getInternalMessage());
+			throw new ApplicationException(ErrorType.COMPANY_ID_MUST_BE_ASSIGNED, ErrorType.COMPANY_ID_MUST_BE_ASSIGNED.getInternalMessage(), true);
 		}
 		
 		if (!companiesDAO.isCompanyExistsByMailOrName(company.getEmail(), company.getName())) { 
-			throw new ApplicationException(ErrorType.NAME_IS_ALREADY_EXISTS, ErrorType.NAME_IS_ALREADY_EXISTS.getInternalMessage());
+			throw new ApplicationException(ErrorType.NAME_IS_ALREADY_EXISTS, ErrorType.NAME_IS_ALREADY_EXISTS.getInternalMessage(), true);
 		}
 			return companiesDAO.addCompany(company);
 		

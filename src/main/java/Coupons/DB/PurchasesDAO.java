@@ -44,7 +44,7 @@ public class PurchasesDAO {
 
 				if(!resultSet.next())
 				{
-						throw new ApplicationException(ErrorType.INVALID_ID,"purchase does not exist!");
+						throw new ApplicationException(ErrorType.INVALID_ID,"purchase does not exist!", true);
 				}
 				else
 				{
@@ -56,8 +56,8 @@ public class PurchasesDAO {
 		{
 			e.printStackTrace();
 			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" check purchase exists failed");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+
 		} 
 		finally {
 			JdbcUtils.closeResources(connection, preparedStatement);
@@ -87,8 +87,8 @@ public class PurchasesDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" get all purchases by coupon failed");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+
 		}  finally {
 			JdbcUtils.closeResources(connection, preparedStatement);
 		}
@@ -117,8 +117,8 @@ public class PurchasesDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" get all purchases by customer failed");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+
 		}  finally {
 			JdbcUtils.closeResources(connection, preparedStatement);
 		}
@@ -171,8 +171,8 @@ public class PurchasesDAO {
 		{
 			e.printStackTrace();
 			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" delete purchases failed");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+
 		} 
 		finally {
 			JdbcUtils.closeResources(connection, preparedStatement);
@@ -207,7 +207,7 @@ public class PurchasesDAO {
 				}
 				else
 				{
-				throw new ApplicationException(ErrorType.GENERAL_ERROR, "Failed to create purchase id");
+				throw new ApplicationException(ErrorType.GENERAL_ERROR, "Failed to create purchase id", true);
 				}
 			
 		}
@@ -215,8 +215,8 @@ public class PurchasesDAO {
 		{
 			e.printStackTrace();
 			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" add purchase failed");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+
 		} 
 		finally {
 			JdbcUtils.closeResources(connection, preparedStatement, resultSet);
@@ -237,8 +237,8 @@ public class PurchasesDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" delete purchase by coupon ID failed");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+
 		} finally {
 			JdbcUtils.closeResources(connection, preparedStatement);
 		}
@@ -265,8 +265,8 @@ public class PurchasesDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" get all purchases failed");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+
 		} finally {
 			JdbcUtils.closeResources(connection, preparedStatement);
 		}
@@ -295,8 +295,8 @@ public class PurchasesDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" delete purchase by customer ID failed");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+
 		} finally {
 			JdbcUtils.closeResources(connection, preparedStatement);
 		}
@@ -315,8 +315,8 @@ public class PurchasesDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" delete purchase by company ID failed");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+
 		} finally {
 			JdbcUtils.closeResources(connection, preparedStatement);
 		}

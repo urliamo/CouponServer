@@ -50,22 +50,16 @@ public class CustomerDAO implements ICustomerDAO {
 				preparedStatement = connection.prepareStatement(sql);
 				//execute sql statement
 				resultSet = preparedStatement.executeQuery();
-
-					
-					if (!resultSet.next())
-					{
-						throw new ApplicationException(ErrorType.INVALID_NAME,"customer does not exist!");
-					}
-					//return the id of the selected customer
-					return resultSet.getLong("CustomerID");
+				
+				//return the id of the selected customer
+				return resultSet.getLong("CustomerID");
 
 				
 			
 		}
 		catch (SQLException e) {
 			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
-			throw new ApplicationException( e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" Failed to find customerID by name");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
 		}
 		finally {
 			JdbcUtils.closeResources(connection, preparedStatement, resultSet);
@@ -116,9 +110,8 @@ public class CustomerDAO implements ICustomerDAO {
 			} catch (SQLException e) {
 				e.printStackTrace();
 				//If there was an exception in the "try" block above, it is caught here and notifies a level above.
-				throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-						+" Create customer failed");
-			} 
+				throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+			}
 			finally {
 				//Closing the resources
 				JdbcUtils.closeResources(connection, preparedStatement);
@@ -156,9 +149,8 @@ public class CustomerDAO implements ICustomerDAO {
 		{
 			e.printStackTrace();
 			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" update customer failed");
-		} 
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+		}
 		finally {
 			JdbcUtils.closeResources(connection, preparedStatement);
 		}
@@ -190,9 +182,8 @@ public class CustomerDAO implements ICustomerDAO {
 		{
 			e.printStackTrace();
 			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" delete customer failed");
-		} 
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+		}
 		finally {
 			JdbcUtils.closeResources(connection, preparedStatement);
 		}
@@ -240,9 +231,8 @@ public class CustomerDAO implements ICustomerDAO {
 		{
 			e.printStackTrace();
 			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" find customers failed");
-		} 
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+		}
 		finally {
 			JdbcUtils.closeResources(connection, preparedStatement, resultSet);
 		}
@@ -282,9 +272,8 @@ public class CustomerDAO implements ICustomerDAO {
 		{
 			e.printStackTrace();
 			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" find customer failed");
-		} 
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+		}
 		finally {
 			
 			JdbcUtils.closeResources(connection, preparedStatement, resultSet);
@@ -328,9 +317,8 @@ public class CustomerDAO implements ICustomerDAO {
 		{
 			e.printStackTrace();
 			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" find customer failed");
-		} 
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+		}
 		finally {
 			
 			JdbcUtils.closeResources(connection, preparedStatement, resultSet);

@@ -33,19 +33,22 @@ public class CustomersApi {
 	}
 	
 	@PutMapping
-	public void updateCustomer(@RequestBody Customer customer) throws ApplicationException {
-		customerController.updateCustomer(customer);
+	public void updateCustomer(@RequestBody Customer customer,HttpServletRequest request) throws ApplicationException {
+		UserData userData = (UserData) request.getAttribute("userData");
+		customerController.updateCustomer(customer, userData);
 	}
 	
 	@GetMapping("/{customerId}")
 	public Customer getCustomer(@PathVariable("customerId") long customerId) throws ApplicationException {
-		Customer customer =customerController.getCustomerDetails(customerId);
+		Customer customer =customerController.getCustomerByID(customerId);
 		return customer;
 	}
 	
 	@DeleteMapping("/{customerId}")
-	public void deleteCoupon(@PathVariable("customerId") long customerId) throws ApplicationException {
-		customerController.deleteCustomer(customerId);
+	public void deleteCoupon(@PathVariable("customerId") long customerId,HttpServletRequest request) throws ApplicationException {
+		UserData userData = (UserData) request.getAttribute("userData");
+
+		customerController.deleteCustomer(customerId, userData);
 	}
 	
 	@GetMapping("/name/{customerId}")

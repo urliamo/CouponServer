@@ -1,5 +1,7 @@
 package Coupons.Enums;
 
+import Coupons.Utils.DateUtils;
+
 public enum ErrorType {
 GENERAL_ERROR(600, "General error"),
 NAME_IS_ALREADY_EXISTS(600, "The name or mail you entered already exists"),
@@ -27,14 +29,18 @@ COUPON_IS_OUT_OF_ORDER(600, "Coupon is out of order"),
 EXISTING_COUPON_TITLE(600, "Coupon with this title already exists"),
 COUPON_ALREADY_EXPIRED(600, "coupon is past its' end-date"),
 COUPON_DATE_MISMATCH(600, "coupon start date is after end date"),
-LOGIN_FAILED(600, "Login failed. credentials incorrect.");
+LOGIN_FAILED(600, "Login failed. credentials incorrect."), 
+USER_TYPE_MISMATCH(600, "User Type Mismatch. User is:"),
+USER_ID_MISMATCH(600, "user ID does not match cached ID"),
+COMPANY_ID_MISMATCH(600, "company ID does not match cached ID");
+
 	
 	private int internalErrorCode;
 	private String internalMessage;
 	
 	private ErrorType(int internalErrorCode, String internalMessage) {
 		this.internalErrorCode=internalErrorCode;
-		this.internalMessage=internalMessage;
+		this.internalMessage=internalMessage+DateUtils.getCurrentDateAndTime();
 	}
 
 	public int getInternalErrorCode() {

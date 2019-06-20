@@ -55,7 +55,7 @@ public class CompaniesDAO implements ICompaniesDAO {
 
 				if(!resultSet.next())
 				{
-						throw new ApplicationException(ErrorType.INVALID_EMAIL,"company does not exist!");
+						throw new ApplicationException(ErrorType.GENERAL_ERROR,"company does not exist!", true);
 				}
 				else
 				{
@@ -68,8 +68,8 @@ public class CompaniesDAO implements ICompaniesDAO {
 		{
 			e.printStackTrace();
 			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" check company exists failed");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+
 		} 
 		finally {
 			JdbcUtils.closeResources(connection, preparedStatement, resultSet);
@@ -103,7 +103,7 @@ public class CompaniesDAO implements ICompaniesDAO {
 					
 					if(!resultSet.next())
 					{
-							throw new ApplicationException(ErrorType.INVALID_EMAIL_OR_PASS,"company does not exist!");
+							throw new ApplicationException(ErrorType.GENERAL_ERROR,"company does not exist!", true);
 					}
 					
 					long id = resultSet.getLong("CompanyID");
@@ -116,8 +116,8 @@ public class CompaniesDAO implements ICompaniesDAO {
 		{
 			e.printStackTrace();
 			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" get company failed");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+
 		} 
 		finally {
 			JdbcUtils.closeResources(connection, preparedStatement, resultSet);
@@ -156,8 +156,8 @@ public class CompaniesDAO implements ICompaniesDAO {
 		{
 			e.printStackTrace();
 			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" get company failed");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+
 		} 
 		finally {
 			JdbcUtils.closeResources(connection, preparedStatement);
@@ -199,7 +199,7 @@ public class CompaniesDAO implements ICompaniesDAO {
 				}
 				else
 				{
-				throw new ApplicationException(ErrorType.GENERAL_ERROR, "Failed to create company id");
+				throw new ApplicationException(ErrorType.GENERAL_ERROR, "Failed to create company id", true);
 				}
 			
 		}
@@ -207,8 +207,8 @@ public class CompaniesDAO implements ICompaniesDAO {
 		{
 			e.printStackTrace();
 			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" add company failed");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+
 		} 
 		finally {
 			JdbcUtils.closeResources(connection, preparedStatement, resultSet);
@@ -241,8 +241,8 @@ public class CompaniesDAO implements ICompaniesDAO {
 		{
 			e.printStackTrace();
 			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" update company failed");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+
 		} 
 		finally {
 			JdbcUtils.closeResources(connection, preparedStatement);
@@ -273,8 +273,8 @@ public class CompaniesDAO implements ICompaniesDAO {
 		catch (SQLException e)
 		{
 			e.printStackTrace();
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" delete company failed");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+
 		} 
 		finally {
 			JdbcUtils.closeResources(connection, preparedStatement);
@@ -317,8 +317,8 @@ public class CompaniesDAO implements ICompaniesDAO {
 		catch (SQLException e)
 		{
 			e.printStackTrace();
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" find all companies failed");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+
 		} 
 		finally {
 			JdbcUtils.closeResources(connection, preparedStatement, resultSet);
@@ -349,7 +349,7 @@ public class CompaniesDAO implements ICompaniesDAO {
 			
 				 if(!resultSet.next())
 				{
-						throw new ApplicationException(ErrorType.INVALID_EMAIL_OR_PASS,"company does not exist!");
+						throw new ApplicationException(ErrorType.GENERAL_ERROR,"company does not exist!", true);
 				}
 				else
 				{
@@ -361,8 +361,7 @@ public class CompaniesDAO implements ICompaniesDAO {
 		catch (SQLException e)
 		{
 			e.printStackTrace();
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" find company failed");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
 		} 
 		
 		finally {

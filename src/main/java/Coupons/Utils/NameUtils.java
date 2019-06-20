@@ -12,10 +12,10 @@ public class NameUtils {
 	public static void isValidName(String name) throws ApplicationException {
 
 		if (name == null || name.isEmpty())
-			throw new ApplicationException(ErrorType.EMPTY, ErrorType.EMPTY.getInternalMessage());
+			throw new ApplicationException(ErrorType.EMPTY, ErrorType.EMPTY.getInternalMessage(), false);
 
 		if (name.length() < 2)
-			throw new ApplicationException(ErrorType.INVALID_NAME,ErrorType.INVALID_NAME.getInternalMessage());
+			throw new ApplicationException(ErrorType.INVALID_NAME,ErrorType.INVALID_NAME.getInternalMessage(), false);
 
 	}
 }

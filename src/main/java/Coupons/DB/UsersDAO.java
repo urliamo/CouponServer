@@ -66,13 +66,13 @@ public class UsersDAO {
 				
 				return id;
 			}
-			throw new ApplicationException(ErrorType.GENERAL_ERROR, "Failed to create user id");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true);
 		
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime() +" Create User failed");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
 		} 
 		finally {
 			//Closing the resources
@@ -94,7 +94,7 @@ public class UsersDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime() + "failed to delete the user");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
 		} 
 		finally {
 			JdbcUtils.closeResources(connection, preparedStatement);		
@@ -115,7 +115,7 @@ public class UsersDAO {
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime() + "failed to delete the user");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
 		} 
 		finally {
 			JdbcUtils.closeResources(connection, preparedStatement);
@@ -140,7 +140,7 @@ public class UsersDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new ApplicationException(e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime() + "dailed to update user information");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
 		}  finally {
 			JdbcUtils.closeResources(connection, preparedStatement);
 		}
@@ -160,8 +160,7 @@ public class UsersDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new ApplicationException( e, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" Failed delete users");
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
 		} finally {
 			JdbcUtils.closeResources(connection, preparedStatement);
 		}
@@ -187,11 +186,10 @@ public class UsersDAO {
 
 			return allUsers;
 			}
-			catch (SQLException exception)
+			catch (SQLException e)
 			{
-				exception.printStackTrace();
-				throw new ApplicationException( exception, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-						+" get All Users by Type failed");
+				e.printStackTrace();
+				throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
 			} finally
 			{
 			JdbcUtils.closeResources(connection, preparedStatement);
@@ -217,10 +215,10 @@ public class UsersDAO {
 
 			return allUsers;
 
-		}catch (SQLException exception) {
-			exception.printStackTrace();
-			throw new ApplicationException( exception, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" get All Users failed");
+		}catch (SQLException e) {
+			e.printStackTrace();
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+
 		} finally {
 			JdbcUtils.closeResources(connection, preparedStatement);
 		}
@@ -242,10 +240,10 @@ public class UsersDAO {
 
 			return user;
 
-		}catch (SQLException exception) {
-			exception.printStackTrace();
-			throw new ApplicationException( exception, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" get User by Mail failed");
+		}catch (SQLException e) {
+			e.printStackTrace();
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+
 		} finally {
 			JdbcUtils.closeResources(connection, preparedStatement);
 		}
@@ -267,10 +265,10 @@ public class UsersDAO {
 
 			return user;
 
-		}catch (SQLException exception) {
-			exception.printStackTrace();
-			throw new ApplicationException( exception, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" get User by ID failed");
+		}catch (SQLException e) {
+			e.printStackTrace();
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+
 		} finally {
 			JdbcUtils.closeResources(connection, preparedStatement);
 		}
@@ -301,15 +299,13 @@ public class UsersDAO {
 
 			// Login had failed (!!!!!!!!!!!!!!!)
 			if (!result.next()) {
-				throw new ApplicationException(ErrorType.LOGIN_FAILED, "Failed login");
+				throw new ApplicationException(ErrorType.LOGIN_FAILED, ErrorType.LOGIN_FAILED.getInternalMessage(), true);
 			}
 			UserData loginData = new UserData(result.getLong("user_ID"),userName,ClientType.valueOf(result.getString("type")), result.getLong("company_id"));
 			return loginData;
-		} catch (SQLException exception) {
-			exception.printStackTrace();
-			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
-			throw new ApplicationException( exception, ErrorType.GENERAL_ERROR, DateUtils.getCurrentDateAndTime()
-					+" login failed");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
 		}
 		finally {
 			//Closing the resources
