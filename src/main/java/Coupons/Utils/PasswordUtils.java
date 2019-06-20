@@ -30,7 +30,7 @@ public class PasswordUtils {
 		Pattern ptr = Pattern.compile("\\A(?=\\S*?[0-9])(?=\\S*?[a-z])(?=\\S*?[A-Z])(?=\\S*?[@#$%^&+=])\\S{8,}\\z");
 
 		if (!ptr.matcher(password).matches()) {
-			throw new ApplicationException(ErrorType.INVALID_PASSWORD, ErrorType.INVALID_PASSWORD.getInternalMessage());
+			throw new ApplicationException(ErrorType.INVALID_PASSWORD, ErrorType.INVALID_PASSWORD.getInternalMessage(), false);
 		}
 	}
 

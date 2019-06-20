@@ -3,7 +3,7 @@ public class Company {
 
     private String name;
     private String email;
-    private long company_id=0;
+    private Long company_id;
 
 	public void setName(String name) {
         this.name = name;
@@ -16,7 +16,7 @@ public class Company {
 
 
 
-    public void setCompanyID(long id) {
+    public void setCompanyID(Long id) {
         this.company_id = id;
     }
 
@@ -30,7 +30,7 @@ public class Company {
         return this.email;
     }
 
-    public long getCompanyID() {
+    public Long getCompanyID() {
         return this.company_id;
     }
     
@@ -41,6 +41,11 @@ public class Company {
 		this.setEmail(email);
 		this.setCompanyID(company_id);
 	}
+    public Company(String name, String email) {
+  		this.setName(name);
+  		this.setEmail(email);
+  		this.setCompanyID(null);
+  	}
     
     public Company() {
 		super();

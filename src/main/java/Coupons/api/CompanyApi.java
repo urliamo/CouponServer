@@ -1,5 +1,7 @@
 package Coupons.api;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,7 @@ import Coupons.Exceptions.ApplicationException;
 import Coupons.JavaBeans.Company;
 import Coupons.JavaBeans.Coupon;
 import Coupons.JavaBeans.User;
+import Coupons.JavaBeans.UserData;
 import Coupons.Logic.CompanyController;
 
 @RestController
@@ -24,23 +27,27 @@ public class CompanyApi {
 	private CompanyController companyController; 
 	
 	@PostMapping
-	public void createCompany(@RequestBody Company company) throws ApplicationException {
-	companyController.addCompany(company);
+	public void createCompany(@RequestBody Company company,HttpServletRequest request) throws ApplicationException {
+		UserData userData = (UserData) request.getAttribute("userData");
+	companyController.addCompany(company, userData);
 	}
 	
 	@DeleteMapping("/{companyId}")
-	public void deleteCompany(@PathVariable("companyId") long id) throws ApplicationException {
-	companyController.deleteCompany(id);
+	public void deleteCompany(@PathVariable("companyId") long id,HttpServletRequest request) throws ApplicationException {
+		UserData userData = (UserData) request.getAttribute("userData");
+	companyController.deleteCompany(id, userData);
 	}
 	
 	@PutMapping
-	public void updateCompany(@RequestBody Company company) throws ApplicationException {
-		companyController.updateCompany(company);	
+	public void updateCompany(@RequestBody Company company,HttpServletRequest request) throws ApplicationException {
+		UserData userData = (UserData) request.getAttribute("userData");
+		companyController.updateCompany(company, userData);	
 	}
 	
 	@GetMapping("/{companyId}")
-	public Company getCoupon(@PathVariable("companyId") long id) throws ApplicationException {
-		Company company = companyController.getCompany(id);
+	public Company getCoupon(@PathVariable("companyId") long id,HttpServletRequest request) throws ApplicationException {
+		UserData userData = (UserData) request.getAttribute("userData");
+		Company company = companyController.getCompany(id, userData);
 		return company;
 	}
 	

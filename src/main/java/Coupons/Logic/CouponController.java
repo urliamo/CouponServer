@@ -2,6 +2,7 @@ package Coupons.Logic;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Locale.Category;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,6 +11,9 @@ import Coupons.Enums.Categories;
 import Coupons.Enums.ErrorType;
 import Coupons.Exceptions.ApplicationException;
 import Coupons.JavaBeans.Coupon;
+import Coupons.JavaBeans.UserData;
+import Coupons.Utils.DateUtils;
+import Coupons.Utils.NameUtils;
 
 
 /**
@@ -51,17 +55,23 @@ public class CouponController {
 	 * @see			JavaBeans.Coupon
 	 */
 	
-	public void addCoupon(Coupon coupon) throws ApplicationException{
-				if (couponsDAO.getCompanyCouponsByTitle(coupon.getCompany_id(), coupon.getTitle()) != null) {
-					throw new ApplicationException(ErrorType.EXISTING_COUPON_TITLE, ErrorType.EXISTING_COUPON_TITLE.getInternalMessage());
-				}
-			//check coupon expiration date vs. start date
-			if (coupon.getStart_date().isAfter(coupon.getEnd_date())) {
-				throw new ApplicationException(ErrorType.COUPON_DATE_MISMATCH, ErrorType.COUPON_DATE_MISMATCH.getInternalMessage());
+	public void addCoupon(Coupon coupon, UserData userData) throws ApplicationException{
+			
+			validateCoupon(coupon);
+			if (!userData.getType().name().equals("Company"))
+				throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
+
+			if (userData.getCompany() != coupon.getCompany_id())
+				throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
+
+			if (couponsDAO.getCompanyCouponsByTitle(coupon.getCompany_id(), coupon.getTitle()) != null) {
+				throw new ApplicationException(ErrorType.EXISTING_COUPON_TITLE, ErrorType.EXISTING_COUPON_TITLE.getInternalMessage(), false);
 			}
-			if (LocalDate.now().isAfter(coupon.getEnd_date())) {
-				throw new ApplicationException(ErrorType.COUPON_ALREADY_EXPIRED, ErrorType.COUPON_ALREADY_EXPIRED.getInternalMessage());
+			
+			if (couponsDAO.isCouponExists(coupon.getId())) {
+				throw new ApplicationException(ErrorType.EXISTING_COUPON_ID, ErrorType.EXISTING_COUPON_ID.getInternalMessage(), false);
 			}
+			
 			//add coupon
 		couponsDAO.addCoupon(coupon);
 		
@@ -76,11 +86,22 @@ public class CouponController {
 	 * @see 		couponsDAO
 	 * @see			JavaBeans.Coupon
 	 */
-	public void updateCoupon(Coupon coupon) throws ApplicationException{
+	public void updateCoupon(Coupon coupon, UserData userData) throws ApplicationException{
+		validateCoupon(coupon);
+		if (!userData.getType().name().equals("Company"))
+			throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
+
+		if (userData.getCompany() != coupon.getCompany_id())
+			throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
+
+		if (couponsDAO.getCompanyCouponsByTitle(coupon.getCompany_id(), coupon.getTitle()) != null) {
+			throw new ApplicationException(ErrorType.EXISTING_COUPON_TITLE, ErrorType.EXISTING_COUPON_TITLE.getInternalMessage(), false);
+		}
 		
 			//check coupon with this id exists
-			if (!couponsDAO.isCouponExists(coupon.getId()))
-				throw new ApplicationException(ErrorType.COUPON_ID_DOES_NOT_EXIST, ErrorType.COUPON_ID_DOES_NOT_EXIST.getInternalMessage());
+		if (!couponsDAO.isCouponExists(coupon.getId())) {
+			throw new ApplicationException(ErrorType.COUPON_ID_DOES_NOT_EXIST, ErrorType.COUPON_ID_DOES_NOT_EXIST.getInternalMessage(), false);
+		}
 				//update coupon
 		couponsDAO.updateCoupon(coupon);
 	
@@ -98,11 +119,20 @@ public class CouponController {
 	 * @see 		couponsDAO
 	 * @see			JavaBeans.Coupon
 	 */
-	public void deleteCoupon(long couponID) throws ApplicationException {
-		
+	public void deleteCoupon(long couponID, UserData userData) throws ApplicationException {
+		if (couponID<1) {
+			throw new ApplicationException(ErrorType.INVALID_ID, ErrorType.INVALID_ID.getInternalMessage(), false);
+			
+		}
+		if (!userData.getType().name().equals("Company"))
+			throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
+
+		if (userData.getCompany() != couponsDAO.getOneCoupon(couponID).getCompany_id())
+			throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
+
 			//check if coupon actually exists
 			if (!couponsDAO.isCouponExists(couponID)) {
-				throw new ApplicationException(ErrorType.COUPON_ID_DOES_NOT_EXIST, ErrorType.COUPON_ID_DOES_NOT_EXIST.getInternalMessage());
+				throw new ApplicationException(ErrorType.COUPON_ID_DOES_NOT_EXIST, ErrorType.COUPON_ID_DOES_NOT_EXIST.getInternalMessage(), false);
 			}
 			
 		//delete coupon customer purchases
@@ -123,11 +153,20 @@ public class CouponController {
 	 * @see 		couponsDAO
 	 * @see			JavaBeans.Coupon
 	 */
-	public void deleteCompanyCoupons(long companyID) throws ApplicationException {
-		
-			//check if coupon actually exists
+	public void deleteCompanyCoupons(long companyID, UserData userData) throws ApplicationException {
+		if (companyID<1) {
+			throw new ApplicationException(ErrorType.INVALID_ID, ErrorType.INVALID_ID.getInternalMessage(), false);
+			
+		}
+		if (!userData.getType().name().equals("Company"))
+			throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
+
+		if (userData.getCompany() != companyID)
+			throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
+
+			
 			if (companiesDAO.getCompanyByID(companyID)==null) {
-				throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage());
+				throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage(), false);
 			}
 			
 		//delete coupon customer purchases
@@ -143,10 +182,22 @@ public class CouponController {
 	 * @return ArrayList of coupon objects belonging to this company
 	 */
 	
-	public Coupon getCoupon(long couponID) throws ApplicationException{
-		if (couponsDAO.getOneCoupon(couponID)==null) {
-			throw new ApplicationException(ErrorType.COUPON_ID_DOES_NOT_EXIST, ErrorType.COUPON_ID_DOES_NOT_EXIST.getInternalMessage());
+	public Coupon getCoupon(long couponID, UserData userData) throws ApplicationException{
+		if (couponID<1) {
+			throw new ApplicationException(ErrorType.INVALID_ID, ErrorType.INVALID_ID.getInternalMessage(), false);
+			
 		}
+		if (!userData.getType().name().equals("Company"))
+			throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
+
+		if (userData.getCompany() != couponsDAO.getOneCoupon(couponID).getCompany_id())
+			throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
+
+		//check if coupon actually exists
+		if (!couponsDAO.isCouponExists(couponID)) {
+			throw new ApplicationException(ErrorType.COUPON_ID_DOES_NOT_EXIST, ErrorType.COUPON_ID_DOES_NOT_EXIST.getInternalMessage(), false);
+		}
+		
 		return couponsDAO.getOneCoupon(couponID);
 	}
 	
@@ -160,9 +211,16 @@ public class CouponController {
 	 * @return 		ArrayList of coupons
 	 */
 	
-	public Collection<Long> getCompanyCouponIDs(long companyID) throws ApplicationException{
-		if (companiesDAO.getCompanyByID(companyID)==null) {
-			throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage());
+	public Collection<Long> getCompanyCouponIDs(long companyID, UserData userData) throws ApplicationException{
+		if (companyID<1) {
+			throw new ApplicationException(ErrorType.INVALID_ID, ErrorType.INVALID_ID.getInternalMessage(), false);
+			
+		}
+		if (userData.getCompany() != companyID)
+			throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
+
+		if (companiesDAO.isCompanyExists(companyID)) {
+			throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage(), false);
 		}
 		return couponsDAO.getCompanyCouponsID(companyID);
 	}
@@ -176,7 +234,7 @@ public class CouponController {
 	 * @see			JavaBeans.Category
 	 * @return 		ArrayList of coupons
 	 */
-	public Collection<Coupon> getCouponsByCategory(Categories category) throws ApplicationException
+	public Collection<Coupon> getCouponsByCategory(Categories category, UserData userData) throws ApplicationException
 	{
 		//get list of all company coupons
 		
@@ -196,7 +254,7 @@ public class CouponController {
 	 * @see			JavaBeans.Category
 	 * @return 		ArrayList of coupons
 	 */
-	public Collection<Coupon> getCompanyCoupons(long companyID, Categories category) throws ApplicationException
+	public Collection<Coupon> getCompanyCoupons(long companyID, Categories category, UserData userData) throws ApplicationException
 	{
 		//get list of all company coupons
 		if (companiesDAO.getCompanyByID(companyID)==null) {
@@ -220,7 +278,7 @@ public class CouponController {
 	 * @see			JavaBeans.Coupon
 	 * @return ArrayList of coupons
 	 */
-	public Collection<Coupon> getCompanyCoupons(long companyID, double maxprice) throws ApplicationException{
+	public Collection<Coupon> getCompanyCoupons(long companyID, double maxprice, UserData userData) throws ApplicationException{
 		if (companiesDAO.getCompanyByID(companyID)==null) {
 			throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage());
 		}
@@ -241,14 +299,36 @@ public class CouponController {
 	 * @see			JavaBeans.Coupon
 	 * @return ArrayList of coupons
 	 */
-	public Collection<Coupon> getCompanyCoupons(long companyID) throws ApplicationException{
+	public Collection<Coupon> getCompanyCoupons(long companyID, UserData userData) throws ApplicationException{
 		if (companiesDAO.getCompanyByID(companyID)==null) {
-			throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage());
+			throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage(), false);
 		}
 		Collection<Coupon> coupons = couponsDAO.getCompanyCoupons(companyID);
 
 		return coupons;
 	}
 
+	private void validateCoupon(Coupon coupon) throws ApplicationException {
+		
+		DateUtils.validateDates(coupon.getStart_date().toString(), coupon.getEnd_date().toString());
+		if (coupon.getCompany_id()<1) {
+			throw new ApplicationException(ErrorType.INVALID_ID, ErrorType.INVALID_ID.getInternalMessage(), false);
+			
+		}
+		if (companiesDAO.isCompanyExists(coupon.getCompany_id())) {
+			throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage(),false);
+		}
+
+		if (coupon.getPrice() <= 0)
+			throw new ApplicationException(ErrorType.INVALID_PRICE, ErrorType.INVALID_PRICE.getInternalMessage(), false);
+		if (coupon.getCategory() == null)
+			throw new ApplicationException(ErrorType.INVALID_CATEGORY, ErrorType.INVALID_CATEGORY.getInternalMessage(), false);
+		if (!(coupon.getImage().contains(".")) || coupon.getImage().charAt(coupon.getImage().length() - 1) == '.' || coupon.getImage().charAt(0) == '.')
+			throw new ApplicationException(ErrorType.INVALID_IMAGE, ErrorType.INVALID_IMAGE.getInternalMessage(), false);
+
+		NameUtils.isValidName(coupon.getTitle());
+		
+	}
+	
 	
 }

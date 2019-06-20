@@ -14,7 +14,7 @@ public interface ICompaniesDAO {
     void updateCompany(Company company) throws Exception;   
 	Collection<Company> getAllCompanies() throws Exception;
     Company getCompanyByID(long companyID) throws Exception;
-    boolean isCompanyExists(String email, String password) throws Exception;
+    boolean isCompanyExists(long companyID) throws Exception;
     void deleteCompany(long companyID) throws Exception;
 
 }

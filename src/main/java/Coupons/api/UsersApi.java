@@ -1,5 +1,7 @@
 package Coupons.api;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +17,7 @@ import Coupons.Exceptions.ApplicationException;
 import Coupons.JavaBeans.LoginData;
 import Coupons.JavaBeans.LoginForm;
 import Coupons.JavaBeans.User;
+import Coupons.JavaBeans.UserData;
 
 
 @RestController
@@ -33,18 +36,23 @@ public class UsersApi {
 	}
 	
 	@PostMapping
-	public long addUser(@RequestBody User user) throws ApplicationException {
-		return usersController.createUser(user);
+	public long addUser(@RequestBody User user,HttpServletRequest request) throws ApplicationException {
+		UserData userData = (UserData) request.getAttribute("userData");
+		return usersController.createUser(user,userData);
 	}
 	
 	@PutMapping
-	public void updateUser(@RequestBody User user) throws ApplicationException {
-		usersController.updateUser(user);	
+	public void updateUser(@RequestBody User user,HttpServletRequest request) throws ApplicationException {
+		UserData userData = (UserData) request.getAttribute("userData");
+
+		usersController.updateUser(user,userData);	
 	}
 	
 	@DeleteMapping("/{userId}")
-	public void deleteUser(@PathVariable("userId") long id) throws ApplicationException {
-		usersController.deleteUser(id);
+	public void deleteUser(@PathVariable("userId") long id,HttpServletRequest request) throws ApplicationException {
+		UserData userData = (UserData) request.getAttribute("userData");
+
+		usersController.deleteUser(id,userData);
 	}
 	
 //	@GetMapping("/{userID}")

@@ -9,8 +9,8 @@ import Coupons.Exceptions.ApplicationException;
 import Coupons.JavaBeans.Customer;
 import Coupons.JavaBeans.User;
 import Coupons.JavaBeans.UserData;
+import Coupons.Utils.EmailUtils;
 import Coupons.Utils.NameUtils;
-import Coupons.Utils.userDataUtils;
 
 
 
@@ -47,8 +47,20 @@ public class CustomerController{
 	public void deleteCustomer(long customerId, UserData userData) {
 		try
 		{
-			userDataUtils.validateCustomerData(customerId, userData);
-			purchasesDAO.deleteCustomerPurchases(customerId);
+			if (userData == null)
+				throw new ApplicationException(ErrorType.EMPTY, ErrorType.EMPTY.getInternalMessage(), false);
+
+			if (!userData.getType().name().equals("Administrator")) {
+				if (customerId != userData.getUserID()) {
+					throw new ApplicationException(ErrorType.USER_ID_MISMATCH, ErrorType.USER_ID_MISMATCH.getInternalMessage(), true);
+				}
+			}
+			if (customerDAO.getOneCustomer(customerId)==null)
+				throw new ApplicationException(ErrorType.CUSTOMER_ID_DOES_NOT_EXIST,ErrorType.CUSTOMER_ID_DOES_NOT_EXIST.getInternalMessage(), false);
+
+			if (usersDAO.getUserByID(customerId)==null)
+				throw new ApplicationException(ErrorType.USER_ID_DOES_NOT_EXIST, ErrorType.USER_ID_DOES_NOT_EXIST.getInternalMessage(),false);
+					purchasesDAO.deleteCustomerPurchases(customerId);
 			customerDAO.deleteCustomer(customerId);
 			usersDAO.deleteUserByID(customerId);
 		}
@@ -82,14 +94,55 @@ public class CustomerController{
 	public void updateCustomer(Customer customer, UserData userData) throws ApplicationException {
 		try
 			{
-			userDataUtils.validateCustomerData(customer, userData);
-			if (userData.getType().name().equals("Administrator")
-					|| userData.getType().name().equals("Company"))
-				throw new ApplicationException(ErrorType.FIELD_IS_IRREPLACEABLE,
-						ErrorType.FIELD_IS_IRREPLACEABLE.getInternalMessage(), false);
+			if (userData == null)
+				throw new ApplicationException(ErrorType.EMPTY, ErrorType.EMPTY.getInternalMessage(), false);
+
+			if (customer == null)
+				throw new ApplicationException(ErrorType.EMPTY, ErrorType.EMPTY.getInternalMessage(), false);
+
+			if (customer.getUser() == null)
+				throw new ApplicationException(ErrorType.EMPTY, ErrorType.EMPTY.getInternalMessage(), false);
+
+			if (!userData.getType().name().equals("Administrator")) {
+				if (customer.getCustomerId() != userData.getUserID()) {
+					throw new ApplicationException(ErrorType.USER_ID_MISMATCH, ErrorType.USER_ID_MISMATCH.getInternalMessage(), true);
+				}
+			}
+			if (userData.getType().name().equals("Administrator")|| userData.getType().name().equals("Company"))
+				throw new ApplicationException(ErrorType.FIELD_IS_IRREPLACEABLE,ErrorType.FIELD_IS_IRREPLACEABLE.getInternalMessage(), false);
 			
 			NameUtils.isValidName(customer.getFirstName());
 			NameUtils.isValidName(customer.getLastName());
+			
+
+			if (customer.getCustomerId() < 1) {
+				throw new ApplicationException(ErrorType.INVALID_ID, ErrorType.INVALID_ID.getInternalMessage(), false);
+				
+			}
+			User innerUser = customer.getUser();
+
+			EmailUtils.isValidEmail(innerUser.getEmail());
+			if (innerUser.getId() < 1) {
+				throw new ApplicationException(ErrorType.INVALID_ID, ErrorType.INVALID_ID.getInternalMessage(), false);
+				
+			}
+			NameUtils.isValidName(innerUser.getUserName());
+
+			if (!customerDAO.isCustomerIDExist(customer.getCustomerId())) {
+				throw new ApplicationException(ErrorType.CUSTOMER_ID_DOES_NOT_EXIST,ErrorType.CUSTOMER_ID_DOES_NOT_EXIST.getInternalMessage(), false);
+			}
+			
+			User userFromDataBase = usersDAO.getUserByID(customer.getCustomerId());
+
+			if (!userFromDataBase.getUserName().equals(customer.getUser().getUserName())) {
+
+				if (usersDAO.isUserNameExist(customer.getUser().getUserName()))
+
+					throw new ApplicationException(ErrorType.NAME_IS_ALREADY_EXISTS,ErrorType.NAME_IS_ALREADY_EXISTS.getInternalMessage(), false);
+
+			}
+
+			usersDAO.updateUser(innerUser);
 			customerDAO.updateCustomer(customer);
 			}
 		
@@ -100,7 +153,19 @@ public class CustomerController{
 		}
 	
 	public String getCustomerName(long customerId, UserData userData) throws ApplicationException {
-		userDataUtils.validateCustomerData(customerId, userData);
+		if (userData == null)
+			throw new ApplicationException(ErrorType.EMPTY, ErrorType.EMPTY.getInternalMessage(), false);
+
+		if (!userData.getType().name().equals("Administrator")) {
+			if (customerId != userData.getUserID()) {
+				throw new ApplicationException(ErrorType.USER_ID_MISMATCH, ErrorType.USER_ID_MISMATCH.getInternalMessage(), true);
+			}
+		}
+		if (customerDAO.getOneCustomer(customerId)==null)
+			throw new ApplicationException(ErrorType.CUSTOMER_ID_DOES_NOT_EXIST,ErrorType.CUSTOMER_ID_DOES_NOT_EXIST.getInternalMessage(), false);
+
+		if (usersDAO.getUserByID(customerId)==null)
+			throw new ApplicationException(ErrorType.USER_ID_DOES_NOT_EXIST, ErrorType.USER_ID_DOES_NOT_EXIST.getInternalMessage(),false);
 		String name = customerDAO.getCustomerName(customerId);
 
 		return name;

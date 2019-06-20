@@ -35,7 +35,7 @@ public class CompaniesDAO implements ICompaniesDAO {
 	 * @return		true if company exists in DB
 	 */
 	
-	public boolean isCompanyExists(String email, String password) throws ApplicationException {
+	public boolean isCompanyExists(long id) throws ApplicationException {
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -47,20 +47,18 @@ public class CompaniesDAO implements ICompaniesDAO {
 			connection =JdbcUtils.getConnection();
 
 			String sql = String.format(
-					"SELECT * FROM COMPANIES WHERE EMAIL = ?");
+					"SELECT * FROM COMPANIES WHERE company_ID = ?");
 
 			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setString(1,email);
+			preparedStatement.setLong(1,id);
 			resultSet = preparedStatement.executeQuery();
 
 				if(!resultSet.next())
 				{
-						throw new ApplicationException(ErrorType.GENERAL_ERROR,"company does not exist!", true);
+					return false;
 				}
-				else
-				{
 				return true;
-				}
+				
 				
 			
 		}
@@ -132,7 +130,7 @@ public class CompaniesDAO implements ICompaniesDAO {
 	 * @param name name of company to be searched 
 	 * @return		true if company exists in DB
 	 */
-	public boolean isCompanyExistsByMailOrName(String email, String name) throws ApplicationException {
+	public boolean isCompanyMailExist(String email) throws ApplicationException {
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -140,14 +138,9 @@ public class CompaniesDAO implements ICompaniesDAO {
 
 		try {
 			connection =JdbcUtils.getConnection();
-
-			String sql = String.format(
-					"SELECT * FROM COMPANIES WHERE company_EMAIL = ? OR company_NAME = ?");
-			
-
+			String sql = String.format("SELECT * FROM COMPANIES WHERE company_EMAIL =?");
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1,email);
-			preparedStatement.setString(2,name);
 			ResultSet resultSet = preparedStatement.executeQuery();
 			return(resultSet.next());
 			
@@ -163,7 +156,32 @@ public class CompaniesDAO implements ICompaniesDAO {
 			JdbcUtils.closeResources(connection, preparedStatement);
 		}
 	}
+	public boolean isCompanyNameExist(String name) throws ApplicationException {
 
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+
+
+		try {
+			connection =JdbcUtils.getConnection();
+			String sql = String.format("SELECT * FROM COMPANIES WHERE company_NAME =?");
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1,name);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			return(resultSet.next());
+			
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+
+		} 
+		finally {
+			JdbcUtils.closeResources(connection, preparedStatement);
+		}
+	}
 	
 	/**
 	 *adds a new company to the DB using the DBDAO.

@@ -280,6 +280,39 @@ public class CustomerDAO implements ICustomerDAO {
 		}
 	}
 	
+	
+	public boolean isCustomerIDExist(long CustomerID) throws ApplicationException {
+
+		Connection connection = null;
+		ResultSet resultSet = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			connection =JdbcUtils.getConnection();
+			//set sql string to find customer with selected ID from customers table
+			String sql = String.format("SELECT * FROM Customers WHERE customer_ID=%d", CustomerID);
+
+			preparedStatement = connection.prepareStatement(sql) ;
+
+			resultSet = preparedStatement.executeQuery();
+
+					if (resultSet.next()) {
+
+						return true;	
+					}	
+					
+			return false;
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+			//If there was an exception in the "try" block above, it is caught here and notifies a level above.
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+		}
+		finally {
+			
+			JdbcUtils.closeResources(connection, preparedStatement, resultSet);
+		}
+	}
 	/**
 	 * returns a list of the IDs of all customer coupons with specified ID
 	 * 

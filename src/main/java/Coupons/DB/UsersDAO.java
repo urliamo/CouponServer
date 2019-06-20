@@ -18,7 +18,6 @@ import Coupons.JavaBeans.User;
 import Coupons.JavaBeans.UserData;
 import Coupons.Enums.ErrorType;
 import Coupons.Exceptions.ApplicationException;
-import Coupons.Utils.DateUtils;
 //import com.avi.coupons.utils.JdbcUtils;
 @Repository
 public class UsersDAO {
@@ -78,27 +77,6 @@ public class UsersDAO {
 			//Closing the resources
 			JdbcUtils.closeResources(connection, preparedStatement, resultSet);
 		}
-	}
-	public void deleteUserByMail(String userEmail) throws ApplicationException {
-
-		Connection connection=null;
-		PreparedStatement preparedStatement=null;
-
-
-		try {
-			connection = JdbcUtils.getConnection();
-			String delete = "DELETE FROM users WHERE email=?";
-			preparedStatement = connection.prepareStatement(delete);
-			preparedStatement.setString(1, userEmail);
-			preparedStatement.executeUpdate();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
-		} 
-		finally {
-			JdbcUtils.closeResources(connection, preparedStatement);		
-			}
 	}
 	
 	public void deleteUserByID(long userID) throws ApplicationException {
@@ -313,6 +291,56 @@ public class UsersDAO {
 		}
 	}
 	
+	public Boolean isUserNameExist(String name) throws ApplicationException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet result = null;
+
+		try {
+			connection = JdbcUtils.getConnection();
+			String sqlQuery = "SELECT * FROM users where user_Name=?";
+			preparedStatement = connection.prepareStatement(sqlQuery);
+			preparedStatement.setString(1, name);
+			result = preparedStatement.executeQuery();
+
+			if (result.next()) {
+				return true;
+			}
+			return false;
+
+		}catch (SQLException e) {
+			e.printStackTrace();
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+
+		} finally {
+			JdbcUtils.closeResources(connection, preparedStatement);
+		}
+	}
+	public Boolean isUserIDExist(long id) throws ApplicationException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet result = null;
+
+		try {
+			connection = JdbcUtils.getConnection();
+			String sqlQuery = "SELECT * FROM users where user_ID=?";
+			preparedStatement = connection.prepareStatement(sqlQuery);
+			preparedStatement.setLong(1, id);
+			result = preparedStatement.executeQuery();
+
+			if (result.next()) {
+				return true;
+			}
+			return false;
+
+		}catch (SQLException e) {
+			e.printStackTrace();
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+
+		} finally {
+			JdbcUtils.closeResources(connection, preparedStatement);
+		}
+	}
 	private User extractUserFromResultSet(ResultSet result) throws SQLException {
 		User user = new User();
 		user.setId(result.getLong("user_id"));

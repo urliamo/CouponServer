@@ -27,12 +27,16 @@ FIELD_IS_IRREPLACEABLE(600, "You can't change this field."),
 NAME_IS_IRREPLACEABLE(600, "You can't change your name."),
 COUPON_IS_OUT_OF_ORDER(600, "Coupon is out of order"),
 EXISTING_COUPON_TITLE(600, "Coupon with this title already exists"),
+EXISTING_COUPON_ID(600, "Coupon with this ID already exists"),
 COUPON_ALREADY_EXPIRED(600, "coupon is past its' end-date"),
 COUPON_DATE_MISMATCH(600, "coupon start date is after end date"),
 LOGIN_FAILED(600, "Login failed. credentials incorrect."), 
-USER_TYPE_MISMATCH(600, "User Type Mismatch. User is:"),
+USER_TYPE_MISMATCH(600, "user not authorized for this action (type or ID mismatch)"),
 USER_ID_MISMATCH(600, "user ID does not match cached ID"),
-COMPANY_ID_MISMATCH(600, "company ID does not match cached ID");
+COMPANY_ID_MISMATCH(600, "company ID does not match cached ID"),
+USERNAME_DOES_NOT_EXISTS(600, "no such userName in DB"),
+INVALID_CATEGORY(600, "invalid category"),
+INVALID_IMAGE(600, "invalid image");
 
 	
 	private int internalErrorCode;
