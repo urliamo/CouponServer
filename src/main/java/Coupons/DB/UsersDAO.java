@@ -7,7 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
@@ -61,9 +61,7 @@ public class UsersDAO {
 			
 		    resultSet = preparedStatement.getGeneratedKeys();
 			if (resultSet.next()) {
-				long id = resultSet.getLong(1);
-				
-				return id;
+				return resultSet.getLong(1);
 			}
 			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true);
 		
@@ -144,7 +142,7 @@ public class UsersDAO {
 		}
 	}
 	
-	public Collection<User> getAllUsersByType(ClientType type) throws ApplicationException {
+	public List<User> getAllUsersByType(ClientType type) throws ApplicationException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
@@ -156,7 +154,7 @@ public class UsersDAO {
 			preparedStatement.setString(1, type.name());
 			result = preparedStatement.executeQuery();
 
-			Collection<User> allUsers = new ArrayList<User>();
+			List<User> allUsers = new ArrayList<User>();
 
 			while (result.next()) {
 				allUsers.add(extractUserFromResultSet(result));
@@ -174,7 +172,7 @@ public class UsersDAO {
 			}
 	}
 	
-	public Collection<User> getAllUsers() throws ApplicationException {
+	public List<User> getAllUsers() throws ApplicationException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
@@ -185,7 +183,7 @@ public class UsersDAO {
 			preparedStatement = connection.prepareStatement(getAllCompanies);
 			result = preparedStatement.executeQuery();
 
-			Collection<User> allUsers = new ArrayList<User>();
+			List<User> allUsers = new ArrayList<User>();
 
 			while (result.next()) {
 				allUsers.add(extractUserFromResultSet(result));
@@ -251,7 +249,29 @@ public class UsersDAO {
 			JdbcUtils.closeResources(connection, preparedStatement);
 		}
 	}
-	
+	public String getUserName(long id) throws ApplicationException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet result = null;
+
+		try {
+			connection = JdbcUtils.getConnection();
+			String getAllCompanies = "SELECT user_Name FROM users where user_ID=?";
+			preparedStatement = connection.prepareStatement(getAllCompanies);
+			preparedStatement.setLong(1, id);
+			result = preparedStatement.executeQuery();
+
+			String userName = result.getString("user_Name");			
+			return userName;
+
+		}catch (SQLException e) {
+			e.printStackTrace();
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+
+		} finally {
+			JdbcUtils.closeResources(connection, preparedStatement);
+		}
+	}
 	public UserData login(String userName, String password) throws ApplicationException {
 		//Turn on the connections
 		Connection connection=null;

@@ -1,6 +1,6 @@
 package Coupons.Logic;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -166,7 +166,7 @@ public class CompanyController {
 		 * @see 		JavaBeans.Company
 		 * @return		ArrayList of all companies
 		 */
-		public Collection<Company> getAllCompanies(UserData userData) throws ApplicationException{
+		public List<Company> getAllCompanies(UserData userData) throws ApplicationException{
 			if (!userData.getType().name().equals("Administrator")) {
 				throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
 

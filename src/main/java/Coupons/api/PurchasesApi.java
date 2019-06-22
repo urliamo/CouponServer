@@ -22,9 +22,9 @@ public class PurchasesApi {
 	private PurchasesController purchasesController;
 	
 	@PostMapping
-	public void purchaseCoupon(@RequestBody Purchase purchaseData, HttpServletRequest request) {
+	public void purchaseCoupon(@RequestBody Purchase purchase, HttpServletRequest request) {
 		UserData userData = (UserData) request.getAttribute("userData");
-		this.purchasesController.purchaseCoupon(purchaseData.getCouponID(), userData.getUserID(), purchaseData.getAmount());
+		this.purchasesController.purchaseCoupon(purchase, userData);
 	}
 	
 }

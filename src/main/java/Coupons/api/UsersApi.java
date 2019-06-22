@@ -1,5 +1,7 @@
 package Coupons.api;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,42 +25,109 @@ import Coupons.JavaBeans.UserData;
 @RestController
 @RequestMapping("/users")
 public class UsersApi {
-	
+
 	@Autowired
 	private UsersController usersController;
-	
 
-	
-	@PostMapping("/login")
-	public LoginData login(@RequestBody LoginForm loginForm) throws ApplicationException {
-		
-		return usersController.login(loginForm);
-	}
-	
+	/**
+	 * @param user    Receive an user
+	 * @param request Receive a httpServletRequest
+	 * @return This function return an id
+	 * @throws ApplicationException This function can throw an applicationException
+	 */
 	@PostMapping
-	public long addUser(@RequestBody User user,HttpServletRequest request) throws ApplicationException {
-		UserData userData = (UserData) request.getAttribute("userData");
-		return usersController.createUser(user,userData);
-	}
-	
-	@PutMapping
-	public void updateUser(@RequestBody User user,HttpServletRequest request) throws ApplicationException {
+	public long createUser(@RequestBody User user, HttpServletRequest request) throws ApplicationException {
+
 		UserData userData = (UserData) request.getAttribute("userData");
 
-		usersController.updateUser(user,userData);	
+		return usersController.createUser(user, userData);
+
 	}
-	
+
+	/**
+	 * @param userId  Receive an user id
+	 * @param request Receive a httpServletRequest
+	 * @throws ApplicationException This function can throw an applicationException
+	 */
 	@DeleteMapping("/{userId}")
-	public void deleteUser(@PathVariable("userId") long id,HttpServletRequest request) throws ApplicationException {
+	public void deleteUser(@PathVariable("userId") long userId, HttpServletRequest request)
+			throws ApplicationException {
+
 		UserData userData = (UserData) request.getAttribute("userData");
 
-		usersController.deleteUser(id,userData);
+		usersController.deleteUser(userId, userData);
+
 	}
-	
-//	@GetMapping("/{userID}")
-//	public User getUser(@PathVariable("userID") long id) throws ApplicationException {
-//		User user = usersController.;
-//		return user;
-//	}
+
+	/**
+	 * @param user    Receive an user
+	 * @param request Receive a httpServletRequest
+	 * @throws ApplicationException This function can throw an applicationException
+	 */
+	@PutMapping
+	public void updateUser(@RequestBody User user, HttpServletRequest request) throws ApplicationException {
+
+		UserData userData = (UserData) request.getAttribute("userData");
+
+		usersController.updateUser(user, userData);
+
+	}
+
+	/**
+	 * @param userId  Receive an user id
+	 * @param request Receive a httpServletRequest
+	 * @return This function return an user name
+	 * @throws ApplicationException This function can throw an applicationException
+	 */
+	@GetMapping("/name/{userId}")
+	public String getUserName(@PathVariable("userId") long userId, HttpServletRequest request)
+			throws ApplicationException {
+
+		UserData UserData = (UserData) request.getAttribute("userData");
+
+		return usersController.getUserName(userId, UserData);
+
+	}
+
+	/**
+	 * @param userId  Receive an user id
+	 * @param request Receive a httpServletRequest
+	 * @return This function return an user
+	 * @throws ApplicationException This function can throw an applicationException
+	 */
+	@GetMapping("/{userId}")
+	public User getUser(@PathVariable("userId") long userId, HttpServletRequest request) throws ApplicationException {
+
+		UserData userData = (UserData) request.getAttribute("userData");
+
+		return usersController.getUser(userId, userData);
+
+	}
+
+	/**
+	 * @param request Receive a httpServletRequest
+	 * @return This function return an user list
+	 * @throws ApplicationException This function can throw an applicationException
+	 */
+	@GetMapping
+	public List<User> getAllUsers(HttpServletRequest request) throws ApplicationException {
+
+		UserData userData = (UserData) request.getAttribute("userData");
+
+		return usersController.getAllUsers(userData);
+
+	}
+
+	/**
+	 * @param login Receive a login (contain user name and password)
+	 * @return This function return a client type
+	 * @throws ApplicationException This function can throw an applicationException
+	 */
+	@PostMapping("/login/unsecured")
+	public LoginData login(@RequestBody LoginForm login) throws ApplicationException {
+
+		return usersController.login(login);
+
+	}
 
 }

@@ -1,11 +1,10 @@
 package Coupons.Logic;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import Coupons.DB.CompaniesDAO;
 import Coupons.Enums.ClientType;
 import Coupons.Enums.ErrorType;
 import Coupons.Exceptions.ApplicationException;
@@ -150,7 +149,7 @@ public class UsersController {
 			throw new ApplicationException(ErrorType.INVALID_ID, ErrorType.INVALID_ID.getInternalMessage(), false);
 			
 		}
-		if (usersDao.getUserByID(userId) == null) {
+		if (usersDao.isUserIDExist(userId)) {
 			throw new ApplicationException(ErrorType.USER_ID_DOES_NOT_EXIST, ErrorType.USER_ID_DOES_NOT_EXIST.getInternalMessage(), false);
 		}
 		usersDao.deleteUserByID(userId); 
@@ -167,7 +166,7 @@ public class UsersController {
 
 	}*/
 
-	public Collection<User> getAllUsers(UserData userData) throws ApplicationException
+	public List<User> getAllUsers(UserData userData) throws ApplicationException
 	{
 		if(!userData.getType().name().equals("Administrator"))
 		throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
@@ -194,6 +193,25 @@ public class UsersController {
 			throw new ApplicationException(ErrorType.USER_ID_DOES_NOT_EXIST, ErrorType.USER_ID_DOES_NOT_EXIST.getInternalMessage(),	false);
 		}
 		return usersDao.getUserByID(userId);
+
+	}
+	public String getUserName(long userId, UserData userData) throws ApplicationException {
+
+		if (!userData.getType().name().equals("Administrator")) {
+			if (userId != userData.getUserID()) {
+				throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
+			}
+		}
+		
+		if (userId < 1) {
+			throw new ApplicationException(ErrorType.INVALID_ID, ErrorType.INVALID_ID.getInternalMessage(), false);
+			
+		}
+		
+		if (!usersDao.isUserIDExist(userId)) {
+			throw new ApplicationException(ErrorType.USER_ID_DOES_NOT_EXIST, ErrorType.USER_ID_DOES_NOT_EXIST.getInternalMessage(),	false);
+		}
+		return usersDao.getUserName(userId);
 
 	}
 

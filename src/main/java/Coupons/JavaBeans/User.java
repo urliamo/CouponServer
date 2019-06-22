@@ -4,41 +4,50 @@ import Coupons.Enums.ClientType;
 
 public class User {
 	
-	private long id;
+	private Long userId;
 	private String email;
 	private String userName;
 	private String password;
+	private ClientType clientType;
 	private Long companyId;
-	private ClientType type;
 	
-	public User(long id,String email, String userName, String password, Long companyId, ClientType type) {
-		this(userName, email, password, companyId, type);
-		this.id = id;
+	public User(long id,String email, String userName, String password, Long companyId, ClientType clientType) {
+		this(userName, email, password,id, clientType, companyId);
+		this.userId = id;
 	}
 	
-	public User(String userName,String email, String password, Long companyId, ClientType type) {
+	/*public User(String userName,String email, String password, Long companyId, ClientType type) {
 		this(userName,email, password, type);
 		this.companyId = companyId;
-	}
-	
-	public User(String userName, String email, String password, ClientType type) {
-		super();
+	}*/
+	public User(String userName, String email, String password, String clientType, Long companyId) {
+		this();
 		this.email= email;
 		this.userName = userName;
 		this.password = password;
 		this.companyId = null;
-		this.type = type;
+		this.clientType = ClientType.valueOf(clientType);
+	}
+	public User(String userName, String email, String password,Long userId, ClientType clientType, Long companyId) {
+		this();
+		this.email= email;
+		this.userName = userName;
+		this.password = password;
+		this.companyId = null;
+		this.clientType = clientType;
+		this.userId = null;
 	}
 	
 	public User() {
+		super();
 	}
 
 	public long getId() {
-		return id;
+		return userId;
 	}
 
-	public void setId(long id) {
-		this.id = id;
+	public void setId(Long id) {
+		this.userId = id;
 	}
 
 	public String getUserName() {
@@ -58,6 +67,7 @@ public class User {
 	}
 
 	public Long getCompanyId() {
+		
 		return companyId;
 	}
 
@@ -66,11 +76,11 @@ public class User {
 	}
 
 	public ClientType getType() {
-		return type;
+		return clientType;
 	}
 
 	public void setType(ClientType type) {
-		this.type = type;
+		this.clientType = type;
 	}
 
 	public String getEmail() {

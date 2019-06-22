@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import Coupons.Exceptions.ApplicationException;
 import Coupons.JavaBeans.Customer;
+import Coupons.JavaBeans.User;
 import Coupons.JavaBeans.UserData;
 import Coupons.Logic.CustomerController;
 
@@ -26,7 +27,7 @@ public class CustomersApi {
 	private CustomerController customerController; 
 	
 	
-	@PostMapping
+	@PostMapping("/unsecured")
 	public void createCustomer(@RequestBody Customer customer) throws ApplicationException {
 		//add new customer to DB
 		customerController.createCustomer(customer);
@@ -39,9 +40,9 @@ public class CustomersApi {
 	}
 	
 	@GetMapping("/{customerId}")
-	public Customer getCustomer(@PathVariable("customerId") long customerId) throws ApplicationException {
-		Customer customer =customerController.getCustomerByID(customerId);
-		return customer;
+	public Customer getCustomer(@PathVariable("customerId") long customerId,HttpServletRequest request) throws ApplicationException {
+		UserData userData = (UserData) request.getAttribute("userData");
+		return customerController.getCustomerByID(customerId, userData);
 	}
 	
 	@DeleteMapping("/{customerId}")

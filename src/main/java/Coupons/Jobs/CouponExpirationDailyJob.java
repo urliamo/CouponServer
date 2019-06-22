@@ -2,6 +2,9 @@ package Coupons.Jobs;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import Coupons.JavaBeans.Coupon;
 
@@ -13,11 +16,14 @@ import Coupons.JavaBeans.Coupon;
  * @param date the current time
  * @see 		JavaBeans.Coupon
  */
-public class CoupanExpirationDailyJob implements Runnable {
+public class CouponExpirationDailyJob implements Runnable {
 	
 	private boolean quit = false;
-	private  Coupons.DB.CouponsDAO couponsDBDAO = new Coupons.DB.CouponsDAO();
-	private Coupons.DB.PurchasesDAO purchasesDBDAO = new Coupons.DB.PurchasesDAO();
+	@Autowired
+	private  Coupons.DB.CouponsDAO couponsDAO = new Coupons.DB.CouponsDAO();
+	@Autowired
+	private  Coupons.DB.PurchasesDAO purchasesDAO = new Coupons.DB.PurchasesDAO();
+	
 	private LocalDate date = LocalDate.now();
 	
 	public void setQuit(boolean quit) {
@@ -33,12 +39,8 @@ public class CoupanExpirationDailyJob implements Runnable {
 				//update current date
 				date = LocalDate.now();
 				//get expired coupons
-				ArrayList<Coupon> expiredCoupons = couponsDBDAO.getExpiredCoupons();
-				//delete each coupon histories
-				for (Coupon c : expiredCoupons) {
-					couponsDBDAO.deleteCoupon(c.getId());
-					purchasesDBDAO.deleteCouponPurchase(c.getId(), -1);
-				}
+				purchasesDAO.deleteExpiredPurchases();
+				couponsDAO.deleteExpiredCoupons();
 			}
 			//wait 1 hour and check for date change
 			try {
@@ -55,7 +57,7 @@ public class CoupanExpirationDailyJob implements Runnable {
 		}
 	}
 	
-	public CoupanExpirationDailyJob() {
+	public CouponExpirationDailyJob() {
 		super();
 		
 	}

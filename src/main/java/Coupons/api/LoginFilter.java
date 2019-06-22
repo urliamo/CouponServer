@@ -20,48 +20,52 @@ import java.io.IOException;
 @WebFilter("/*")
 public class LoginFilter implements Filter {
 
-@Autowired
-private ICacheManager cacheManager;
+	@Autowired
+	private ICacheManager cacheManager;
 
-@Override
-public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-throws IOException, ServletException {
+	public static final String UNSECURED = "unsecured";
 
-HttpServletRequest req = ((HttpServletRequest) request);
-String path = req.getRequestURI();
-if (path.startsWith("/users/login")) {
+	/**
+	 * This function filter requests
+	 */
+	@Override
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+			throws IOException, ServletException {
 
-chain.doFilter(request, response); // Just continue chain.
-return;
+		String path = ((HttpServletRequest) request).getRequestURI();
+		if (path.endsWith(UNSECURED)) {
 
-}
+			chain.doFilter(request, response); // Just continue chain.
 
-// Create
-if (path.startsWith("/customers") && req.getMethod()
-.equalsIgnoreCase("post"))
-{
+		} else if (path.startsWith("/users/logout")) {
 
-chain.doFilter(request, response); // Just continue chain.
-return;
+			HttpServletRequest req = (HttpServletRequest) request;
 
-}
+			Integer token = Integer.parseInt(req.getParameter("token"));
+			cacheManager.deleteFromMap(token);
 
-Integer token = Integer.parseInt(req.getParameter("token"));
+		} else {
 
-UserData userData = (UserData) cacheManager.get(token);
+			HttpServletRequest req = (HttpServletRequest) request;
 
-if (userData != null) {
+			Integer token = Integer.parseInt(req.getParameter("token"));
 
-request.setAttribute("userData", userData);
-chain.doFilter(request, response);
-return;
+			UserData userData = (UserData) cacheManager.get(token);
 
-}
+			if (userData != null) {
 
-HttpServletResponse res = (HttpServletResponse) response;
-// 401 = Unauthorized http error code
-res.setStatus(401);
+				request.setAttribute("userData", userData);
+				chain.doFilter(request, response);
+				return;
 
-}
+			}
+
+			HttpServletResponse res = (HttpServletResponse) response;
+//	        401 = Unauthorized http error code
+			res.setStatus(401);
+
+		}
+
+	}
 
 }

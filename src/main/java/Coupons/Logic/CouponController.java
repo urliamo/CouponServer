@@ -1,7 +1,8 @@
 package Coupons.Logic;
 
 import java.time.LocalDate;
-import java.util.Collection;
+import java.util.List;
+import java.util.List;
 import java.util.Locale.Category;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,9 @@ public class CouponController {
 
 	@Autowired
 	private Coupons.DB.CouponsDAO couponsDAO;
-
+	
+	@Autowired
+	private Coupons.DB.CustomerDAO customersDAO;
 
 	public CouponController() {
 		super();
@@ -88,6 +91,10 @@ public class CouponController {
 	 */
 	public void updateCoupon(Coupon coupon, UserData userData) throws ApplicationException{
 		validateCoupon(coupon);
+		if (coupon.getId()<1) {
+			throw new ApplicationException(ErrorType.INVALID_ID, ErrorType.INVALID_ID.getInternalMessage(), false);
+			
+		}
 		if (!userData.getType().name().equals("Company"))
 			throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
 
@@ -182,17 +189,11 @@ public class CouponController {
 	 * @return ArrayList of coupon objects belonging to this company
 	 */
 	
-	public Coupon getCoupon(long couponID, UserData userData) throws ApplicationException{
+	public Coupon getCoupon(long couponID) throws ApplicationException{
 		if (couponID<1) {
 			throw new ApplicationException(ErrorType.INVALID_ID, ErrorType.INVALID_ID.getInternalMessage(), false);
 			
 		}
-		if (!userData.getType().name().equals("Company"))
-			throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
-
-		if (userData.getCompany() != couponsDAO.getOneCoupon(couponID).getCompany_id())
-			throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
-
 		//check if coupon actually exists
 		if (!couponsDAO.isCouponExists(couponID)) {
 			throw new ApplicationException(ErrorType.COUPON_ID_DOES_NOT_EXIST, ErrorType.COUPON_ID_DOES_NOT_EXIST.getInternalMessage(), false);
@@ -211,7 +212,7 @@ public class CouponController {
 	 * @return 		ArrayList of coupons
 	 */
 	
-	public Collection<Long> getCompanyCouponIDs(long companyID, UserData userData) throws ApplicationException{
+	/*public List<Long> getCompanyCouponIDs(long companyID, UserData userData) throws ApplicationException{
 		if (companyID<1) {
 			throw new ApplicationException(ErrorType.INVALID_ID, ErrorType.INVALID_ID.getInternalMessage(), false);
 			
@@ -223,7 +224,7 @@ public class CouponController {
 			throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage(), false);
 		}
 		return couponsDAO.getCompanyCouponsID(companyID);
-	}
+	}*/
 	
 	/**
 	 * returns a list of all  coupons of a specified category
@@ -234,41 +235,56 @@ public class CouponController {
 	 * @see			JavaBeans.Category
 	 * @return 		ArrayList of coupons
 	 */
-	public Collection<Coupon> getCouponsByCategory(Categories category, UserData userData) throws ApplicationException
+	public List<Coupon> getCouponsByCategory(Categories category) throws ApplicationException
 	{
 		//get list of all company coupons
 		
-		Collection<Coupon> coupons = couponsDAO.getAllCouponsByCategory(category);
+		List<Coupon> coupons = couponsDAO.getAllCouponsByCategory(category);
 
 		//remove coupons with different category from list
 		
 		return coupons;
 
 	}
+	
+	public List<Coupon> getAllCoupons() throws ApplicationException {
+
+		// only customer can see coupon list for purchase
+		return couponsDAO.getAllCoupons();
+
+	}
 	/**
 	 * returns a list of all company coupons of a specified category
 	 * 
-	 * @param  Category the category of coupons to be returnes
+	 * @param  Category the category of coupons to be returned
 	 * @see 		companiesDAO
 	 * @see			JavaBeans.Coupon
 	 * @see			JavaBeans.Category
 	 * @return 		ArrayList of coupons
 	 */
-	public Collection<Coupon> getCompanyCoupons(long companyID, Categories category, UserData userData) throws ApplicationException
+	public List<Coupon> getCompanyCouponsByCategory(long companyID, Categories category, UserData userData) throws ApplicationException
 	{
 		//get list of all company coupons
-		if (companiesDAO.getCompanyByID(companyID)==null) {
-			throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage());
+		if (companyID<1) {
+			throw new ApplicationException(ErrorType.INVALID_ID, ErrorType.INVALID_ID.getInternalMessage(), false);
 		}
-		Collection<Coupon> coupons = couponsDAO.getCompanyCoupons(companyID);
-
-		//remove coupons with different category from list
-		for (Coupon c : coupons) {
-			if (c.getCategory()!=category)
-				coupons.remove(c);
+		
+		if (userData.getType().name().equals("Company")) {
+			if (companyID != userData.getCompany()) {
+				throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
+			}		
 		}
-		return coupons;
+		if (userData.getType().name().equals("Customer")) {
+			throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
+		}
+		if (companiesDAO.isCompanyExists(companyID)) {
+			throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage(), false);
 
+		}
+		if (category == null) {
+			throw new ApplicationException(ErrorType.INVALID_CATEGORY, ErrorType.INVALID_CATEGORY.getInternalMessage(), false);
+		}
+		return couponsDAO.getCompanyCouponsByCategory(companyID, category);
 	}
 	/**
 	 * returns a list of all company coupons of a specified max price
@@ -278,18 +294,27 @@ public class CouponController {
 	 * @see			JavaBeans.Coupon
 	 * @return ArrayList of coupons
 	 */
-	public Collection<Coupon> getCompanyCoupons(long companyID, double maxprice, UserData userData) throws ApplicationException{
-		if (companiesDAO.getCompanyByID(companyID)==null) {
-			throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage());
+	public List<Coupon> getCompanyCouponsByMaxPrice(long companyID, double maxPrice, UserData userData) throws ApplicationException{
+		if (companyID<1) {
+			throw new ApplicationException(ErrorType.INVALID_ID, ErrorType.INVALID_ID.getInternalMessage(), false);
 		}
-		Collection<Coupon> coupons = couponsDAO.getCompanyCoupons(companyID);
+		
+		if (userData.getType().name().equals("Company")) {
+			if (companyID != userData.getCompany()) {
+				throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
+			}		
+		}
+		if (userData.getType().name().equals("Customer")) {
+			throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
+		}
+		if (companiesDAO.isCompanyExists(companyID)) {
+			throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage(), false);
 
-		//remove coupons with higher price from returned list
-		for (Coupon c : coupons) {
-			if (c.getPrice()>maxprice)
-				coupons.remove(c);
 		}
-		return coupons;
+		if (maxPrice <0) {
+			throw new ApplicationException(ErrorType.INVALID_PRICE, ErrorType.INVALID_PRICE.getInternalMessage(), false);
+		}
+		return couponsDAO.getCompanyCouponsByMaxPrice(companyID, maxPrice);
 	}
 	/**
 	 * returns a list of all company coupons
@@ -299,11 +324,24 @@ public class CouponController {
 	 * @see			JavaBeans.Coupon
 	 * @return ArrayList of coupons
 	 */
-	public Collection<Coupon> getCompanyCoupons(long companyID, UserData userData) throws ApplicationException{
-		if (companiesDAO.getCompanyByID(companyID)==null) {
-			throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage(), false);
+	public List<Coupon> getCompanyCoupons(long companyID, UserData userData) throws ApplicationException{
+		if (companyID<1) {
+			throw new ApplicationException(ErrorType.INVALID_ID, ErrorType.INVALID_ID.getInternalMessage(), false);
 		}
-		Collection<Coupon> coupons = couponsDAO.getCompanyCoupons(companyID);
+		
+		if (userData.getType().name().equals("Company")) {
+			if (companyID != userData.getCompany()) {
+				throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
+			}		
+		}
+		if (userData.getType().name().equals("Customer")) {
+			throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
+		}
+		if (companiesDAO.isCompanyExists(companyID)) {
+			throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage(), false);
+
+		}
+		List<Coupon> coupons = couponsDAO.getCompanyCoupons(companyID);
 
 		return coupons;
 	}
@@ -318,8 +356,10 @@ public class CouponController {
 		if (companiesDAO.isCompanyExists(coupon.getCompany_id())) {
 			throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage(),false);
 		}
-
-		if (coupon.getPrice() <= 0)
+		if (couponsDAO.isCouponExists(coupon.getId())) {
+			throw new ApplicationException(ErrorType.COUPON_ID_DOES_NOT_EXIST, ErrorType.COUPON_ID_DOES_NOT_EXIST.getInternalMessage(),false);
+		}
+		if (coupon.getPrice() < 0)
 			throw new ApplicationException(ErrorType.INVALID_PRICE, ErrorType.INVALID_PRICE.getInternalMessage(), false);
 		if (coupon.getCategory() == null)
 			throw new ApplicationException(ErrorType.INVALID_CATEGORY, ErrorType.INVALID_CATEGORY.getInternalMessage(), false);
@@ -330,5 +370,97 @@ public class CouponController {
 		
 	}
 	
+	/**
+	 * returns a list of all company coupons of a specified category
+	 * 
+	 * @param  Category the category of coupons to be returned
+	 * @see 		companiesDAO
+	 * @see			JavaBeans.Coupon
+	 * @see			JavaBeans.Category
+	 * @return 		ArrayList of coupons
+	 */
+	public List<Coupon> getCustomerCouponsByCategory(long customerID, Categories category, UserData userData) throws ApplicationException
+	{
+		//get list of all company coupons
+		if (customerID<1) {
+			throw new ApplicationException(ErrorType.INVALID_ID, ErrorType.INVALID_ID.getInternalMessage(), false);
+		}
+		
+		if (userData.getType().name().equals("Customer")) {
+			if (customerID != userData.getUserID()) {
+				throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
+			}		
+		}
+		if (userData.getType().name().equals("Company")) {
+			throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
+		}
+		if (customersDAO.isCustomerIDExist(customerID)) {
+			throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage(), false);
+
+		}
+		if (category == null) {
+			throw new ApplicationException(ErrorType.INVALID_CATEGORY, ErrorType.INVALID_CATEGORY.getInternalMessage(), false);
+		}
+		return couponsDAO.getCustomerCouponsByCategory(customerID, category);
+	}
+	/**
+	 * returns a list of all company coupons of a specified max price
+	 * 
+	 * @param  maxprice the highest price of the returned coupons
+	 * @see 		companiesDAO
+	 * @see			JavaBeans.Coupon
+	 * @return ArrayList of coupons
+	 */
+	public List<Coupon> getCustomerCouponsByMaxPrice(long customerID, double maxPrice, UserData userData) throws ApplicationException{
+		if (customerID<1) {
+			throw new ApplicationException(ErrorType.INVALID_ID, ErrorType.INVALID_ID.getInternalMessage(), false);
+		}
+		
+		if (userData.getType().name().equals("Customer")) {
+			if (customerID != userData.getUserID()) {
+				throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
+			}		
+		}
+		if (userData.getType().name().equals("Company")) {
+			throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
+		}
 	
+		if (maxPrice <0) {
+			throw new ApplicationException(ErrorType.INVALID_PRICE, ErrorType.INVALID_PRICE.getInternalMessage(), false);
+		}
+		if (customersDAO.isCustomerIDExist(customerID)) {
+			throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage(), false);
+
+		}
+		return couponsDAO.getCustomerCouponsByMaxPrice(customerID, maxPrice);
+	}
+	/**
+	 * returns a list of all company coupons
+	 * 
+	 * @param  maxprice the highest price of the returned coupons
+	 * @see 		companiesDAO
+	 * @see			JavaBeans.Coupon
+	 * @return ArrayList of coupons
+	 */
+	public List<Coupon> getCustomerCoupons(long customerID, UserData userData) throws ApplicationException{
+		if (customerID<1) {
+			throw new ApplicationException(ErrorType.INVALID_ID, ErrorType.INVALID_ID.getInternalMessage(), false);
+		}
+		
+		if (userData.getType().name().equals("Customer")) {
+			if (customerID != userData.getUserID()) {
+				throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
+			}		
+		}
+		if (userData.getType().name().equals("Company")) {
+			throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
+		}
+		if (customersDAO.isCustomerIDExist(customerID)) {
+			throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage(), false);
+
+		}
+		List<Coupon> coupons = couponsDAO.getCustomerCoupons(customerID);
+
+		return coupons;
+	}
 }

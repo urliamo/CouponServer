@@ -2,6 +2,9 @@ package Coupons.api;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,8 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import Coupons.JavaBeans.Coupon;
 import Coupons.JavaBeans.UserData;
 import Coupons.Logic.CouponController;
-import Coupons.Logic.ICacheManager;
-import Coupons.Logic.PurchasesController;
 import Coupons.Enums.Categories;
 import Coupons.Exceptions.ApplicationException;
 
@@ -27,58 +28,175 @@ import Coupons.Exceptions.ApplicationException;
 public class CouponsApi {
 	
 	@Autowired
-	private CouponController couponsController; 
-	
-	@Autowired
-	private PurchasesController purchasesController; 
-	
-	@Autowired
-	private ICacheManager cacheManager;
-	
+	private CouponController couponController;
+
+	/**
+	 * @param coupon  Receive a coupon
+	 * @param request Receive a httpServletRequest
+	 * @throws ApplicationException This function can throw an applicationException
+	 */
 	@PostMapping
-	public void createCoupon(@RequestBody Coupon coupon) throws ApplicationException {
-		couponsController.addCoupon(coupon);
+	public void createCoupon(@RequestBody Coupon coupon, HttpServletRequest request) throws ApplicationException {
+
+		UserData userData = (UserData) request.getAttribute("userData");
+
+		couponController.addCoupon(coupon, userData);
+
 	}
-	
-	@PutMapping
-	public void updateCoupon(@RequestBody Coupon coupon) throws ApplicationException {
-		couponsController.updateCoupon(coupon);
-	}
-	
-	@GetMapping("/{couponId}")
-	public Coupon getCoupon(@PathVariable("couponId") long id) throws ApplicationException {
-		Coupon coupon = couponsController.getCoupon(id);
-		return coupon;
-	}
-	
+
+	/**
+	 * @param couponId  Receive a coupon id
+	 * @param companyId Receive a company id
+	 * @param request   Receive a httpServletRequest
+	 * @throws ApplicationException This function can throw an applicationException
+	 */
 	@DeleteMapping("/{couponId}")
-	public void deleteCoupon(@PathVariable("couponId") long id) throws ApplicationException {
-		couponsController.deleteCoupon(id);
+	public void deleteCoupon(@PathVariable("couponId") long couponId, @RequestParam("companyId") long companyId,
+			HttpServletRequest request) throws ApplicationException {
+
+		UserData userData = (UserData) request.getAttribute("userData");
+
+		couponController.deleteCoupon(couponId, userData);
+
 	}
-	@GetMapping("/byType")
-	public Collection<Coupon> getCouponByType(@PathVariable("type") Categories category) throws ApplicationException {
-		return couponsController.getCouponsByCategory(category);
+
+	/**
+	 * @param coupon  Receive a coupon
+	 * @param request Receive a httpServletRequest
+	 * @throws ApplicationException This function can throw an applicationException
+	 */
+	@PutMapping
+	public void updateCoupon(@RequestBody Coupon coupon, HttpServletRequest request) throws ApplicationException {
+
+		UserData userData = (UserData) request.getAttribute("userData");
+
+		couponController.updateCoupon(coupon, userData);
+
 	}
-	
-	@GetMapping("/byCompany/")
-	public Collection<Coupon> getCompanyCoupons(@RequestParam("token") int token, @RequestParam(value = "category", required = false) Categories category) throws ApplicationException {
-		UserData userData =  (UserData) cacheManager.get(token);
-		
-		if (category != null){
-			return couponsController.getCompanyCoupons(userData.getCompany(), category);
-		}
-		
-		return couponsController.getCompanyCoupons(userData.getCompany());
+
+	/**
+	 * @param request Receive a httpServletRequest
+	 * @return This function return coupon list
+	 * @throws ApplicationException This function can throw an applicationException
+	 */
+	@GetMapping
+	public List<Coupon> getAllCoupons() throws ApplicationException {
+
+
+		return couponController.getAllCoupons();
+
 	}
-	
-	@GetMapping("/byCustomer/")
-	public Collection<Coupon> getCustomerCoupons(@RequestParam("token") int token, @RequestParam(value = "category", required = false) Categories category) throws ApplicationException {
-		UserData userData =  (UserData) cacheManager.get(token);
-		
-		if (category != null){
-			return purchasesController.getCustomerCoupons(category, userData.getUserID());
-		}
-		
-		return purchasesController.getCustomerCoupons(userData.getUserID());
+
+	/**
+	 * @param couponId Receive a coupon id
+	 * @return This function return a coupon
+	 * @throws ApplicationException This function can throw an applicationException
+	 */
+	@GetMapping("/{couponId}")
+	public Coupon getCoupon(@PathVariable long couponId) throws ApplicationException {
+
+		return couponController.getCoupon(couponId);
+
 	}
+
+	/**
+	 * @param companyId Receive a company id
+	 * @param request   Receive a httpServletRequest
+	 * @return This function return a coupon list
+	 * @throws ApplicationException This function can throw an applicationException
+	 */
+	@GetMapping("/company")
+	public List<Coupon> getCompanyCouponsByCompanyId(@RequestParam("companyId") long companyId,
+			HttpServletRequest request) throws ApplicationException {
+
+		UserData userData = (UserData) request.getAttribute("userData");
+
+		return couponController.getCompanyCoupons(companyId, userData);
+
+	}
+
+	/**
+	 * @param companyId Receive a company id
+	 * @param Categories  Receive a Categories
+	 * @param request   Receive a httpServletRequest
+	 * @return This function return a coupon list
+	 * @throws ApplicationException This function can throw an applicationException
+	 */
+	@GetMapping("/company/Categories")
+	public List<Coupon> getCompanyCouponsByCategories(@RequestParam("companyId") long companyId,
+			@RequestParam("Categories") Categories Category, HttpServletRequest request) throws ApplicationException {
+
+		UserData userData = (UserData) request.getAttribute("userData");
+
+		return couponController.getCompanyCouponsByCategory(companyId, Category, userData);
+
+	}
+
+	/**
+	 * @param companyId Receive a company id
+	 * @param maxPrice  Receive a max price
+	 * @param request   Receive a httpServletRequest
+	 * @return This function return a coupon list
+	 * @throws ApplicationException This function can throw an applicationException
+	 */
+	@GetMapping("/company/price")
+	public List<Coupon> getCompanyCouponsByMaxPrice(@RequestParam("companyId") long companyId,
+			@RequestParam("maxPrice") double maxPrice, HttpServletRequest request) throws ApplicationException {
+
+		UserData userData = (UserData) request.getAttribute("userData");
+
+		return couponController.getCompanyCouponsByMaxPrice(companyId, maxPrice, userData);
+
+	}
+
+	/**
+	 * @param customerId Receive a customer id
+	 * @param request    Receive a httpServletRequest
+	 * @return This function return a coupon list
+	 * @throws ApplicationException This function can throw an applicationException
+	 */
+	@GetMapping("/customer")
+	public List<Coupon> getCustomerCouponsByCustomerId(@RequestParam("customerId") long customerId,
+			HttpServletRequest request) throws ApplicationException {
+
+		UserData userData = (UserData) request.getAttribute("userData");
+
+		return couponController.getCustomerCoupons(customerId, userData);
+
+	}
+
+	/**
+	 * @param customerId Receive a customer id
+	 * @param Categories   Receive a Categories
+	 * @param request    Receive a httpServletRequest
+	 * @return This function return a coupon list
+	 * @throws ApplicationException This function can throw an applicationException
+	 */
+	@GetMapping("/customer/Categories")
+	public List<Coupon> getCustomerCouponsByCategory(@RequestParam("customerId") long customerId,
+			@RequestParam("Categories") Categories Category, HttpServletRequest request) throws ApplicationException {
+
+		UserData userData = (UserData) request.getAttribute("userData");
+
+		return couponController.getCustomerCouponsByCategory(customerId, Category, userData);
+
+	}
+
+	/**
+	 * @param customerId Receive a customer id
+	 * @param maxPrice   Receive a max price
+	 * @param request    Receive a httpServletRequest
+	 * @return This function return a coupon list
+	 * @throws ApplicationException This function can throw an applicationException
+	 */
+	@GetMapping("/customer/price")
+	public List<Coupon> getCustomerCouponsByMaxPrice(@RequestParam("customerId") long customerId,
+			@RequestParam("maxPrice") double maxPrice, HttpServletRequest request) throws ApplicationException {
+
+		UserData userData = (UserData) request.getAttribute("userData");
+
+		return couponController.getCustomerCouponsByMaxPrice(customerId, maxPrice, userData);
+
+	}
+
 }

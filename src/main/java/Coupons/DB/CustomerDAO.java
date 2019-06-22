@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
@@ -196,7 +196,7 @@ public class CustomerDAO implements ICustomerDAO {
 	 * @return ArrayList of all Customers
 	 */
 	
-	public Collection<Customer> getAllCustomers() throws ApplicationException {
+	public List<Customer> getAllCustomers() throws ApplicationException {
 
 		Connection connection = null;
 		Customer customer = null;
@@ -214,7 +214,7 @@ public class CustomerDAO implements ICustomerDAO {
 				 resultSet = preparedStatement.executeQuery();
 
 					//create arraylist to include customers and be returned
-					Collection<Customer> allCustomers = new ArrayList<Customer>();
+					List<Customer> allCustomers = new ArrayList<Customer>();
 					//scan each item in the result set
 					while(resultSet.next()) {
 

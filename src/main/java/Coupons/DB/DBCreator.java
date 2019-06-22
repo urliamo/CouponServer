@@ -6,11 +6,13 @@ import java.sql.*;
 
 public class DBCreator  {
 private static String USERNAME = "root";
-//private static String PASSWORD = "123456";
-private static String PASSWORD = "administrator";
-//private static String DRIVER = "com.mysql.cj.jdbc.Driver";
-private static String DRIVER = "org.mariadb.jdbc.Driver";
-private static String URL = "jdbc:mariadb://localhost:3306/";
+private static String PASSWORD = "123456";
+//private static String PASSWORD = "administrator";
+private static String DRIVER = "com.mysql.cj.jdbc.Driver";
+//private static String DRIVER = "org.mariadb.jdbc.Driver";
+//private static String URL = "jdbc:mariadb://localhost:3306/";
+private static String URL = "jdbc:mysql://127.0.0.1:3306/";
+
 
 
 
@@ -22,7 +24,7 @@ public static void buildDB() {
 	try {
 		Class.forName(DRIVER);
 		// Create a connection to the database: 
-		connection = DriverManager.getConnection(URL,USERNAME,PASSWORD);
+		connection = DriverManager.getConnection(URL+"?useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC",USERNAME,PASSWORD);
 		
 		
 		//Create SQL statement
@@ -45,7 +47,7 @@ public static void buildDB() {
 		statement.close();
 		connection.close();
 		
-		connection = DriverManager.getConnection(URL+"JB",USERNAME,PASSWORD);
+		connection = DriverManager.getConnection(URL+"JB?useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC",USERNAME,PASSWORD);
 		statement = connection.createStatement();	
 		
 		

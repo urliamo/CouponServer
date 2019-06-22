@@ -36,7 +36,9 @@ USER_ID_MISMATCH(600, "user ID does not match cached ID"),
 COMPANY_ID_MISMATCH(600, "company ID does not match cached ID"),
 USERNAME_DOES_NOT_EXISTS(600, "no such userName in DB"),
 INVALID_CATEGORY(600, "invalid category"),
-INVALID_IMAGE(600, "invalid image");
+INVALID_IMAGE(600, "invalid image"), 
+NOT_ENOUGH_COUPONS_IN_STOCK(600, "not enough coupons in stuck to fulfill purchase, amount is:"), 
+PURCHASE_ID_DOES_NOT_EXIST(600,"no such purhcaseID in DB");
 
 	
 	private int internalErrorCode;

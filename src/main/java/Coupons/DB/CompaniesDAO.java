@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
@@ -306,7 +306,7 @@ public class CompaniesDAO implements ICompaniesDAO {
 	 * @see 		JavaBeans.Company
 	 * @return		ArrayList of all companies
 	 */
-	public Collection<Company> getAllCompanies() throws ApplicationException {
+	public List<Company> getAllCompanies() throws ApplicationException {
 
 		Connection connection = null;
 		ResultSet resultSet = null;

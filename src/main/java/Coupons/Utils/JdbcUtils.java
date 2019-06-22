@@ -5,11 +5,12 @@ import java.sql.*;
 public class JdbcUtils {
 
 	private static String USERNAME = "root";
-	//private static String PASSWORD = "123456";
-	private static String PASSWORD = "administrator";
-	//private static String DRIVER = "com.mysql.cj.jdbc.Driver";
-	private static String DRIVER = "org.mariadb.jdbc.Driver";
-	private static String DBDTYPE = "mariadb";
+	private static String PASSWORD = "123456";
+	//private static String PASSWORD = "administrator";
+	private static String DRIVER = "com.mysql.cj.jdbc.Driver";
+	//private static String DRIVER = "org.mariadb.jdbc.Driver";
+	private static String DBDTYPE = "mysql";
+	//private static String DBDTYPE = "mariadb";
 	private static String DBDNAME = "jb";
 	static {
 		try {
@@ -20,8 +21,7 @@ public class JdbcUtils {
 	}
 
 	public static Connection getConnection() throws SQLException {
-		Connection connection = DriverManager.getConnection("jdbc:"+DBDTYPE+"://localhost:3306/"+DBDNAME+"?useSSL=false", USERNAME,
-				PASSWORD);
+		Connection connection = DriverManager.getConnection("jdbc:"+DBDTYPE+"://localhost:3306/"+DBDNAME+"?useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC", USERNAME, PASSWORD);
 		return connection;
 	}
 

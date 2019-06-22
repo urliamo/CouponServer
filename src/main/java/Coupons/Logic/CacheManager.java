@@ -14,7 +14,12 @@ public class CacheManager implements ICacheManager{
 		this.map = new HashMap<Object, Object>();
 	}
 
-	
+	@Override
+	public void deleteFromMap(Integer key) {
+
+		map.remove(key);
+
+	}
 	public void put(Object key, Object value) {
 		this.map.put(key, value);
 	}

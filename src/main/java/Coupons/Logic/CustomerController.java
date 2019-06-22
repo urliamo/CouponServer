@@ -39,7 +39,18 @@ public class CustomerController{
 	 * @see			JavaBeans.Customer
 	 * @return 		customer object with this customers' data
 	 */
-	public Customer getCustomerByID(long customerID) throws ApplicationException{
+	public Customer getCustomerByID(long customerID, UserData userData) throws ApplicationException{
+		if (userData == null)
+			throw new ApplicationException(ErrorType.EMPTY, ErrorType.EMPTY.getInternalMessage(), false);
+
+		if (!userData.getType().name().equals("Administrator")) {
+			if (customerID != userData.getUserID()) {
+				throw new ApplicationException(ErrorType.USER_ID_MISMATCH, ErrorType.USER_ID_MISMATCH.getInternalMessage(), true);
+			}
+		}
+		if (customerDAO.isCustomerIDExist(customerID))
+			throw new ApplicationException(ErrorType.CUSTOMER_ID_DOES_NOT_EXIST,ErrorType.CUSTOMER_ID_DOES_NOT_EXIST.getInternalMessage(), false);
+
 		return  customerDAO.getOneCustomer(customerID);	
 		
 	}
@@ -55,7 +66,7 @@ public class CustomerController{
 					throw new ApplicationException(ErrorType.USER_ID_MISMATCH, ErrorType.USER_ID_MISMATCH.getInternalMessage(), true);
 				}
 			}
-			if (customerDAO.getOneCustomer(customerId)==null)
+			if (customerDAO.isCustomerIDExist(customerId))
 				throw new ApplicationException(ErrorType.CUSTOMER_ID_DOES_NOT_EXIST,ErrorType.CUSTOMER_ID_DOES_NOT_EXIST.getInternalMessage(), false);
 
 			if (usersDAO.getUserByID(customerId)==null)
@@ -82,7 +93,9 @@ public class CustomerController{
 			NameUtils.isValidName(customer.getFirstName());
 			NameUtils.isValidName(customer.getLastName());
 			User customerUser= customer.getUser();
-			customer.setCustomerId(usersDAO.createUser(customerUser));
+ 			long userID = usersDAO.createUser(customerUser);
+			customer.setCustomerId(userID);
+			customer.getUser().setId(userID);
 			customerDAO.addCustomer(customer);
 			}
 		
