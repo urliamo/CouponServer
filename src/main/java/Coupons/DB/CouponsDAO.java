@@ -401,14 +401,9 @@ public class CouponsDAO implements ICouponsDAO {
 			preparedStatement.setLong(1,CouponID);
 
 				resultSet = preparedStatement.executeQuery();
-				if (!resultSet.next())
-				{
-					throw new ApplicationException(ErrorType.GENERAL_ERROR,"coupon does not exist!", true);
-				}
-
-					
-					Coupon Coupon = extractCouponFromResultSet(resultSet);
-					return Coupon;
+				resultSet.next();
+				Coupon Coupon = extractCouponFromResultSet(resultSet);
+				return Coupon;
 			
 		}
 		catch (SQLException e)

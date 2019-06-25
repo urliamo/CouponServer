@@ -50,7 +50,7 @@ public class CustomerDAO implements ICustomerDAO {
 				preparedStatement = connection.prepareStatement(sql);
 				//execute sql statement
 				resultSet = preparedStatement.executeQuery();
-				
+				resultSet.next();
 				//return the id of the selected customer
 				return resultSet.getLong("CustomerID");
 

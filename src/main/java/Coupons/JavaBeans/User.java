@@ -8,7 +8,7 @@ public class User {
 	private String email;
 	private String userName;
 	private String password;
-	private ClientType clientType;
+	private ClientType type;
 	private Long companyId;
 	
 	public User(long id,String email, String userName, String password, Long companyId, ClientType clientType) {
@@ -26,7 +26,7 @@ public class User {
 		this.userName = userName;
 		this.password = password;
 		this.companyId = null;
-		this.clientType = ClientType.valueOf(clientType);
+		this.type = ClientType.valueOf(clientType);
 	}
 	public User(String userName, String email, String password,Long userId, ClientType clientType, Long companyId) {
 		this();
@@ -34,7 +34,7 @@ public class User {
 		this.userName = userName;
 		this.password = password;
 		this.companyId = null;
-		this.clientType = clientType;
+		this.type = clientType;
 		this.userId = null;
 	}
 	
@@ -76,11 +76,11 @@ public class User {
 	}
 
 	public ClientType getType() {
-		return clientType;
+		return type;
 	}
 
 	public void setType(ClientType type) {
-		this.clientType = type;
+		this.type = type;
 	}
 
 	public String getEmail() {

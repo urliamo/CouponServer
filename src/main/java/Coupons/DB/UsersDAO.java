@@ -200,7 +200,7 @@ public class UsersDAO {
 		}
 	}
 	
-	public User getUserByMail(String email) throws ApplicationException {
+/*	public User getUserByMail(String email) throws ApplicationException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
@@ -211,7 +211,7 @@ public class UsersDAO {
 			preparedStatement = connection.prepareStatement(getAllCompanies);
 			preparedStatement.setString(1, email);
 			result = preparedStatement.executeQuery();
-
+			result.next();
 			User user = extractUserFromResultSet(result);			
 
 			return user;
@@ -224,7 +224,29 @@ public class UsersDAO {
 			JdbcUtils.closeResources(connection, preparedStatement);
 		}
 	}
+	*/
 	
+	public boolean isUserExistByMail(String email) throws ApplicationException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet result = null;
+
+		try {
+			connection = JdbcUtils.getConnection();
+			String getAllCompanies = "SELECT * FROM users where email=?";
+			preparedStatement = connection.prepareStatement(getAllCompanies);
+			preparedStatement.setString(1, email);
+			result = preparedStatement.executeQuery();
+			return (result.next());
+
+		}catch (SQLException e) {
+			e.printStackTrace();
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+
+		} finally {
+			JdbcUtils.closeResources(connection, preparedStatement);
+		}
+	}
 	public User getUserByID(long id) throws ApplicationException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -236,7 +258,7 @@ public class UsersDAO {
 			preparedStatement = connection.prepareStatement(getAllCompanies);
 			preparedStatement.setLong(1, id);
 			result = preparedStatement.executeQuery();
-
+			result.next();
 			User user = extractUserFromResultSet(result);			
 
 			return user;
@@ -256,12 +278,12 @@ public class UsersDAO {
 
 		try {
 			connection = JdbcUtils.getConnection();
-			String getAllCompanies = "SELECT user_Name FROM users where user_ID=?";
-			preparedStatement = connection.prepareStatement(getAllCompanies);
+			String sql = "SELECT user_Name FROM users where user_ID=?";
+			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setLong(1, id);
-			result = preparedStatement.executeQuery();
-
-			String userName = result.getString("user_Name");			
+ 			result = preparedStatement.executeQuery();
+			result.next();
+			String userName = result.getString("user_name");			
 			return userName;
 
 		}catch (SQLException e) {

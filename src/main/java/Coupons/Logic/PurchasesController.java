@@ -214,6 +214,42 @@ public void deletePurchase(long purchaseID, UserData userData) throws Applicatio
 			
 
 	}
+
+
+public List<Purchase> getCustomerPurchases(long customerId, UserData userData) throws ApplicationException {
+	// TODO Auto-generated method stub
+	if (customerId<1) {
+		throw new ApplicationException(ErrorType.INVALID_ID, ErrorType.INVALID_ID.getInternalMessage(), false);
+	}
 	
+	if (userData.getType().name().equals("Customer")) {
+		if (customerId != userData.getUserID()) {
+			throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
+		}		
+	}
+	if (userData.getType().name().equals("Company")) {
+		throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
+	}
+	if (customerDAO.isCustomerIDExist(customerId)) {
+		throw new ApplicationException(ErrorType.CUSTOMER_ID_DOES_NOT_EXIST, ErrorType.CUSTOMER_ID_DOES_NOT_EXIST.getInternalMessage(), false);
+
+	}
+	return purchasesDAO.getAllPurchasesbyCustomer(customerId);
+}
+
+
+public List<Purchase> getAllPurchases(UserData userData) throws ApplicationException {
+	
+	if (!userData.getType().name().equals("Administrator")) {
+		
+		throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
+		
+	}
+	// TODO Auto-generated method stub
+	return purchasesDAO.getAllPurchases();
+}
+
+
+
 	
 }

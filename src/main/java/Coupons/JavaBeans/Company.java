@@ -39,7 +39,7 @@ public class Company {
     public Company(String name, String email, long id) {
 		this.setName(name);
 		this.setEmail(email);
-		this.setCompanyID(company_id);
+		this.setCompanyID(id);
 	}
     public Company(String name, String email) {
   		this.setName(name);

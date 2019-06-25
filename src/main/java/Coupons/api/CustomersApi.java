@@ -1,6 +1,8 @@
 package Coupons.api;
 
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +61,15 @@ public class CustomersApi {
 		UserData userData = (UserData) request.getAttribute("userData");
 
 		return customerController.getCustomerName(customerId, userData);
+
+	}
+	
+	@GetMapping
+	public List<Customer> getAllCustomers(HttpServletRequest request) throws ApplicationException {
+
+		UserData userData = (UserData) request.getAttribute("userData");
+
+		return customerController.getAllCustomers(userData);
 
 	}
 }

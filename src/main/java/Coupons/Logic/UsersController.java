@@ -57,7 +57,7 @@ public class UsersController {
 		UserData userData = usersDao.login(loginForm.getUserName(),loginForm.getPassword());
 		int token = generateEncryptedToken(loginForm.getUserName());
 		cacheManager.put(token, userData);
-		LoginData loginData = new LoginData(userData.getUserID(),token,userData.getType(), userData.getCompany());
+		LoginData loginData = new LoginData(token,userData.getType(),userData.getUserID(), userData.getCompany());
 		return loginData;
 	}
 
@@ -73,7 +73,10 @@ public class UsersController {
 		if (user == null) {
 			throw new ApplicationException(ErrorType.EMPTY, ErrorType.EMPTY.getInternalMessage(), false);
 		}
-		
+		if (userData.getUserID() < 1) {
+			throw new ApplicationException(ErrorType.INVALID_ID, ErrorType.INVALID_ID.getInternalMessage(), false);
+			
+		}
 		if (!userData.getType().name().equals("Administrator")) {
 			if (!user.getType().name().equals("Customer"))
 				throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
@@ -83,11 +86,8 @@ public class UsersController {
 		
 		NameUtils.isValidName(user.getUserName());
 		PasswordUtils.isValidPassword(user.getPassword());
-		if (user.getId() < 1) {
-			throw new ApplicationException(ErrorType.INVALID_ID, ErrorType.INVALID_ID.getInternalMessage(), false);
-			
-		}
-		if (usersDao.getUserByMail(user.getEmail()) != null) {
+		
+		if (usersDao.isUserExistByMail(user.getEmail())) {
 			throw new ApplicationException(ErrorType.EXISTING_EMAIL, ErrorType.EXISTING_EMAIL.getInternalMessage(), false);
 		}
 		if ((user.getCompanyId() != null && user.getType().equals(ClientType.Customer))) {
@@ -101,7 +101,7 @@ public class UsersController {
 				throw new ApplicationException(ErrorType.INVALID_ID, ErrorType.INVALID_ID.getInternalMessage(), false);
 				
 			}
-			if(companiesDAO.isCompanyExists(user.getCompanyId())) {
+			if(!companiesDAO.isCompanyExists(user.getCompanyId())) {
 				throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage(), false);
 			}
 		}
@@ -130,7 +130,7 @@ public class UsersController {
 			throw new ApplicationException(ErrorType.INVALID_ID, ErrorType.INVALID_ID.getInternalMessage(), false);
 			
 		}
-		if (usersDao.getUserByID(user.getId()) == null) {
+		if (!usersDao.isUserIDExist(user.getId())) {
 			throw new ApplicationException(ErrorType.USER_ID_DOES_NOT_EXIST, ErrorType.USER_ID_DOES_NOT_EXIST.getInternalMessage(), false);
 		}
 		if (usersDao.isUserNameExist(user.getUserName())) {
@@ -149,7 +149,7 @@ public class UsersController {
 			throw new ApplicationException(ErrorType.INVALID_ID, ErrorType.INVALID_ID.getInternalMessage(), false);
 			
 		}
-		if (usersDao.isUserIDExist(userId)) {
+		if (!usersDao.isUserIDExist(userId)) {
 			throw new ApplicationException(ErrorType.USER_ID_DOES_NOT_EXIST, ErrorType.USER_ID_DOES_NOT_EXIST.getInternalMessage(), false);
 		}
 		usersDao.deleteUserByID(userId); 

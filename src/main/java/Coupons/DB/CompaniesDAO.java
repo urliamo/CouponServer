@@ -82,7 +82,7 @@ public class CompaniesDAO implements ICompaniesDAO {
 	 * @return	int containing the found companyID
 	 * @throws InterruptedException 
 	 */
-	public long getCompanyID(String email, String password) throws ApplicationException {
+	public long getCompanyID(String email) throws ApplicationException {
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -91,22 +91,14 @@ public class CompaniesDAO implements ICompaniesDAO {
 		try {
 			connection =JdbcUtils.getConnection();
 
-			String sql = String.format("SELECT ID FROM COMPANIES WHERE EMAIL = ? AND PASSWORD = ?");
+			String sql = String.format("SELECT COMPANY_ID FROM COMPANIES WHERE COMPANY_EMAIL");
 
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1,email);
-			preparedStatement.setString(2,password);
 			resultSet = preparedStatement.executeQuery();
-
-					
-					if(!resultSet.next())
-					{
-							throw new ApplicationException(ErrorType.GENERAL_ERROR,"company does not exist!", true);
-					}
-					
-					long id = resultSet.getLong("CompanyID");
-
-					return id;
+			resultSet.next();
+			long id = resultSet.getLong("CompanyID");
+			return id;
 							
 				
 		}
@@ -164,7 +156,7 @@ public class CompaniesDAO implements ICompaniesDAO {
 
 		try {
 			connection =JdbcUtils.getConnection();
-			String sql = String.format("SELECT * FROM COMPANIES WHERE company_NAME =?");
+			String sql = String.format("SELECT * FROM COMPANIES WHERE COMPANY_NAME =?");
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1,name);
 			ResultSet resultSet = preparedStatement.executeQuery();
@@ -201,13 +193,12 @@ public class CompaniesDAO implements ICompaniesDAO {
 
 			connection =JdbcUtils.getConnection();
 
-			String sql = String.format("INSERT INTO COMPANIES(COMPANYID, EMAIL, NAME) " + 
-					"VALUES(?, ?, ?)");
+			String sql = String.format("INSERT INTO COMPANIES(COMPANY_EMAIL, COMPANY_NAME) " + 
+					"VALUES(?, ?)");
 
 			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setLong(1,company.getCompanyID());
-			preparedStatement.setString(2,company.getEmail());
-			preparedStatement.setString(3,  company.getName());
+			preparedStatement.setString(1,company.getEmail());
+			preparedStatement.setString(2,company.getName());
 			preparedStatement.executeUpdate();
 			resultSet = preparedStatement.getGeneratedKeys();
 			
@@ -247,7 +238,7 @@ public class CompaniesDAO implements ICompaniesDAO {
 
 			connection =JdbcUtils.getConnection();
 
-			String sql = String.format("UPDATE COMPANIES SET EMAIL = ? where company_ID= ?");
+			String sql = String.format("UPDATE COMPANIES SET COMPANY_EMAIL = ? WHERE COMPANY_ID= ?");
 
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1,company.getEmail());
@@ -280,7 +271,7 @@ public class CompaniesDAO implements ICompaniesDAO {
 		try {
 			connection =JdbcUtils.getConnection();
 
-			String sql = String.format("DELETE FROM COMPANIES WHERE company_ID=?");
+			String sql = String.format("DELETE FROM COMPANIES WHERE COMPANY_ID=?");
 
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setLong(1,companyID);
@@ -321,7 +312,7 @@ public class CompaniesDAO implements ICompaniesDAO {
 
 			resultSet = preparedStatement.executeQuery();
 
-			ArrayList<Company> allCompanies = new ArrayList<Company>();
+			List<Company> allCompanies = new ArrayList<Company>();
 					
 			while(resultSet.next()) {
 						Company company = extractCompanyFromResultSet(resultSet);
@@ -359,22 +350,14 @@ public class CompaniesDAO implements ICompaniesDAO {
 		try {
 			connection =JdbcUtils.getConnection();
 
-			String sql = String.format("SELECT * FROM COMPANIES WHERE company_ID=?");
+			String sql = String.format("SELECT * FROM COMPANIES WHERE COMPANY_ID=?");
 
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setLong(1,companyID);
 			resultSet = preparedStatement.executeQuery();
-			
-				 if(!resultSet.next())
-				{
-						throw new ApplicationException(ErrorType.GENERAL_ERROR,"company does not exist!", true);
-				}
-				else
-				{
-
-					Company company = extractCompanyFromResultSet(resultSet);
-					return company;			
-				}	
+			resultSet.next();
+			Company company = extractCompanyFromResultSet(resultSet);
+			return company;			
 		}
 		catch (SQLException e)
 		{
@@ -389,7 +372,7 @@ public class CompaniesDAO implements ICompaniesDAO {
 	
 	
 	private Company extractCompanyFromResultSet(ResultSet result) throws SQLException {
-		Company company = new Company(result.getString("company_email"), result.getString("company_name"),result.getLong("company_id") );
+		Company company = new Company( result.getString("company_name"),result.getString("company_email"), result.getLong("company_ID"));
 
 
 		return company;

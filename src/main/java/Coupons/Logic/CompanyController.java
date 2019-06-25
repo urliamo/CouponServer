@@ -138,7 +138,7 @@ public class CompanyController {
 					throw new ApplicationException(ErrorType.INVALID_ID, ErrorType.INVALID_ID.getInternalMessage(), false);
 					
 				}
-				if (companiesDAO.getCompanyByID(companyId)!=null) {
+				if (!companiesDAO.isCompanyExists(companyId)) {
 					throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage(), false);
 				}
 				
