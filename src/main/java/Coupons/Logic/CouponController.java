@@ -1,14 +1,11 @@
 package Coupons.Logic;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.List;
-import java.util.Locale.Category;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import Coupons.Enums.Categories;
+import Coupons.Enums.Category;
 import Coupons.Enums.ErrorType;
 import Coupons.Exceptions.ApplicationException;
 import Coupons.JavaBeans.Coupon;
@@ -235,7 +232,7 @@ public class CouponController {
 	 * @see			JavaBeans.Category
 	 * @return 		ArrayList of coupons
 	 */
-	public List<Coupon> getCouponsByCategory(Categories category) throws ApplicationException
+	public List<Coupon> getCouponsByCategory(Category category) throws ApplicationException
 	{
 		//get list of all company coupons
 		
@@ -262,7 +259,7 @@ public class CouponController {
 	 * @see			JavaBeans.Category
 	 * @return 		ArrayList of coupons
 	 */
-	public List<Coupon> getCompanyCouponsByCategory(long companyID, Categories category, UserData userData) throws ApplicationException
+	public List<Coupon> getCompanyCouponsByCategory(long companyID, Category category, UserData userData) throws ApplicationException
 	{
 		//get list of all company coupons
 		if (companyID<1) {
@@ -379,7 +376,7 @@ public class CouponController {
 	 * @see			JavaBeans.Category
 	 * @return 		ArrayList of coupons
 	 */
-	public List<Coupon> getCustomerCouponsByCategory(long customerID, Categories category, UserData userData) throws ApplicationException
+	public List<Coupon> getCustomerCouponsByCategory(long customerID, Category category, UserData userData) throws ApplicationException
 	{
 		//get list of all company coupons
 		if (customerID<1) {

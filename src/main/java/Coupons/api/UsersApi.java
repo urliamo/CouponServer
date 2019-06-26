@@ -113,8 +113,8 @@ public class UsersApi {
 	public List<User> getAllUsers(HttpServletRequest request) throws ApplicationException {
 
 		UserData userData = (UserData) request.getAttribute("userData");
-
-		return usersController.getAllUsers(userData);
+		List<User> userList = usersController.getAllUsers(userData);
+		return userList;
 
 	}
 

@@ -4,18 +4,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale.Category;
 
 import org.springframework.stereotype.Repository;
 
-import Coupons.Enums.Categories;
+import Coupons.Enums.Category;
 import Coupons.Enums.ErrorType;
 import Coupons.Exceptions.ApplicationException;
 import Coupons.JavaBeans.Coupon;
-import Coupons.Utils.DateUtils;
 import Coupons.Utils.JdbcUtils;
 
 
@@ -102,8 +99,8 @@ public class CouponsDAO implements ICouponsDAO {
 			preparedStatement.setString(2,Coupon.getImage());
 			preparedStatement.setString(3, Coupon.getTitle());
 			preparedStatement.setInt(4,Coupon.getAmount());
-			preparedStatement.setDate(5,java.sql.Date.valueOf(Coupon.getStart_date()));
-			preparedStatement.setDate(6,java.sql.Date.valueOf(Coupon.getEnd_date()));
+			preparedStatement.setDate(5,java.sql.Date.valueOf(Coupon.getStart_date().toString()));
+			preparedStatement.setDate(6,java.sql.Date.valueOf(Coupon.getEnd_date().toString()));
 			preparedStatement.setLong(7, Coupon.getCompany_id());
 			preparedStatement.setString(8,Coupon.getCategory().toString());
 			preparedStatement.setDouble(9, Coupon.getPrice());
@@ -146,7 +143,6 @@ public class CouponsDAO implements ICouponsDAO {
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
-		ResultSet resultSet = null;
 
 		try {
 
@@ -163,8 +159,8 @@ public class CouponsDAO implements ICouponsDAO {
 			preparedStatement.setString(2,Coupon.getImage());
 			preparedStatement.setString(3, Coupon.getTitle());
 			preparedStatement.setInt(4,Coupon.getAmount());
-			preparedStatement.setDate(5,java.sql.Date.valueOf(Coupon.getStart_date()));
-			preparedStatement.setDate(6,java.sql.Date.valueOf(Coupon.getEnd_date()));
+			preparedStatement.setDate(5,java.sql.Date.valueOf(Coupon.getStart_date().toString()));
+			preparedStatement.setDate(6,java.sql.Date.valueOf(Coupon.getEnd_date().toString()));
 			preparedStatement.setString(7,Coupon.getCategory().toString());
 			preparedStatement.setDouble(8, Coupon.getPrice());
 			preparedStatement.setLong(9, Coupon.getId());
@@ -499,7 +495,7 @@ public class CouponsDAO implements ICouponsDAO {
 			JdbcUtils.closeResources(connection, preparedStatement, resultSet);
 		}
 	}
-	public List<Coupon> getCustomerCouponsByCategory(long customerID, Categories category) throws ApplicationException {
+	public List<Coupon> getCustomerCouponsByCategory(long customerID, Category category) throws ApplicationException {
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -570,7 +566,7 @@ public class CouponsDAO implements ICouponsDAO {
 			JdbcUtils.closeResources(connection, preparedStatement, resultSet);
 		}
 	}
-	public List<Coupon> getAllCouponsByCategory(Categories category) throws ApplicationException {
+	public List<Coupon> getAllCouponsByCategory(Category category) throws ApplicationException {
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -683,7 +679,7 @@ public class CouponsDAO implements ICouponsDAO {
 			JdbcUtils.closeResources(connection, preparedStatement, resultSet);
 		}
 	}
-	public List<Coupon> getCompanyCouponsByCategory(long companyID, Categories category) throws ApplicationException {
+	public List<Coupon> getCompanyCouponsByCategory(long companyID, Category category) throws ApplicationException {
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -796,7 +792,7 @@ public class CouponsDAO implements ICouponsDAO {
 	
 private Coupon extractCouponFromResultSet(ResultSet result) throws SQLException  {
 		
-		Coupon coupon = new Coupon(result.getString("description"),result.getString("image"), result.getString("title"),result.getLong("coupon_id"), result.getInt("amount"), result.getDate("start_date").toLocalDate(), result.getDate("end_date").toLocalDate(), result.getLong("comp_id"), Categories.valueOf(result.getString("category")), result.getDouble("price"));
+		Coupon coupon = new Coupon(result.getString("description"),result.getString("image"), result.getString("title"),result.getLong("coupon_id"), result.getInt("amount"), result.getDate("start_date"), result.getDate("end_date"), result.getLong("comp_id"), Category.valueOf(result.getString("category")), result.getDouble("price"));
 	
 		return coupon;
 	}

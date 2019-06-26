@@ -25,7 +25,7 @@ public class User {
 		this.email= email;
 		this.userName = userName;
 		this.password = password;
-		this.companyId = null;
+		this.companyId = companyId;
 		this.type = ClientType.valueOf(clientType);
 	}
 	public User(String userName, String email, String password,Long userId, ClientType clientType, Long companyId) {
@@ -33,7 +33,7 @@ public class User {
 		this.email= email;
 		this.userName = userName;
 		this.password = password;
-		this.companyId = null;
+		this.companyId = companyId;
 		this.type = clientType;
 		this.userId = null;
 	}

@@ -29,9 +29,9 @@ public class CompanyApi {
 	private CompanyController companyController; 
 	
 	@PostMapping
-	public void createCompany(@RequestBody Company company,HttpServletRequest request) throws ApplicationException {
+	public long createCompany(@RequestBody Company company,HttpServletRequest request) throws ApplicationException {
 		UserData userData = (UserData) request.getAttribute("userData");
-	companyController.addCompany(company, userData);
+		return companyController.addCompany(company, userData);
 	}
 	
 	@DeleteMapping("/{companyId}")

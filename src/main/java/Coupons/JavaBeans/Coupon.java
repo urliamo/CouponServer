@@ -1,22 +1,24 @@
 package Coupons.JavaBeans;
 
-import java.time.LocalDate;
+//import java.sql.Date;
+import java.util.Date;
 //import java.util.Date;
 
-import Coupons.Enums.Categories;
+import Coupons.Enums.Category;
 
 public class Coupon {
 
-    private String description;
-    private String image;
-    private String title;
-    private long coupon_id;
-    private int amount;
-    private LocalDate start_date;
-    private LocalDate end_date;
-    private long company_id;
-    private Categories category;
-    private double price;
+	private long companyId;
+	private Category category;
+	private String title;
+	private String description;
+	private Date startDate;
+	private Date endDate;
+	private int amount;
+	private double price;
+	private String image;
+	private Long couponId;
+
     
     
     //----------Setters & Getters-----------------------//
@@ -46,11 +48,11 @@ public class Coupon {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	public long getId() {
-		return coupon_id;
+	public Long getId() {
+		return couponId;
 	}
-	public void setId(long id) {
-		this.coupon_id = id;
+	public void setId(Long id) {
+		this.couponId = id;
 	}
 	public int getAmount() {
 		return amount;
@@ -58,36 +60,36 @@ public class Coupon {
 	public void setAmount(int amount) {
 		this.amount = amount;
 	}
-	public LocalDate getStart_date() {
-		return start_date;
+	public Date getStart_date() {
+		return startDate;
 	}
-	public void setStart_date(LocalDate start_Date) {
+	public void setStart_date(Date start_Date) {
 		
-		this.start_date = start_Date;
+		this.startDate = start_Date;
 	}
-	public LocalDate getEnd_date() {
-		return end_date;
+	public Date getEnd_date() {
+		return endDate;
 	}
-	public void setEnd_date(LocalDate end_date) {
-		this.end_date = end_date;
+	public void setEnd_date(Date end_date) {
+		this.endDate = end_date;
 	}
 	public long getCompany_id() {
-		return company_id;
+		return companyId;
 	}
 	public void setCompany_id(long company_id) {
-		this.company_id = company_id;
+		this.companyId = company_id;
 	}
-	public Categories getCategory() {
+	public Category getCategory() {
 		return category;
 	}
-	public void setCategory(Categories category) {
+	public void setCategory(Category category) {
 		this.category = category;
 	}
     
 	//-------------Constructors-----------------------------------------------//
 	
-	public Coupon(String description, String image, String title, long coupon_id, int amount, LocalDate start_date, LocalDate end_date,
-			long company_id, Categories category, double price) {
+	public Coupon(String description, String image, String title, long coupon_id, int amount, Date start_date, Date end_date,
+			long company_id, Category category, double price) {
 		super();
 		this.setDescription(description);
 		this.setImage(image);
@@ -101,6 +103,21 @@ public class Coupon {
 		this.setPrice(price);
 	}
 	
+	public Coupon(long companyId, Category category, String title, String description, Date startDate, Date endDate,
+			int amount, double price, String image, Long couponId) {
+		super();
+		this.setDescription(description);
+		this.setImage(image);
+		this.setTitle(title);
+		this.setId(null);
+		this.setAmount(amount);
+		this.setStart_date(startDate);
+		this.setEnd_date(endDate);
+		this.setCompany_id(companyId);
+		this.setCategory(category);
+		this.setPrice(price);
+		this.setId(couponId);
+	}
 	public Coupon() {
 		super();
 	

@@ -1,7 +1,5 @@
 package Coupons.api;
 
-import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import Coupons.JavaBeans.Coupon;
 import Coupons.JavaBeans.UserData;
 import Coupons.Logic.CouponController;
-import Coupons.Enums.Categories;
+import Coupons.Enums.Category;
 import Coupons.Exceptions.ApplicationException;
 
 @RestController
@@ -117,14 +115,14 @@ public class CouponsApi {
 
 	/**
 	 * @param companyId Receive a company id
-	 * @param Categories  Receive a Categories
+	 * @param Category  Receive a Categories
 	 * @param request   Receive a httpServletRequest
 	 * @return This function return a coupon list
 	 * @throws ApplicationException This function can throw an applicationException
 	 */
 	@GetMapping("/company/Categories")
 	public List<Coupon> getCompanyCouponsByCategories(@RequestParam("companyId") long companyId,
-			@RequestParam("Categories") Categories Category, HttpServletRequest request) throws ApplicationException {
+			@RequestParam("Categories") Category Category, HttpServletRequest request) throws ApplicationException {
 
 		UserData userData = (UserData) request.getAttribute("userData");
 
@@ -167,14 +165,14 @@ public class CouponsApi {
 
 	/**
 	 * @param customerId Receive a customer id
-	 * @param Categories   Receive a Categories
+	 * @param Category   Receive a Categories
 	 * @param request    Receive a httpServletRequest
 	 * @return This function return a coupon list
 	 * @throws ApplicationException This function can throw an applicationException
 	 */
 	@GetMapping("/customer/Categories")
 	public List<Coupon> getCustomerCouponsByCategory(@RequestParam("customerId") long customerId,
-			@RequestParam("Categories") Categories Category, HttpServletRequest request) throws ApplicationException {
+			@RequestParam("Categories") Category Category, HttpServletRequest request) throws ApplicationException {
 
 		UserData userData = (UserData) request.getAttribute("userData");
 
