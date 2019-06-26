@@ -44,7 +44,7 @@ public class CouponsDAO implements ICouponsDAO {
 			connection =JdbcUtils.getConnection();
 
 			String sql = String.format(
-					"SELECT * AS Count FROM Coupons WHERE coupon_ID = ?'");
+					"SELECT * FROM Coupons WHERE coupon_ID = ?");
 	
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setLong(1,id);
@@ -189,7 +189,7 @@ public class CouponsDAO implements ICouponsDAO {
 			connection =JdbcUtils.getConnection();
 
 			String sql = String.format(
-					"UPDATE Coupons SET amount = amount-? where couponID = ?");
+					"UPDATE Coupons SET amount = amount-? where coupon_ID = ?");
 
 			preparedStatement = connection.prepareStatement(sql);	
 			preparedStatement.setInt(1,amount);
@@ -249,7 +249,7 @@ public class CouponsDAO implements ICouponsDAO {
 
 			connection =JdbcUtils.getConnection();
 
-			String sql = String.format("DELETE FROM Coupons WHERE couponID=?");
+			String sql = String.format("DELETE FROM Coupons WHERE coupon_ID=?");
 
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setLong(1, CouponID);
@@ -283,7 +283,7 @@ public class CouponsDAO implements ICouponsDAO {
 
 			connection =JdbcUtils.getConnection();
 
-			String sql = String.format("DELETE FROM Coupons WHERE companyID=?");
+			String sql = String.format("DELETE FROM Coupons WHERE company_ID=?");
 
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setLong(1, companyId);
@@ -466,7 +466,7 @@ public class CouponsDAO implements ICouponsDAO {
 		ResultSet resultSet = null;
 		try {
 			connection =JdbcUtils.getConnection();
-			String sql = String.format("SELECT * from purchases JOIN coupons ON coupons.ID = purchases.COUPON_ID WHERE CUSTOMER_ID = ? AND PRICE<=?");
+			String sql = String.format("SELECT * from purchases JOIN coupons ON coupons.COUPON_ID = purchases.COUPON_ID WHERE CUSTOMER_ID = ? AND PRICE<=?");
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setLong(1,customerID);
 			preparedStatement.setDouble(2,maxPrice);
@@ -502,7 +502,7 @@ public class CouponsDAO implements ICouponsDAO {
 		ResultSet resultSet = null;
 		try {
 			connection =JdbcUtils.getConnection();
-			String sql = String.format("SELECT * from purchases JOIN coupons ON coupons.ID = purchases.COUPON_ID WHERE CUSTOMER_ID = ? AND CATEGORY=?");
+			String sql = String.format("SELECT * from purchases JOIN coupons ON coupons.COUPON_ID = purchases.COUPON_ID WHERE CUSTOMER_ID = ? AND CATEGORY=?");
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setLong(1,customerID);
 			preparedStatement.setString(2,category.toString());
@@ -538,7 +538,7 @@ public class CouponsDAO implements ICouponsDAO {
 		ResultSet resultSet = null;
 		try {
 			connection =JdbcUtils.getConnection();
-			String sql = String.format("SELECT * from purchases JOIN coupons ON coupons.ID = purchases.COUPON_ID WHERE CUSTOMER_ID = ?");
+			String sql = String.format("SELECT * from purchases JOIN coupons ON coupons.COUPON_ID = purchases.COUPON_ID WHERE CUSTOMER_ID = ?");
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setLong(1,customerID);
 
@@ -616,7 +616,7 @@ public class CouponsDAO implements ICouponsDAO {
 		ResultSet resultSet = null;
 		try {
 			connection =JdbcUtils.getConnection();
-			String sql = String.format("SELECT coupon_id FROM Coupons WHERE company_id=?");
+			String sql = String.format("SELECT * FROM Coupons WHERE company_id=?");
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setLong(1,companyID);
 
@@ -651,7 +651,7 @@ public class CouponsDAO implements ICouponsDAO {
 		ResultSet resultSet = null;
 		try {
 			connection =JdbcUtils.getConnection();
-			String sql = String.format("SELECT coupon_id FROM Coupons WHERE company_id=?");
+			String sql = String.format("SELECT * FROM Coupons WHERE company_id=?");
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setLong(1,companyID);
 
@@ -686,7 +686,7 @@ public class CouponsDAO implements ICouponsDAO {
 		ResultSet resultSet = null;
 		try {
 			connection =JdbcUtils.getConnection();
-			String sql = String.format("SELECT coupon_id FROM Coupons WHERE company_id=? AND category = ?");
+			String sql = String.format("SELECT * FROM Coupons WHERE company_id=? AND category = ?");
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setLong(1,companyID);
 			preparedStatement.setString(2,category.toString());
@@ -723,7 +723,7 @@ public class CouponsDAO implements ICouponsDAO {
 		ResultSet resultSet = null;
 		try {
 			connection =JdbcUtils.getConnection();
-			String sql = String.format("SELECT coupon_id FROM Coupons WHERE company_id=? AND price<= ?");
+			String sql = String.format("SELECT * FROM Coupons WHERE company_id=? AND price<= ?");
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setLong(1,companyID);
 			preparedStatement.setDouble(2,maxPrice);
@@ -792,7 +792,7 @@ public class CouponsDAO implements ICouponsDAO {
 	
 private Coupon extractCouponFromResultSet(ResultSet result) throws SQLException  {
 		
-		Coupon coupon = new Coupon(result.getString("description"),result.getString("image"), result.getString("title"),result.getLong("coupon_id"), result.getInt("amount"), result.getDate("start_date"), result.getDate("end_date"), result.getLong("comp_id"), Category.valueOf(result.getString("category")), result.getDouble("price"));
+		Coupon coupon = new Coupon(result.getString("description"),result.getString("image"), result.getString("title"),result.getLong("coupon_id"), result.getInt("amount"), result.getDate("start_date"), result.getDate("end_date"), result.getLong("company_id"), Category.valueOf(result.getString("category")), result.getDouble("price"));
 	
 		return coupon;
 	}

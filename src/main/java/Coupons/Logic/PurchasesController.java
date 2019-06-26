@@ -60,7 +60,7 @@ public void purchaseCoupon(Purchase purchase, UserData userData) {
 		if (purchase.getCustomerID()<1) {
 			throw new ApplicationException(ErrorType.INVALID_ID, ErrorType.INVALID_ID.getInternalMessage(), false);
 		}
-		if (customerDAO.isCustomerIDExist(purchase.getCustomerID())) {
+		if (!customerDAO.isCustomerIDExist(purchase.getCustomerID())) {
 			throw new ApplicationException(ErrorType.CUSTOMER_ID_DOES_NOT_EXIST, ErrorType.CUSTOMER_ID_DOES_NOT_EXIST.getInternalMessage(), false);
 		}
 		if (!userData.getType().name().equals("Customer")) {
@@ -80,10 +80,10 @@ public void purchaseCoupon(Purchase purchase, UserData userData) {
 		if (couponDB.getCompany_id()<1) {
 			throw new ApplicationException(ErrorType.INVALID_ID, ErrorType.INVALID_ID.getInternalMessage(), false);
 		}
-		if (companiesDAO.isCompanyExists(couponDB.getCompany_id())) {
+		if (!companiesDAO.isCompanyExists(couponDB.getCompany_id())) {
 			throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage(),false);
 		}
-		if (couponsDAO.isCouponExists(couponDB.getId())) {
+		if (!couponsDAO.isCouponExists(couponDB.getId())) {
 			throw new ApplicationException(ErrorType.COUPON_ID_DOES_NOT_EXIST, ErrorType.COUPON_ID_DOES_NOT_EXIST.getInternalMessage(),false);
 		}
 		if (couponDB.getPrice() <0)
@@ -113,7 +113,7 @@ public void deleteCustomerPurchases(long customerId, UserData userData) throws A
 		if (userData.getType().name().equals("Company")) {
 			throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
 		}
-		if (customerDAO.isCustomerIDExist(customerId)) {
+		if (!customerDAO.isCustomerIDExist(customerId)) {
 			throw new ApplicationException(ErrorType.CUSTOMER_ID_DOES_NOT_EXIST, ErrorType.CUSTOMER_ID_DOES_NOT_EXIST.getInternalMessage(), false);
 
 		}
@@ -137,7 +137,7 @@ public void deleteCompanyPurchases(long companyId, UserData userData) throws App
 		if (userData.getType().name().equals("Customer")) {
 			throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
 		}
-		if (companiesDAO.isCompanyExists(companyId)) {
+		if (!companiesDAO.isCompanyExists(companyId)) {
 			throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage(), false);
 
 		}
@@ -206,7 +206,7 @@ public void deletePurchase(long purchaseID, UserData userData) throws Applicatio
 			if (userData.getType().name().equals("Company")) {
 				throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
 			}
-			if (customerDAO.isCustomerIDExist(customerID)) {
+			if (!customerDAO.isCustomerIDExist(customerID)) {
 				throw new ApplicationException(ErrorType.CUSTOMER_ID_DOES_NOT_EXIST, ErrorType.CUSTOMER_ID_DOES_NOT_EXIST.getInternalMessage(), false);
 
 			}
@@ -230,7 +230,7 @@ public List<Purchase> getCustomerPurchases(long customerId, UserData userData) t
 	if (userData.getType().name().equals("Company")) {
 		throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
 	}
-	if (customerDAO.isCustomerIDExist(customerId)) {
+	if (!customerDAO.isCustomerIDExist(customerId)) {
 		throw new ApplicationException(ErrorType.CUSTOMER_ID_DOES_NOT_EXIST, ErrorType.CUSTOMER_ID_DOES_NOT_EXIST.getInternalMessage(), false);
 
 	}

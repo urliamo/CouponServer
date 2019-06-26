@@ -120,9 +120,9 @@ public class CouponsApi {
 	 * @return This function return a coupon list
 	 * @throws ApplicationException This function can throw an applicationException
 	 */
-	@GetMapping("/company/Categories")
+	@GetMapping("/company/category")
 	public List<Coupon> getCompanyCouponsByCategories(@RequestParam("companyId") long companyId,
-			@RequestParam("Categories") Category Category, HttpServletRequest request) throws ApplicationException {
+			@RequestParam("category") Category Category, HttpServletRequest request) throws ApplicationException {
 
 		UserData userData = (UserData) request.getAttribute("userData");
 
@@ -170,9 +170,9 @@ public class CouponsApi {
 	 * @return This function return a coupon list
 	 * @throws ApplicationException This function can throw an applicationException
 	 */
-	@GetMapping("/customer/Categories")
+	@GetMapping("/customer/category")
 	public List<Coupon> getCustomerCouponsByCategory(@RequestParam("customerId") long customerId,
-			@RequestParam("Categories") Category Category, HttpServletRequest request) throws ApplicationException {
+			@RequestParam("category") Category Category, HttpServletRequest request) throws ApplicationException {
 
 		UserData userData = (UserData) request.getAttribute("userData");
 

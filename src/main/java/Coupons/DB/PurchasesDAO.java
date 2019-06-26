@@ -210,7 +210,7 @@ public class PurchasesDAO {
 		PreparedStatement preparedStatement = null;
 		try {
 				connection = JdbcUtils.getConnection();
-				String sql = String.format("INSERT INTO CUSTOMERS_VS_COUPONS(CUSTOMER_ID, COUPON_ID, AMOUNT) " + "VALUES(?, ?, ?)");
+				String sql = String.format("INSERT INTO PURCHASES (CUSTOMER_ID, COUPON_ID, AMOUNT) VALUES(?, ?, ?)");
 				preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 				preparedStatement.setLong(1,purchase.getCustomerID());
 				preparedStatement.setLong(2,purchase.getCouponID());

@@ -169,7 +169,7 @@ public class CouponController {
 			throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
 
 			
-			if (companiesDAO.getCompanyByID(companyID)==null) {
+			if (!companiesDAO.isCompanyExists(companyID)) {
 				throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage(), false);
 			}
 			
@@ -274,7 +274,7 @@ public class CouponController {
 		if (userData.getType().name().equals("Customer")) {
 			throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
 		}
-		if (companiesDAO.isCompanyExists(companyID)) {
+		if (!companiesDAO.isCompanyExists(companyID)) {
 			throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage(), false);
 
 		}
@@ -304,7 +304,7 @@ public class CouponController {
 		if (userData.getType().name().equals("Customer")) {
 			throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
 		}
-		if (companiesDAO.isCompanyExists(companyID)) {
+		if (!companiesDAO.isCompanyExists(companyID)) {
 			throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage(), false);
 
 		}
@@ -334,7 +334,7 @@ public class CouponController {
 		if (userData.getType().name().equals("Customer")) {
 			throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
 		}
-		if (companiesDAO.isCompanyExists(companyID)) {
+		if (!companiesDAO.isCompanyExists(companyID)) {
 			throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage(), false);
 
 		}
@@ -350,10 +350,10 @@ public class CouponController {
 			throw new ApplicationException(ErrorType.INVALID_ID, ErrorType.INVALID_ID.getInternalMessage(), false);
 			
 		}
-		if (companiesDAO.isCompanyExists(coupon.getCompany_id())) {
+		if (!companiesDAO.isCompanyExists(coupon.getCompany_id())) {
 			throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage(),false);
 		}
-		if (couponsDAO.isCouponExists(coupon.getId())) {
+		if (!couponsDAO.isCouponExists(coupon.getId())) {
 			throw new ApplicationException(ErrorType.COUPON_ID_DOES_NOT_EXIST, ErrorType.COUPON_ID_DOES_NOT_EXIST.getInternalMessage(),false);
 		}
 		if (coupon.getPrice() < 0)
@@ -391,7 +391,7 @@ public class CouponController {
 		if (userData.getType().name().equals("Company")) {
 			throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
 		}
-		if (customersDAO.isCustomerIDExist(customerID)) {
+		if (!customersDAO.isCustomerIDExist(customerID)) {
 			throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage(), false);
 
 		}
@@ -425,7 +425,7 @@ public class CouponController {
 		if (maxPrice <0) {
 			throw new ApplicationException(ErrorType.INVALID_PRICE, ErrorType.INVALID_PRICE.getInternalMessage(), false);
 		}
-		if (customersDAO.isCustomerIDExist(customerID)) {
+		if (!customersDAO.isCustomerIDExist(customerID)) {
 			throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage(), false);
 
 		}
@@ -452,7 +452,7 @@ public class CouponController {
 		if (userData.getType().name().equals("Company")) {
 			throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
 		}
-		if (customersDAO.isCustomerIDExist(customerID)) {
+		if (!customersDAO.isCustomerIDExist(customerID)) {
 			throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage(), false);
 
 		}
