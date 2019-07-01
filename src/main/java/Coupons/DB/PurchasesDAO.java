@@ -338,4 +338,32 @@ public class PurchasesDAO {
 			JdbcUtils.closeResources(connection, preparedStatement);
 		}
 	}
+	public int getCustomerPurchaseAmount(long customerId) throws ApplicationException {
+		int amount = 0;
+
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+
+		try {
+			connection = JdbcUtils.getConnection();
+
+			preparedStatement = connection.prepareStatement("SELECT SUM(AMOUNT) FROM purchases WHERE CUSTOMER_ID = ?");
+			preparedStatement.setLong(1, customerId);
+			resultSet = preparedStatement.executeQuery();
+
+			while (resultSet.next()) {
+
+				amount += resultSet.getInt("SUM(AMOUNT)");
+			}
+
+		} catch (SQLException e) {
+
+			throw new ApplicationException(ErrorType.GENERAL_ERROR, ErrorType.GENERAL_ERROR.getInternalMessage(), true, e);
+
+		} finally {
+			JdbcUtils.closeResources(connection, preparedStatement, resultSet);
+		}
+		return amount;
+	}
 }

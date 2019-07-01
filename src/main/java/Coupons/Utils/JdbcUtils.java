@@ -5,12 +5,12 @@ import java.sql.*;
 public class JdbcUtils {
 
 	private static String USERNAME = "root";
-	//private static String PASSWORD = "123456";
-	private static String PASSWORD = "administrator";
-	//private static String DRIVER = "com.mysql.cj.jdbc.Driver";
-	private static String DRIVER = "org.mariadb.jdbc.Driver";
-	//private static String DBDTYPE = "mysql";
-	private static String DBDTYPE = "mariadb";
+	private static String PASSWORD = "123456";
+	//private static String PASSWORD = "administrator";
+	private static String DRIVER = "com.mysql.cj.jdbc.Driver";
+	//private static String DRIVER = "org.mariadb.jdbc.Driver";
+	private static String DBDTYPE = "mysql";
+	//private static String DBDTYPE = "mariadb";
 	private static String DBDNAME = "jb";
 	static {
 		try {

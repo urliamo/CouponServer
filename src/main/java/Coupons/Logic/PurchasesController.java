@@ -76,11 +76,11 @@ public void purchaseCoupon(Purchase purchase, UserData userData) {
 		if (couponDB.getAmount()<purchase.getAmount()) {
 			throw new ApplicationException(ErrorType.NOT_ENOUGH_COUPONS_IN_STOCK, ErrorType.NOT_ENOUGH_COUPONS_IN_STOCK.getInternalMessage()+couponDB.getAmount(), false);
 		}
-		DateUtils.validateDates(couponDB.getStart_date().toString(), couponDB.getEnd_date().toString());
-		if (couponDB.getCompany_id()<1) {
+		DateUtils.validateDates(couponDB.getstartDate(), couponDB.getendDate());
+		if (couponDB.getcompanyId()<1) {
 			throw new ApplicationException(ErrorType.INVALID_ID, ErrorType.INVALID_ID.getInternalMessage(), false);
 		}
-		if (!companiesDAO.isCompanyExists(couponDB.getCompany_id())) {
+		if (!companiesDAO.isCompanyExists(couponDB.getcompanyId())) {
 			throw new ApplicationException(ErrorType.COMPANY_ID_DOES_NOT_EXIST, ErrorType.COMPANY_ID_DOES_NOT_EXIST.getInternalMessage(),false);
 		}
 		if (!couponsDAO.isCouponExists(couponDB.getId())) {
@@ -247,6 +247,29 @@ public List<Purchase> getAllPurchases(UserData userData) throws ApplicationExcep
 	}
 	// TODO Auto-generated method stub
 	return purchasesDAO.getAllPurchases();
+}
+
+
+public int getCustomerPurchaseAmount(long customerId, UserData userData) throws ApplicationException {
+
+	if (userData.getType().name().equals("Company"))
+		throw new ApplicationException(ErrorType.USER_TYPE_MISMATCH, ErrorType.USER_TYPE_MISMATCH.getInternalMessage(), true);
+
+	if (userData.getType().name().equals("Customer")) {
+		if (customerId != userData.getUserID())
+			throw new ApplicationException(ErrorType.USER_ID_MISMATCH, ErrorType.USER_ID_MISMATCH.getInternalMessage(), true);
+
+	}
+
+	if (customerId<1) {
+		throw new ApplicationException(ErrorType.INVALID_ID, ErrorType.INVALID_ID.getInternalMessage(), false);
+	}
+	
+	if (!customerDAO.isCustomerIDExist(customerId))
+		throw new ApplicationException(ErrorType.CUSTOMER_ID_DOES_NOT_EXIST, ErrorType.CUSTOMER_ID_DOES_NOT_EXIST.getInternalMessage(), false);
+
+	return purchasesDAO.getCustomerPurchaseAmount(customerId);
+
 }
 
 

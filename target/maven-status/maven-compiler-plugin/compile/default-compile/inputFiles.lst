@@ -3,10 +3,8 @@ C:\Users\Minor\eclipse-workspace\CouponServer\src\main\java\Coupons\Enums\ErrorT
 C:\Users\Minor\eclipse-workspace\CouponServer\src\main\java\Coupons\DB\CouponsDAO.java
 C:\Users\Minor\eclipse-workspace\CouponServer\src\main\java\Coupons\JavaBeans\UserData.java
 C:\Users\Minor\eclipse-workspace\CouponServer\src\main\java\Coupons\api\CustomersApi.java
-C:\Users\Minor\eclipse-workspace\CouponServer\src\main\java\Coupons\Enums\Categories.java
 C:\Users\Minor\eclipse-workspace\CouponServer\src\main\java\Coupons\Utils\EmailUtils.java
 C:\Users\Minor\eclipse-workspace\CouponServer\src\main\java\Coupons\Logic\CouponController.java
-C:\Users\Minor\eclipse-workspace\CouponServer\src\main\java\Coupons\Jobs\CoupanExpirationDailyJob.java
 C:\Users\Minor\eclipse-workspace\CouponServer\src\main\java\Coupons\DB\CompaniesDAO.java
 C:\Users\Minor\eclipse-workspace\CouponServer\src\main\java\Coupons\JavaBeans\Customer.java
 C:\Users\Minor\eclipse-workspace\CouponServer\src\main\java\Coupons\Utils\PasswordUtils.java
@@ -16,7 +14,6 @@ C:\Users\Minor\eclipse-workspace\CouponServer\src\main\java\Coupons\Utils\DateUt
 C:\Users\Minor\eclipse-workspace\CouponServer\src\main\java\Coupons\JavaBeans\LoginForm.java
 C:\Users\Minor\eclipse-workspace\CouponServer\src\main\java\Coupons\Logic\CacheManager.java
 C:\Users\Minor\eclipse-workspace\CouponServer\src\main\java\Coupons\DB\ICompaniesDAO.java
-C:\Users\Minor\eclipse-workspace\CouponServer\src\main\java\Coupons\DB\main.java
 C:\Users\Minor\eclipse-workspace\CouponServer\src\main\java\Coupons\Exceptions\ExceptionsHandler.java
 C:\Users\Minor\eclipse-workspace\CouponServer\src\main\java\Coupons\Logic\UsersController.java
 C:\Users\Minor\eclipse-workspace\CouponServer\src\main\java\Coupons\Logic\PurchasesController.java
@@ -32,6 +29,7 @@ C:\Users\Minor\eclipse-workspace\CouponServer\src\main\java\Coupons\api\CompanyA
 C:\Users\Minor\eclipse-workspace\CouponServer\src\main\java\Coupons\JavaBeans\Coupon.java
 C:\Users\Minor\eclipse-workspace\CouponServer\src\main\java\Coupons\DB\ICouponsDAO.java
 C:\Users\Minor\eclipse-workspace\CouponServer\src\main\java\Coupons\DB\ICustomerDAO.java
+C:\Users\Minor\eclipse-workspace\CouponServer\src\main\java\Coupons\Enums\Category.java
 C:\Users\Minor\eclipse-workspace\CouponServer\src\main\java\Coupons\Exceptions\ApplicationException.java
 C:\Users\Minor\eclipse-workspace\CouponServer\src\main\java\Coupons\Tests\Test.java
 C:\Users\Minor\eclipse-workspace\CouponServer\src\main\java\Coupons\api\UsersApi.java
@@ -40,6 +38,7 @@ C:\Users\Minor\eclipse-workspace\CouponServer\src\main\java\Coupons\api\Purchase
 C:\Users\Minor\eclipse-workspace\CouponServer\src\main\java\Coupons\DB\PurchasesDAO.java
 C:\Users\Minor\eclipse-workspace\CouponServer\src\main\java\Coupons\Logic\CompanyController.java
 C:\Users\Minor\eclipse-workspace\CouponServer\src\main\java\Coupons\api\CouponsApi.java
+C:\Users\Minor\eclipse-workspace\CouponServer\src\main\java\Coupons\Jobs\CouponExpirationDailyJob.java
 C:\Users\Minor\eclipse-workspace\CouponServer\src\main\java\Coupons\DB\DBCreator.java
 C:\Users\Minor\eclipse-workspace\CouponServer\src\main\java\Coupons\Enums\ClientType.java
 C:\Users\Minor\eclipse-workspace\CouponServer\src\main\java\Coupons\CouponApp.java

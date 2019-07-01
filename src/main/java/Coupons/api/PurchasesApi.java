@@ -82,5 +82,15 @@ public class PurchasesApi {
 		return purchasesController.getCustomerPurchases(customerId, userData);
 
 	}
+	
+	@GetMapping("/amount")
+	public int getPurchaseAmount(@RequestParam("customerId") long customerId, HttpServletRequest request)
+			throws ApplicationException {
+
+		UserData userData = (UserData) request.getAttribute("userData");
+
+		return purchasesController.getCustomerPurchaseAmount(customerId, userData);
+
+	}
 
 }
