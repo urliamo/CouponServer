@@ -179,7 +179,7 @@ public class CustomerController{
 		if (!customerDAO.isCustomerIDExist(customerId))
 			throw new ApplicationException(ErrorType.CUSTOMER_ID_DOES_NOT_EXIST,ErrorType.CUSTOMER_ID_DOES_NOT_EXIST.getInternalMessage(), false);
 
-		if (!usersDAO.isUserIDExist(customerId))
+		if (!usersDAO.isUserIDExist(userData.getUserID()))
 			throw new ApplicationException(ErrorType.USER_ID_DOES_NOT_EXIST, ErrorType.USER_ID_DOES_NOT_EXIST.getInternalMessage(),false);
 		String name = customerDAO.getCustomerName(customerId);
 

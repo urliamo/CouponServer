@@ -51,8 +51,8 @@ public class Coupon {
 	public Long getId() {
 		return couponId;
 	}
-	public void setId(Long id) {
-		this.couponId = id;
+	public void setId(Long couponId) {
+		this.couponId = couponId;
 	}
 	public int getAmount() {
 		return amount;
@@ -60,24 +60,24 @@ public class Coupon {
 	public void setAmount(int amount) {
 		this.amount = amount;
 	}
-	public Date getStart_date() {
+	public Date getstartDate() {
 		return startDate;
 	}
-	public void setStart_date(Date start_Date) {
+	public void setstartDate(Date startDate) {
 		
-		this.startDate = start_Date;
+		this.startDate = startDate;
 	}
-	public Date getEnd_date() {
+	public Date getendDate() {
 		return endDate;
 	}
-	public void setEnd_date(Date end_date) {
-		this.endDate = end_date;
+	public void setendDate(Date endDate) {
+		this.endDate = endDate;
 	}
-	public long getCompany_id() {
+	public long getcompanyId() {
 		return companyId;
 	}
-	public void setCompany_id(long company_id) {
-		this.companyId = company_id;
+	public void setcompanyId(long companyId) {
+		this.companyId = companyId;
 	}
 	public Category getCategory() {
 		return category;
@@ -88,17 +88,17 @@ public class Coupon {
     
 	//-------------Constructors-----------------------------------------------//
 	
-	public Coupon(String description, String image, String title, long coupon_id, int amount, Date start_date, Date end_date,
-			long company_id, Category category, double price) {
+	public Coupon(String description, String image, String title, long couponId, int amount, Date startDate, Date endDate,
+			long companyId, Category category, double price) {
 		super();
 		this.setDescription(description);
 		this.setImage(image);
 		this.setTitle(title);
-		this.setId(coupon_id);
+		this.setId(couponId);
 		this.setAmount(amount);
-		this.setStart_date(start_date);
-		this.setEnd_date(end_date);
-		this.setCompany_id(company_id);
+		this.setstartDate(startDate);
+		this.setendDate(endDate);
+		this.setcompanyId(companyId);
 		this.setCategory(category);
 		this.setPrice(price);
 	}
@@ -111,9 +111,9 @@ public class Coupon {
 		this.setTitle(title);
 		this.setId(null);
 		this.setAmount(amount);
-		this.setStart_date(startDate);
-		this.setEnd_date(endDate);
-		this.setCompany_id(companyId);
+		this.setstartDate(startDate);
+		this.setendDate(endDate);
+		this.setcompanyId(companyId);
 		this.setCategory(category);
 		this.setPrice(price);
 		this.setId(couponId);

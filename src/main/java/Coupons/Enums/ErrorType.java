@@ -1,5 +1,8 @@
 package Coupons.Enums;
 
+import java.sql.Date;
+import java.time.LocalDateTime;
+
 import Coupons.Utils.DateUtils;
 
 public enum ErrorType {
@@ -46,7 +49,7 @@ PURCHASE_ID_DOES_NOT_EXIST(600,"no such purhcaseID in DB");
 	
 	private ErrorType(int internalErrorCode, String internalMessage) {
 		this.internalErrorCode=internalErrorCode;
-		this.internalMessage=internalMessage+DateUtils.getCurrentDateAndTime();
+		this.internalMessage=internalMessage+LocalDateTime.now().toString();
 	}
 
 	public int getInternalErrorCode() {

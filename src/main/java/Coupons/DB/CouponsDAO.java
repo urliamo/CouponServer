@@ -91,7 +91,7 @@ public class CouponsDAO implements ICouponsDAO {
 			connection =JdbcUtils.getConnection();
 			
 			
-			String sql = String.format("INSERT INTO Coupons(DESCRIPTION, IMAGE, TITLE, AMOUNT, START_DATE, END_DATE, COMPANY_ID, CATEGORY_ID, PRICE) " + 
+			String sql = String.format("INSERT INTO Coupons(DESCRIPTION, IMAGE, TITLE, AMOUNT, START_DATE, END_DATE, COMPANY_ID, CATEGORY, PRICE) " + 
 					"VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
 			preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -99,9 +99,9 @@ public class CouponsDAO implements ICouponsDAO {
 			preparedStatement.setString(2,Coupon.getImage());
 			preparedStatement.setString(3, Coupon.getTitle());
 			preparedStatement.setInt(4,Coupon.getAmount());
-			preparedStatement.setDate(5,java.sql.Date.valueOf(Coupon.getStart_date().toString()));
-			preparedStatement.setDate(6,java.sql.Date.valueOf(Coupon.getEnd_date().toString()));
-			preparedStatement.setLong(7, Coupon.getCompany_id());
+			preparedStatement.setDate(5, new java.sql.Date(Coupon.getstartDate().getTime()));
+			preparedStatement.setDate(6, new java.sql.Date(Coupon.getendDate().getTime()));
+			preparedStatement.setLong(7, Coupon.getcompanyId());
 			preparedStatement.setString(8,Coupon.getCategory().toString());
 			preparedStatement.setDouble(9, Coupon.getPrice());
 			
@@ -110,7 +110,7 @@ public class CouponsDAO implements ICouponsDAO {
 
 				ResultSet resultSet = preparedStatement.getGeneratedKeys();
 					if (!resultSet.next()) {
-						long id = resultSet.getInt(1);
+						long id = resultSet.getLong(1);
 						//Coupon.setId(id); // Add the new created id into the Coupon object.
 						return id;
 						}
@@ -150,7 +150,7 @@ public class CouponsDAO implements ICouponsDAO {
 			connection =JdbcUtils.getConnection();
 
 			String sql = String.format(
-					"UPDATE Coupons SET DESCRIPTION=?, IMAGE=?, TITLE=?, AMOUNT=?, START_DATE=?, END_DATE=?, CATEGORY_ID=?, PRICE=? WHERE coupon_ID=?");
+					"UPDATE Coupons SET DESCRIPTION=?, IMAGE=?, TITLE=?, AMOUNT=?, START_DATE=?, END_DATE=?, CATEGORY=?, PRICE=? WHERE coupon_ID=?");
 			
 			
 			preparedStatement = connection.prepareStatement(sql);
@@ -159,8 +159,8 @@ public class CouponsDAO implements ICouponsDAO {
 			preparedStatement.setString(2,Coupon.getImage());
 			preparedStatement.setString(3, Coupon.getTitle());
 			preparedStatement.setInt(4,Coupon.getAmount());
-			preparedStatement.setDate(5,java.sql.Date.valueOf(Coupon.getStart_date().toString()));
-			preparedStatement.setDate(6,java.sql.Date.valueOf(Coupon.getEnd_date().toString()));
+			preparedStatement.setDate(5,new java.sql.Date(Coupon.getstartDate().getTime()));
+			preparedStatement.setDate(6, new java.sql.Date(Coupon.getendDate().getTime()));
 			preparedStatement.setString(7,Coupon.getCategory().toString());
 			preparedStatement.setDouble(8, Coupon.getPrice());
 			preparedStatement.setLong(9, Coupon.getId());
@@ -752,7 +752,7 @@ public class CouponsDAO implements ICouponsDAO {
 			JdbcUtils.closeResources(connection, preparedStatement, resultSet);
 		}
 	}
-	public List<Coupon> getCompanyCouponsByTitle(long companyID, String title) throws ApplicationException {
+	public boolean isCompanyCouponTitleExist(long companyID, String title) throws ApplicationException {
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -767,16 +767,11 @@ public class CouponsDAO implements ICouponsDAO {
 
 			resultSet = preparedStatement.executeQuery();
 
-					List<Coupon> customerCoupons = new ArrayList<Coupon>();
 					
-					while(resultSet.next()) {
-						
-						Coupon coupon = extractCouponFromResultSet(resultSet);
-
-						customerCoupons.add(coupon);
+					if (resultSet.next()){
+						return true;
 					}
-					
-					return customerCoupons;
+					return false;
 				}
 		catch (SQLException e)
 		{

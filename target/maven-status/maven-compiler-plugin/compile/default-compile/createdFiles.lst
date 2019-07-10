@@ -5,6 +5,7 @@ Coupons\Utils\PasswordUtils.class
 Coupons\DB\CompaniesDAO.class
 Coupons\Logic\CacheManager.class
 Coupons\Tests\Test.class
+Coupons\Enums\Category.class
 Coupons\Utils\JdbcUtils.class
 Coupons\JavaBeans\LoginData.class
 Coupons\api\CORSfilter.class
@@ -12,7 +13,6 @@ Coupons\Utils\NameUtils.class
 Coupons\Utils\DateUtils.class
 Coupons\DB\CouponsDAO.class
 Coupons\DB\DBCreator.class
-Coupons\DB\main.class
 Coupons\JavaBeans\Company.class
 Coupons\DB\ICouponsDAO.class
 Coupons\JavaBeans\Customer.class
@@ -30,7 +30,6 @@ Coupons\Utils\EmailUtils.class
 Coupons\api\UsersApi.class
 Coupons\Logic\UsersController.class
 Coupons\DB\ICompaniesDAO.class
-Coupons\Jobs\CoupanExpirationDailyJob.class
 Coupons\api\PurchasesApi.class
 Coupons\DB\ICustomerDAO.class
 Coupons\api\CompanyApi.class
@@ -40,6 +39,6 @@ Coupons\DB\PurchasesDAO.class
 Coupons\CouponApp.class
 Coupons\JavaBeans\LoginForm.class
 Coupons\Enums\ClientType.class
-Coupons\Enums\Categories.class
 Coupons\JavaBeans\UserData.class
+Coupons\Jobs\CouponExpirationDailyJob.class
 Coupons\Logic\CustomerController.class
