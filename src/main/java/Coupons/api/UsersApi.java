@@ -31,7 +31,7 @@ public class UsersApi {
 
 	/**
 	 * @param user    Receive an user
-	 * @param request Receive a httpServletRequest
+	 * @param request httpServletRequest incoming request
 	 * @return This function return an id
 	 * @throws ApplicationException This function can throw an applicationException
 	 */
@@ -45,8 +45,8 @@ public class UsersApi {
 	}
 
 	/**
-	 * @param userId  Receive an user id
-	 * @param request Receive a httpServletRequest
+	 * @param userId  long ID of User
+	 * @param request httpServletRequest incoming request
 	 * @throws ApplicationException This function can throw an applicationException
 	 */
 	@DeleteMapping("/{userId}")
@@ -61,7 +61,7 @@ public class UsersApi {
 
 	/**
 	 * @param user    Receive an user
-	 * @param request Receive a httpServletRequest
+	 * @param request httpServletRequest incoming request
 	 * @throws ApplicationException This function can throw an applicationException
 	 */
 	@PutMapping
@@ -74,9 +74,9 @@ public class UsersApi {
 	}
 
 	/**
-	 * @param userId  Receive an user id
-	 * @param request Receive a httpServletRequest
-	 * @return This function return an user name
+	 * @param userId  long ID of User
+	 * @param request httpServletRequest incoming request
+	 * @return String with user name
 	 * @throws ApplicationException This function can throw an applicationException
 	 */
 	@GetMapping("/name/{userId}")
@@ -90,9 +90,9 @@ public class UsersApi {
 	}
 
 	/**
-	 * @param userId  Receive an user id
-	 * @param request Receive a httpServletRequest
-	 * @return This function return an user
+	 * @param userId  long ID of User
+	 * @param request httpServletRequest incoming request
+	 * @return User containining user from DB
 	 * @throws ApplicationException This function can throw an applicationException
 	 */
 	@GetMapping("/{userId}")
@@ -105,8 +105,8 @@ public class UsersApi {
 	}
 
 	/**
-	 * @param request Receive a httpServletRequest
-	 * @return This function return an user list
+	 * @param request httpServletRequest incoming request
+	 * @return User containining user from DB list
 	 * @throws ApplicationException This function can throw an applicationException
 	 */
 	@GetMapping

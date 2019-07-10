@@ -46,7 +46,7 @@ public class PurchasesApi {
 	}
 
 	/**
-	 * @param customerId Receive a customer id
+	 * @param customerId long ID of customer
 	 * @param request    Receive a httpServletRequest
 	 * @return This function return purchase amount
 	 * @throws ApplicationException This function can throw an applicationException
@@ -54,7 +54,7 @@ public class PurchasesApi {
 	
 
 	/**
-	 * @param request Receive a httpServletRequest
+	 * @param request httpServletRequest incoming request
 	 * @return This function return a purchase list
 	 * @throws ApplicationException This function can throw an applicationException
 	 */
@@ -68,7 +68,7 @@ public class PurchasesApi {
 	}
 
 	/**
-	 * @param customerId Receive a customer id
+	 * @param customerId long ID of customer
 	 * @param request    Receive a httpServletRequest
 	 * @return This function return a purchase list
 	 * @throws ApplicationException This function can throw an applicationException
